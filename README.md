@@ -1,5 +1,13 @@
 # SO-Duck | whole-body bipedal manipulation research
 
+## Current design · complete SO-101 on the first Duck neck joint
+
+One custom adapter bolts the original SO-101 base to the moving plates of the original Duck neck pitch axis. It retains all five stock SO-101 arm axes, its independent gripper, and the ten Duck leg actuators. The installed neck pitch range is −20° to +30°. The modeled assembly reaches 59 of 96 fixed-foot grasp targets and can geometrically pick up a 20 mm cube from the floor. Hardware performance remains untested.
+
+[Assembly and verified results](stock/README.md) · [Connector STEP](stock/connector.step) · [Printable STL](stock/connector.stl) · [Interactive model](stock/poses.html)
+
+## Earlier four-axis Duck neck study
+
 **Public computational study · 22 November 2026 · hardware not yet validated**
 
 SO-Duck studies a **six-joint end-effector pose chain** made by retaining Open Duck Mini V2's four-axis neck and adding the final two SO-101 wrist axes, plus an independently actuated SO-101 gripper. The robot retains Duck's ten actuated leg joints and uses one proposed custom, case-mounted forearm. The shell is not intended to carry the manipulator's structural load.

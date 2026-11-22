@@ -18,3 +18,4 @@ results/private/
 /cad/*.glb
 /cad/*.png
 /cad/under_arm_so101_v1.step
+/collision/bvh.so

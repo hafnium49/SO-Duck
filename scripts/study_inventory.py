@@ -8,7 +8,7 @@ from hashlib import sha256
 import json
 
 ROOT = Path(__file__).resolve().parents[1]
-EXCLUDE = {'docs/SHA256SUMS.txt', 'docs/STUDY_INVENTORY.json'}
+EXCLUDE = {'collision/bvh.so', 'docs/SHA256SUMS.txt', 'docs/STUDY_INVENTORY.json'}
 
 def tracked_files():
     for p in sorted(ROOT.rglob('*')):

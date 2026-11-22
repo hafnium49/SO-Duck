@@ -6,9 +6,19 @@
       "sha256": "4c52e1f62908a05900d73a716459fc8c928a49b7959d3238092c21404cbf65be"
     },
     {
+      "path": ".github/workflows/checks.yml",
+      "bytes": 387,
+      "sha256": "ce3e591fe6f978e8fc071824586bb479f6bfcab019f2783692dc36f5c5cf7168"
+    },
+    {
       "path": ".github/workflows/smoke.yml",
       "bytes": 333,
       "sha256": "226c6fcbd41604f560385e2befac5133d2675a0b6fbe68a0cb91647e72854422"
+    },
+    {
+      "path": ".github/workflows/stock.yml",
+      "bytes": 544,
+      "sha256": "1ff98fcd0f9efc76d069a4c899d7cc919d21b1c470cad2d9156c82b84d65aa15"
     },
     {
       "path": ".github/workflows/study-integrity.yml",
@@ -17,8 +27,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 294,
-      "sha256": "ee3143ba0f524b53c264fce9849d6ccd7eaeb7254726b403e7127895b9c2ba90"
+      "bytes": 312,
+      "sha256": "1dbb2e3f06fb738884de97503472efb0738e5bf189e6285a4a9d00e8ae34e67f"
     },
     {
       "path": "LICENSES/Open_Duck_Mini_APACHE-2.0.txt",
@@ -32,8 +42,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 5648,
-      "sha256": "33512e1d4033f5fd417c186e249c6f85c4f12985cc23dcb7bc09e7842b5af4ae"
+      "bytes": 6349,
+      "sha256": "18b31ed7675419fdddc46dcaad77487d78c880c41193f29ed00aae8bdbe6dfc4"
     },
     {
       "path": "SO_Duck_pose_explorer.html",
@@ -372,8 +382,8 @@
     },
     {
       "path": "docs/PROVENANCE.md",
-      "bytes": 2010,
-      "sha256": "7d6b3a769752c39da767e7c5ae667fbb90078292284327f6a264bec690b1fc11"
+      "bytes": 2727,
+      "sha256": "74b1de1a34e1ba0d6f9146aa537179479e640829dbc4c33a0a568163e71d9363"
     },
     {
       "path": "docs/REPRODUCIBILITY.md",
@@ -394,6 +404,11 @@
       "path": "docs/VALIDATION.md",
       "bytes": 1733,
       "sha256": "c95fca5613414cabac964704da54cfa9f41802ac10e5a5641c13efe3a723029f"
+    },
+    {
+      "path": "docs/WHOLE_BODY_STUDY.md",
+      "bytes": 13523,
+      "sha256": "db5784927dac385eb4dc9f7f10599af49a6094736a4472e0d6c33be470618fba"
     },
     {
       "path": "legs/README.md",
@@ -461,14 +476,24 @@
       "sha256": "1978c5330a34a48fac00c1107de3949b8c8da3bd11517f59ca9b4510363c6c8a"
     },
     {
+      "path": "scripts/export_step.py",
+      "bytes": 1311,
+      "sha256": "6cd3fbd8070bd794d9c7d0f5bafec21000b50ef455524d9ea32a3ecb78545f4c"
+    },
+    {
       "path": "scripts/restore_assets.py",
       "bytes": 2084,
       "sha256": "3a910bbec1a18238425c3a67298bcbaccd77ed5461d45749be7e0bb135075913"
     },
     {
       "path": "scripts/study_inventory.py",
-      "bytes": 1390,
-      "sha256": "c807a7dfffd0fea5d8a08e6a06ae04c8446a1c97941081d031bdf02b18ef34e9"
+      "bytes": 1410,
+      "sha256": "a8840fdd596febe5a1520bd73c480e5066c454da38d9e476a9a0672c2864d5f1"
+    },
+    {
+      "path": "scripts/verify_repository.py",
+      "bytes": 881,
+      "sha256": "0d468f3fb280184d473e0899de746060c1bc9d8655826f5ac3e1b9f86ce8a2b5"
     },
     {
       "path": "scripts/verify_structure.py",
@@ -504,6 +529,11 @@
       "path": "search/arm_validation_full.csv",
       "bytes": 4048,
       "sha256": "302f2991253afc1baa0eb2a15cfc1afc7fc71ea08133fd4782843184c0d0e4b2"
+    },
+    {
+      "path": "search/check_jacobian.py",
+      "bytes": 1135,
+      "sha256": "d2a64a3c26d8895b8809a0914f22e2c3c47898c18097f088cf93f0cb1e2e0a40"
     },
     {
       "path": "search/checks.py",
@@ -559,6 +589,146 @@
       "path": "search/stance_sensitivity.csv",
       "bytes": 6840,
       "sha256": "dc7dc5c4707bbd78b9caf21b9bfc3b1b312ef044481c9f61b0738072d0c23275"
+    },
+    {
+      "path": "stock/README.md",
+      "bytes": 5025,
+      "sha256": "60a25e43a7264ce82680faad1d70c3f48143d9876cf4d815456a84b7b51dc141"
+    },
+    {
+      "path": "stock/assets/base_motor_holder_so101_v1.stl",
+      "bytes": 1877084,
+      "sha256": "8cd2f241037ea377af1191fffe0dd9d9006beea6dcc48543660ed41647072424"
+    },
+    {
+      "path": "stock/assets/base_so101_v2.stl",
+      "bytes": 471584,
+      "sha256": "bb12b7026575e1f70ccc7240051f9d943553bf34e5128537de6cd86fae33924d"
+    },
+    {
+      "path": "stock/assets/bms.stl",
+      "bytes": 684,
+      "sha256": "bab502befa20892f36900d118c4b72b0df1720abe4f5406dc53078d22fd5037a"
+    },
+    {
+      "path": "stock/assets/bno055.stl",
+      "bytes": 73484,
+      "sha256": "266027fa9c82ff00741b76ab6b97acf0788bf59574df671be7ee7e8926a5a268"
+    },
+    {
+      "path": "stock/assets/board.stl",
+      "bytes": 495884,
+      "sha256": "697efdf8c7144ef4b56610e82ef334cb099f60a181d1b912f040e0afc91a9a77"
+    },
+    {
+      "path": "stock/assets/cell.stl",
+      "bytes": 273684,
+      "sha256": "897b4ab0a3852aebd905009159345dacead2b1850a4f3a8e4c5d3095c108bc0f"
+    },
+    {
+      "path": "stock/assets/holder.stl",
+      "bytes": 1484,
+      "sha256": "a17ce27cfdfc489e18e7e2d1eaddb4b4d63612a48ae7fe8b20ffadadb618b076"
+    },
+    {
+      "path": "stock/assets/motor_holder_so101_base_v1.stl",
+      "bytes": 1129384,
+      "sha256": "31242ae6fb59d8b15c66617b88ad8e9bded62d57c35d11c0c43a70d2f4caa95b"
+    },
+    {
+      "path": "stock/assets/power_switch.stl",
+      "bytes": 96584,
+      "sha256": "3a6ff93634f42a231845ead79c6fe3739f80b2859e11ca92d95110dad00a2dc2"
+    },
+    {
+      "path": "stock/assets/rotation_pitch_so101_v1.stl",
+      "bytes": 883684,
+      "sha256": "9be900cc2a2bf718102841ef82ef8d2873842427648092c8ed2ca1e2ef4ffa34"
+    },
+    {
+      "path": "stock/assets/upper_arm_so101_v1.stl",
+      "bytes": 1303484,
+      "sha256": "475056e03a17e71919b82fd88ab9a0b898ab50164f2a7943652a6b2941bb2d4f"
+    },
+    {
+      "path": "stock/assets/usb_c_charger.stl",
+      "bytes": 60684,
+      "sha256": "485a27a44d353343f18de679c5ce2cfd87cc662150d379d37b79d6869f358f8a"
+    },
+    {
+      "path": "stock/assets/waveshare_mounting_plate_so101_v2.stl",
+      "bytes": 62784,
+      "sha256": "e197e24005a07d01bbc06a8c42311664eaeda415bf859f68fa247884d0f1a6e9"
+    },
+    {
+      "path": "stock/build.py",
+      "bytes": 10577,
+      "sha256": "9fc201cf132bb9ca61f3c048727c744fecbdba1f1589159f0cd38f4e11f79c14"
+    },
+    {
+      "path": "stock/connector.step",
+      "bytes": 122255,
+      "sha256": "d9f07194cf6b7861af253c542e4791fa9a77e7eb90d5b6b639d7c85ac1f3bbb6"
+    },
+    {
+      "path": "stock/connector.stl",
+      "bytes": 244284,
+      "sha256": "56316e9d6de43472fcd1bc39bc46a1f9672efe6e52a735f108461d319df85b21"
+    },
+    {
+      "path": "stock/examples.csv",
+      "bytes": 811,
+      "sha256": "feb71be64b76902b6a17a2fb5d06fc98cf573dfc4c031d9ee24c4c71a9fbf35e"
+    },
+    {
+      "path": "stock/model.py",
+      "bytes": 5876,
+      "sha256": "a02ef93ae1e201ffa31c9ee1c8fe4e6531b79bc8f0b9037f166fb5a81a4c8723"
+    },
+    {
+      "path": "stock/pickup.csv",
+      "bytes": 7985,
+      "sha256": "2f4df19c5ac4c9b099e22c47b59e16bae3eda94880b5462cc136d10df6d33b75"
+    },
+    {
+      "path": "stock/pickup.py",
+      "bytes": 3568,
+      "sha256": "86ec6cb454f06df8750c874570059cfc62c7b156f85c9293c24ed40c4241e049"
+    },
+    {
+      "path": "stock/poses.html",
+      "bytes": 1677003,
+      "sha256": "fbce8f801eb0edc76dc4eb9aa51354c81dd72615d0a910b526259177edb5455a"
+    },
+    {
+      "path": "stock/requirements.txt",
+      "bytes": 134,
+      "sha256": "c9b47428419de3998a4b2783031c783856ee1fc0341bf1f8afc153c95b339760"
+    },
+    {
+      "path": "stock/robot.xml",
+      "bytes": 44184,
+      "sha256": "aa7cbacfc490f82801f92eb6aada57cc8b0616d5e500bd1a5abc23606689cf55"
+    },
+    {
+      "path": "stock/targets.csv",
+      "bytes": 15934,
+      "sha256": "08f1e005675f703361fb25ac845c3aa816cd56b6f1a0ee814b6658e4964dbdb0"
+    },
+    {
+      "path": "stock/verify.py",
+      "bytes": 9076,
+      "sha256": "64a09d2916d26108582dd2b5ac8f5446fcd5343ddf000e90ea44ade229a8356e"
+    },
+    {
+      "path": "stock/viewer.py",
+      "bytes": 6820,
+      "sha256": "49818778087ed32e30d51077617be1d09fd97637c70e01512b87cc90b3208cc1"
+    },
+    {
+      "path": "stock/viewer.template.html",
+      "bytes": 9814,
+      "sha256": "64018d0b57379615422fc07070d921266119cd3aa1bb87e0383292992f006bd9"
     },
     {
       "path": "study/README.md",
@@ -631,5 +801,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 39667790
+  "total_bytes": 48580865
 }
