@@ -1,6 +1,11 @@
-*.step binary
 *.stl binary
+*.step binary
 *.glb binary
 *.png binary
-*.jpg binary
-*.zip binary
+*.xml text eol=lf
+*.py text eol=lf
+*.csv text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.txt text eol=lf
+archives/*.part binary

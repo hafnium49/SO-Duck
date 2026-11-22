@@ -1,0 +1,635 @@
+{
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 182,
+      "sha256": "4c52e1f62908a05900d73a716459fc8c928a49b7959d3238092c21404cbf65be"
+    },
+    {
+      "path": ".github/workflows/smoke.yml",
+      "bytes": 333,
+      "sha256": "226c6fcbd41604f560385e2befac5133d2675a0b6fbe68a0cb91647e72854422"
+    },
+    {
+      "path": ".github/workflows/study-integrity.yml",
+      "bytes": 457,
+      "sha256": "818d4bc5ff0d15cbeb716a2613331f90cc6133e8045048816b4b6f2498f74f5d"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 294,
+      "sha256": "ee3143ba0f524b53c264fce9849d6ccd7eaeb7254726b403e7127895b9c2ba90"
+    },
+    {
+      "path": "LICENSES/Open_Duck_Mini_APACHE-2.0.txt",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "LICENSES/SO-ARM100_APACHE-2.0.txt",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5648,
+      "sha256": "33512e1d4033f5fd417c186e249c6f85c4f12985cc23dcb7bc09e7842b5af4ae"
+    },
+    {
+      "path": "SO_Duck_pose_explorer.html",
+      "bytes": 1168890,
+      "sha256": "c76804c5414a95c98da42a9aac2b30e9f898b9bd5eac7be741ed22381658e267"
+    },
+    {
+      "path": "archives/MANIFEST.json",
+      "bytes": 5086,
+      "sha256": "63899ebaeaab2654ad77a11ae700399c821a7f14004f642c903e4a89b00f5ee3"
+    },
+    {
+      "path": "archives/README.md",
+      "bytes": 1196,
+      "sha256": "5fe063db1aa683fc070cca16d6c30526ded310a8b39d2cf20e351d79e38ff859"
+    },
+    {
+      "path": "cad/Case_mounted_forearm.step",
+      "bytes": 1851513,
+      "sha256": "c47b5966cad2bc92bfb42ecaf9558edfb40efbe0d0e7b02e120a9e7f00b72090"
+    },
+    {
+      "path": "cad/Case_mounted_forearm.stl",
+      "bytes": 1773484,
+      "sha256": "80d7e16707ae3ff8cacb3941a8ed0778c8005d5d39fb6fced6dd6cad2007a5b8"
+    },
+    {
+      "path": "cad/Forward_mount.png",
+      "bytes": 190318,
+      "sha256": "19ec30a5b7d813a5cf42ef0ea776589c7f618dbd538c8e1e235ea504c2c4e1a8"
+    },
+    {
+      "path": "cad/Forward_neck_and_wrist.glb",
+      "bytes": 5014160,
+      "sha256": "05035eaad30a02ed51733d208bae654d52fbb88e9fd999226e4cb3be349a7685"
+    },
+    {
+      "path": "cad/Mount_fit.md",
+      "bytes": 5832,
+      "sha256": "e9c4e5285b271bbd9c17f97eb404e44400d8f370af2151b6c87e4c5084876c8a"
+    },
+    {
+      "path": "cad/README.md",
+      "bytes": 1218,
+      "sha256": "e900554b51e5261737b5b893a47277bd09e3c100591ef0bc676005dca3d07a51"
+    },
+    {
+      "path": "cad/build_forearm.py",
+      "bytes": 4216,
+      "sha256": "e5d3a39305d52cbb80986ef8637964e6cf150ff1836319ca14625e01db15e56a"
+    },
+    {
+      "path": "cad/under_arm_so101_v1.step",
+      "bytes": 626245,
+      "sha256": "677a1a57efeddc439d97ebdc309b1c2853cfcb83f14c7d695c312fcf13a89713"
+    },
+    {
+      "path": "collision/README.md",
+      "bytes": 3956,
+      "sha256": "5943ae17dae721f6306eaa69b97a9964d2b06ec030985104af40fe38e6bc68b3"
+    },
+    {
+      "path": "collision/build_bvh.py",
+      "bytes": 611,
+      "sha256": "3e2d76b5b5503b525d288b7252bd1e7c0431ebbed485cfd9ae745d13482a60df"
+    },
+    {
+      "path": "collision/bvh.cpp",
+      "bytes": 2356,
+      "sha256": "bac12ed3a4d75074507a359b8c2adc0290c99a39e58bd39f1cf6845e99eddd31"
+    },
+    {
+      "path": "collision/candidate_forearm.stl",
+      "bytes": 1773484,
+      "sha256": "80d7e16707ae3ff8cacb3941a8ed0778c8005d5d39fb6fced6dd6cad2007a5b8"
+    },
+    {
+      "path": "collision/collision_poses_O90.csv",
+      "bytes": 4972,
+      "sha256": "205dedea3ec0aa515d70e3a1189ecd77dff9fd3566f9ec501dd5888cbc5745b6"
+    },
+    {
+      "path": "collision/collision_poses_Replant22.csv",
+      "bytes": 4530,
+      "sha256": "6d5413bfa866b1547650d8ee57c4cad96128c7ecbd75a7f130ca4a07ac853b63"
+    },
+    {
+      "path": "collision/collision_poses_Replant27.csv",
+      "bytes": 4307,
+      "sha256": "b7e0c46bacc02020e1575c5f304c906888e0c1fcf4275f347720898c524b21ab"
+    },
+    {
+      "path": "collision/contact_details.csv",
+      "bytes": 2860,
+      "sha256": "0f5e822ac5ab5f4c6d8120fdd336b8e2587266232af9ff101ba3b6eacc734bc6"
+    },
+    {
+      "path": "collision/inputs/arm_meshes/head_pitch_to_yaw.stl",
+      "bytes": 535584,
+      "sha256": "36d8cee628301071f6a529624fdd780fd5d35187aec14759956b9313b4879bdf"
+    },
+    {
+      "path": "collision/inputs/arm_meshes/motor_holder_so101_wrist_v1.stl",
+      "bytes": 1052184,
+      "sha256": "887f92e6013cb64ea3a1ab8675e92da1e0beacfd5e001f972523540545e08011"
+    },
+    {
+      "path": "collision/inputs/arm_meshes/moving_jaw_so101_v1.stl",
+      "bytes": 1413584,
+      "sha256": "785a9dded2f474bc1d869e0d3dae398a3dcd9c0c345640040472210d2861fa9d"
+    },
+    {
+      "path": "collision/inputs/arm_meshes/sts3215_03a_no_horn_v1.stl",
+      "bytes": 865884,
+      "sha256": "75ef3781b752e4065891aea855e34dc161a38a549549cd0970cedd07eae6f887"
+    },
+    {
+      "path": "collision/inputs/arm_meshes/sts3215_03a_v1.stl",
+      "bytes": 954084,
+      "sha256": "a37c871fb502483ab96c256baf457d36f2e97afc9205313d9c5ab275ef941cd0"
+    },
+    {
+      "path": "collision/inputs/arm_meshes/under_arm_so101_v1.stl",
+      "bytes": 1975884,
+      "sha256": "d01d1f2de365651dcad9d6669e94ff87ff7652b5bb2d10752a66a456a86dbc71"
+    },
+    {
+      "path": "collision/inputs/arm_meshes/wrist_roll_follower_so101_v1.stl",
+      "bytes": 1439884,
+      "sha256": "4b17b410a12d64ec39554abc3e8054d8a97384b2dc4a8d95a5ecb2a93670f5f4"
+    },
+    {
+      "path": "collision/inputs/arm_meshes/wrist_roll_pitch_so101_v2.stl",
+      "bytes": 2699784,
+      "sha256": "6c7ec5525b4d8b9e397a30ab4bb0037156a5d5f38a4adf2c7d943d6c56eda5ae"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/battery_pack_lid.stl",
+      "bytes": 119584,
+      "sha256": "d9a37ff5558c7fea666a43312483a0bf57eb1fa14003a0dd79459712f0dbe817"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/body_back.stl",
+      "bytes": 494784,
+      "sha256": "037383e5e5ba81a84cb6776edf253cfc6a5256b33133429e8efbd84387b486db"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/body_front.stl",
+      "bytes": 240184,
+      "sha256": "b209dec3a53c0004a2ec173b227d4513f43eabd75887cfd5e916470a8d5bf6d4"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/body_middle_bottom.stl",
+      "bytes": 418284,
+      "sha256": "217315c97f20b5810cf662e7a38f91af10b5ab548a6fc38f6681c144c074db3b"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/body_middle_top.stl",
+      "bytes": 300684,
+      "sha256": "8145b0046d9e8cb624b3e1c7b1f2f9cf714ff9aa3b5b896f230b1460ca0e76db"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/drive_palonier.stl",
+      "bytes": 102584,
+      "sha256": "70ba3a79ca51aa6c39739cba934d0cf91ad3a6115da3d995cadff1811080c217"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/foot_bottom_pla.stl",
+      "bytes": 59284,
+      "sha256": "da7190dbcdcc013cece385afad9558436983d4ecd73bc62b1ec7484092795da3"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/foot_bottom_tpu.stl",
+      "bytes": 102784,
+      "sha256": "3d0329511c6a4d8796f9ad425dfa3019c6e2d7a7c50ae057e44eaaee636fc31a"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/foot_side.stl",
+      "bytes": 244784,
+      "sha256": "8724b025390917bb3a251b8541f934b5a3160c11257895a0b76bbdf486681ad9"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/foot_top.stl",
+      "bytes": 246684,
+      "sha256": "f55a1a1b2376e248cf3db91e5bc9e7b525d63827d3b9b3da46205f3c33976752"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/head_pitch_to_yaw.stl",
+      "bytes": 673084,
+      "sha256": "8d6cb940bdcf84d40160939a4bdd29a27a8da1650eec6aa3e2d1dd5eefa07f39"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/left_cache.stl",
+      "bytes": 107284,
+      "sha256": "8ba1ec39e643b0ba932eb7de9e6327c8bf7d2991cd8642068a99f8038963faf4"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/left_knee_to_ankle_left_sheet.stl",
+      "bytes": 284384,
+      "sha256": "c49d18abcd227c01132ffbf1825c4c2e8f46b27f90cb08936d4a955b09532dec"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/left_knee_to_ankle_right_sheet.stl",
+      "bytes": 289984,
+      "sha256": "831703441094337352fec9adef68c79b660c25e643e68b19aefb2f088b6fb673"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/left_roll_to_pitch.stl",
+      "bytes": 504784,
+      "sha256": "6f876a11c3c2076ddc9d437948aba94217dad5de75dba9e1f5fab663e8598379"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/leg_spacer.stl",
+      "bytes": 159084,
+      "sha256": "f7e2d0c4ca470032ce6c5cce07447a4c321b6f217a14d1e467cbee972344c14d"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/neck_left_sheet.stl",
+      "bytes": 211484,
+      "sha256": "aa3202e5304cd7c11ee3b9c9a39c3d4c2646aeb3e79e8901e731134afb8514f9"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/neck_right_sheet.stl",
+      "bytes": 215684,
+      "sha256": "e41167546cc7fe9f5a5104c020a885453a960019692b02499f7148c0a0504ec5"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/passive_palonier.stl",
+      "bytes": 102484,
+      "sha256": "88f1ac81c6214080d7ef083a5faafcde9e986b551136e531a1ac7bb1b6b11a4a"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/right_cache.stl",
+      "bytes": 107284,
+      "sha256": "7cf3edfd76be032fcb657ded24e7b098a7c4107919f6420073ae86276df9d002"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/right_roll_to_pitch.stl",
+      "bytes": 504684,
+      "sha256": "60c5ac394fceafa042103745cca33d09dc879ba78867c76cee5950c3f2d59b43"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/roll_bearing.stl",
+      "bytes": 28884,
+      "sha256": "777abd3d00a58c06bf31f8cc233fc8620099ec7e8d79eb7325dc8c1cdd7aa297"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/roll_motor_bottom.stl",
+      "bytes": 89584,
+      "sha256": "20c85b387cd88a8939e70d86cdfc1556f562c8c3e39fc105cfe84e50c977e60a"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/roll_motor_top.stl",
+      "bytes": 226584,
+      "sha256": "e9b6e70d23ad1aee3704de2b2240d3450daaa69d55429a57e50702d98c8c8fb4"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/trunk_bottom.stl",
+      "bytes": 282484,
+      "sha256": "b6f5baba76f9f29d2f76714630927f20a5358c3096b682b1129866cc164c7772"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/trunk_top.stl",
+      "bytes": 951484,
+      "sha256": "693314821a26e943df0c4500b8e35fbe84e1fa8d8348fdc5fa5adfc0c2f98c7c"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/wj-wk00-0122topcabinetcase_95.stl",
+      "bytes": 2068984,
+      "sha256": "aa68a42a6e95bf1c90f2875232804982630ec1d6011efba559a7b7681c595cb4"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/wj-wk00-0123middlecase_56.stl",
+      "bytes": 49684,
+      "sha256": "2d0c841a7d7f2bb7cdb17ee7cb7cab7871cc6bb33ca3cee375beab2fdac2f6b4"
+    },
+    {
+      "path": "collision/inputs/duck_meshes/wj-wk00-0124bottomcase_45.stl",
+      "bytes": 5117184,
+      "sha256": "bf0d8a2b7c00710e6c5e6a0f100f3dc27132e6d0bac215480d37dc3236395349"
+    },
+    {
+      "path": "collision/inputs/license-duck.txt",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "collision/inputs/license-so.txt",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "collision/inputs/robot_motors.xml",
+      "bytes": 57150,
+      "sha256": "dfe66150e556690f69506ad2de84bdbad831cbc4711738d8f64e723088505aee"
+    },
+    {
+      "path": "collision/inputs/so101.xml",
+      "bytes": 13922,
+      "sha256": "30e75dfff686f8610d4bc9c95569a10d81f1d60c8cfc781ca56f3820b91cbb73"
+    },
+    {
+      "path": "collision/inputs/yaw_to_roll.stl",
+      "bytes": 281884,
+      "sha256": "870ccc86e1d0dafe37c7735080e7cd30aeeda29c7c313e9ec0ceefeb7a208d43"
+    },
+    {
+      "path": "collision/screen.py",
+      "bytes": 8817,
+      "sha256": "baa6b19b9af9c868bf098fcfba80aca1cb9d9b604374ff04bae458130d9e416e"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "bytes": 1541,
+      "sha256": "7834eb67a19d0bdb6ce19ce4e8508412dc5211b7fc789bec63ae9cfbecf6597b"
+    },
+    {
+      "path": "docs/DATA_DICTIONARY.md",
+      "bytes": 2278,
+      "sha256": "59f8727f6eb25354bea086b5dd659e7cb1cdc87cfc11f0b6071d88775a13c0e4"
+    },
+    {
+      "path": "docs/DECISIONS.md",
+      "bytes": 1146,
+      "sha256": "5018d5e8aab62c1f4f8515284ec8f5d699cd9015125eb64c43c964685b40a592"
+    },
+    {
+      "path": "docs/METHODS.md",
+      "bytes": 5135,
+      "sha256": "cb0916bc62aacb29236cc771f91eeaa2f454223a7d22d55d89ce2d998975073d"
+    },
+    {
+      "path": "docs/PRIOR_ART.md",
+      "bytes": 1642,
+      "sha256": "2285466bf37f67bd98048a8de6734c8bdff79d280d11427d458356edf262c1a3"
+    },
+    {
+      "path": "docs/PROVENANCE.md",
+      "bytes": 2010,
+      "sha256": "7d6b3a769752c39da767e7c5ae667fbb90078292284327f6a264bec690b1fc11"
+    },
+    {
+      "path": "docs/REPRODUCIBILITY.md",
+      "bytes": 3447,
+      "sha256": "3552d1c56f12b34365c1b746fc40405b517f73bf06d0e26c72475826ae4ffdd7"
+    },
+    {
+      "path": "docs/RESULTS.md",
+      "bytes": 3279,
+      "sha256": "0dc0345b2adba4f33ff56f7ffb55958c06cebe9c6e06f176bcf5ff914f4cf29f"
+    },
+    {
+      "path": "docs/STUDY_INDEX.md",
+      "bytes": 1501,
+      "sha256": "bbd5daf55bb9a3d4ec8517c4784a3d50baf5b9f0bf6b92592cf782fefedb9eb9"
+    },
+    {
+      "path": "docs/VALIDATION.md",
+      "bytes": 1733,
+      "sha256": "c95fca5613414cabac964704da54cfa9f41802ac10e5a5641c13efe3a723029f"
+    },
+    {
+      "path": "legs/README.md",
+      "bytes": 689,
+      "sha256": "e69f1bd5a75beaf3c9663915178ef993d607f8ebbb1952604a998ee796f4eaad"
+    },
+    {
+      "path": "legs/balance.py",
+      "bytes": 2011,
+      "sha256": "675f54b9c3f55839e4a334aab604dbe794c813ca9481c4d1e7a86034201ef30f"
+    },
+    {
+      "path": "legs/duck.xml",
+      "bytes": 32335,
+      "sha256": "968b18de4e3f55b31252155f52779fa490989f5da92bc9b308e0bb4e81d6bb5c"
+    },
+    {
+      "path": "legs/gravity_O90.csv",
+      "bytes": 27687,
+      "sha256": "47e63839a589bbefe7f5358d6f42f4935046a7cee65c15dcef5ae629fdebc613"
+    },
+    {
+      "path": "legs/legs.py",
+      "bytes": 5746,
+      "sha256": "25d2efa771b1d6fc26424e3b9be5f405b762fdfb61c603f7ff7ca90564e182f3"
+    },
+    {
+      "path": "legs/payload_O0.csv",
+      "bytes": 4674,
+      "sha256": "581ff41d3bc43e8c17730cf059c99a49047b563eea636339dd79194173c34f2a"
+    },
+    {
+      "path": "legs/payload_O90.csv",
+      "bytes": 4589,
+      "sha256": "80f390425507dd7ec7c606ed280b4f5a6f2f2729d57368e6b8bdbe8d9004e425"
+    },
+    {
+      "path": "legs/single_support_checked.csv",
+      "bytes": 1659,
+      "sha256": "aba314e1fa038c15566f94b3ecbb49ad5a06051d8e2dbee257394692cef56d08"
+    },
+    {
+      "path": "legs/sole.stl",
+      "bytes": 102784,
+      "sha256": "3d0329511c6a4d8796f9ad425dfa3019c6e2d7a7c50ae057e44eaaee636fc31a"
+    },
+    {
+      "path": "legs/torque.py",
+      "bytes": 3156,
+      "sha256": "21864e3099262663732daeef758ebdb89fb55beb118656095098c09f5aa626b5"
+    },
+    {
+      "path": "requirements-cad.txt",
+      "bytes": 21,
+      "sha256": "189568e61246d7614eaf02bd9477e8298ccf3d0b3e02b455b92b405d284903aa"
+    },
+    {
+      "path": "requirements-collision.txt",
+      "bytes": 16,
+      "sha256": "c947ea949e5dd9b1d9578a9cf5396b75c40dfcffd612a6a1dc3ceb2499ce3cfd"
+    },
+    {
+      "path": "requirements-core.txt",
+      "bytes": 12,
+      "sha256": "1978c5330a34a48fac00c1107de3949b8c8da3bd11517f59ca9b4510363c6c8a"
+    },
+    {
+      "path": "scripts/restore_assets.py",
+      "bytes": 2084,
+      "sha256": "3a910bbec1a18238425c3a67298bcbaccd77ed5461d45749be7e0bb135075913"
+    },
+    {
+      "path": "scripts/study_inventory.py",
+      "bytes": 1390,
+      "sha256": "c807a7dfffd0fea5d8a08e6a06ae04c8446a1c97941081d031bdf02b18ef34e9"
+    },
+    {
+      "path": "scripts/verify_structure.py",
+      "bytes": 926,
+      "sha256": "a969404279a1fa6dcc293d41b7d3bb0004d11a9d93a8de35ee607846f9b39a3b"
+    },
+    {
+      "path": "scripts/verify_study.py",
+      "bytes": 2910,
+      "sha256": "64e9a9d93a3fea68cb1f88e44a265f2a92d92873bed010aa9754021a841a31b5"
+    },
+    {
+      "path": "search/README.md",
+      "bytes": 4305,
+      "sha256": "0b425a5a461674b7d056a385453716eb6be0af9b617ae858eb94a47becdcb8ce"
+    },
+    {
+      "path": "search/arm_grid.csv",
+      "bytes": 134436,
+      "sha256": "a681d8e618477c2a89029e0d151bb0c13ec8bf7366ee2796cc47d70b12144b35"
+    },
+    {
+      "path": "search/arm_model.py",
+      "bytes": 3992,
+      "sha256": "75b610ca8e99a3ca2d77c2d5185c64819924ce773a51066ff3517ec2548c7c60"
+    },
+    {
+      "path": "search/arm_validation_central.csv",
+      "bytes": 3990,
+      "sha256": "beb1a4f7b4174615fea8adc41d2a1421abba2b6822da2aa35647612129cbf1fc"
+    },
+    {
+      "path": "search/arm_validation_full.csv",
+      "bytes": 4048,
+      "sha256": "302f2991253afc1baa0eb2a15cfc1afc7fc71ea08133fd4782843184c0d0e4b2"
+    },
+    {
+      "path": "search/checks.py",
+      "bytes": 2765,
+      "sha256": "19ff7e3cfd13cacd8a15b4a48d6493d262be511467211df44ab3a5bd61135bf3"
+    },
+    {
+      "path": "search/clock_refinement_central.csv",
+      "bytes": 5990,
+      "sha256": "4befed4a0ecb639fa265d188a75fb9b1016609a1b3adbed288c9d51af691cb94"
+    },
+    {
+      "path": "search/clock_refinement_full.csv",
+      "bytes": 6099,
+      "sha256": "935ce976c2c92884c7669bef92f41c3bfd62b63b569e540829c70f16ba31c93a"
+    },
+    {
+      "path": "search/refine_clock.py",
+      "bytes": 798,
+      "sha256": "d71756145dbbebfbaebdd7ccd7bf134b7ca6036b77d83062d994430e8818a6a4"
+    },
+    {
+      "path": "search/robot_grid.csv",
+      "bytes": 422072,
+      "sha256": "3543865e3a23b39be368b4ab6d582fdeb1a3fafcafd37a7fe2710d4e875664ff"
+    },
+    {
+      "path": "search/robot_sensitivity.csv",
+      "bytes": 25515,
+      "sha256": "a7f9e1bf152cc755100ee4edebd72527fe3e1ec517428cf63716ae5453a944b2"
+    },
+    {
+      "path": "search/robot_validation_central.csv",
+      "bytes": 20637,
+      "sha256": "7b0f8e1a6ee951d97d324ce381eaf8543de788e271cf5a41ea28263b651058ce"
+    },
+    {
+      "path": "search/robot_validation_full.csv",
+      "bytes": 20807,
+      "sha256": "7df8fd20816878b9845abd0326c62e3c404367539f000d24fb3c557146c0a402"
+    },
+    {
+      "path": "search/scan_arm.py",
+      "bytes": 2328,
+      "sha256": "2a3414659b6eccb46b8e813df9d107db2f64e70fe8775d6f73061f302a50ded5"
+    },
+    {
+      "path": "search/scan_robot.py",
+      "bytes": 3017,
+      "sha256": "2cdab0a75028a88b3697eb1522ea16ca43c66408664c8863079ef92f33c31748"
+    },
+    {
+      "path": "search/stance_sensitivity.csv",
+      "bytes": 6840,
+      "sha256": "dc7dc5c4707bbd78b9caf21b9bfc3b1b312ef044481c9f61b0738072d0c23275"
+    },
+    {
+      "path": "study/README.md",
+      "bytes": 940,
+      "sha256": "2cd43fc1ad1e0433592a00746c49889d29527eb722569bdac51ececf0d017056"
+    },
+    {
+      "path": "study/endpoint_summary.csv",
+      "bytes": 7215,
+      "sha256": "de987bc3cc9d54c63729d4898d5dccd2f13eace4f67fd3ef7d8ba484dec46f61"
+    },
+    {
+      "path": "study/pose_test.py",
+      "bytes": 10345,
+      "sha256": "e28ab91fbc9cc4b950770c084a08d0c1bff9de06a883c59fada71ba8771bf004"
+    },
+    {
+      "path": "study/poses_FixedO90.csv",
+      "bytes": 49573,
+      "sha256": "c7fe7ba7f937dac05f58738b7a91d45e4f8910d87ead51e331ec5be4668aaa73"
+    },
+    {
+      "path": "study/poses_O0.csv",
+      "bytes": 60560,
+      "sha256": "0ecf7704d14272ce7b7789dbc697c264a79f9836b777b3a8790be1229241a716"
+    },
+    {
+      "path": "study/poses_O105.csv",
+      "bytes": 60586,
+      "sha256": "97abab0f97dbb1618a02521270dd7e167c39e79a3a4daaf2a3d57e3670e83743"
+    },
+    {
+      "path": "study/poses_O120.csv",
+      "bytes": 61755,
+      "sha256": "5cc5f2b0d47235ad7e067c9d366033cd671394b8115d18f860f5db77941a8be1"
+    },
+    {
+      "path": "study/poses_O45.csv",
+      "bytes": 60609,
+      "sha256": "bd63f3d29413acbaa53c4f1ee67147cd86abce812b140d277d4056b727c2670d"
+    },
+    {
+      "path": "study/poses_O75.csv",
+      "bytes": 61876,
+      "sha256": "699da4aad5887b0bfc5ec091b37bec9e3c4f8d465b341dfd4be196a7d77038c2"
+    },
+    {
+      "path": "study/poses_O90.csv",
+      "bytes": 60698,
+      "sha256": "2ed2e48a4fb13c433ed8c940f6655793c3b33a00a63b7ee3afdb1b3b6a474241"
+    },
+    {
+      "path": "study/poses_P0.csv",
+      "bytes": 60499,
+      "sha256": "778bc41cfa0b4e94dc74ba18474ddf1821780c61ef8f65480ddd91d9148842b3"
+    },
+    {
+      "path": "study/poses_P90.csv",
+      "bytes": 60444,
+      "sha256": "c7ee7b8d03b542b22c25f7f3b70459fcbd10d58848d1381872992692aeaf43c7"
+    },
+    {
+      "path": "study/poses_Replant22.csv",
+      "bytes": 66817,
+      "sha256": "b0e116c4b059a78b2ff168738841b86fa29732f08cf245b93ea6cc95d6ebdf91"
+    },
+    {
+      "path": "study/poses_Replant27.csv",
+      "bytes": 66876,
+      "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
+    }
+  ],
+  "total_bytes": 39667790
+}

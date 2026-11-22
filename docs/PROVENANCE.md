@@ -1,14 +1,16 @@
-# Provenance, licenses, and upstream work
+# Upstream geometry and license provenance
 
-- Original Open Duck Mini V2 mechanical design: https://github.com/apirrone/Open_Duck_Mini/tree/v2
-- Original Duck kinematics/simulation: https://github.com/apirrone/Open_Duck_Playground/blob/main/playground/open_duck_mini_v2/xmls/open_duck_mini_v2.xml
-- SO-101 design and kinematics: https://github.com/TheRobotStudio/SO-ARM100
-- SO-101 source simulation: https://github.com/TheRobotStudio/SO-ARM100/blob/main/Simulation/SO101/so101_new_calib.xml
-- Parametric donor reference (not a combined gripper robot): https://github.com/yotown/gym
-- Prior concept for side-mounted Duck arms: https://github.com/matte1782/robot_jarvis/blob/master/docs/OPEN_DUCK_MINI_ARMS_INTEGRATION.md
+This repository combines independently published mechanical and simulation models. **It is public because it is a research record, not because the entire content is original or patent-free.**
 
-Donor geometries and simulation models are adapted under the upstream projects' Apache-2.0 terms, with complete license copies in LICENSES/. All unverified engineering results are labeled as modeled predictions.
+| Component | Upstream | Attribution / local files |
+|---|---|---|
+| Duck mechanical form, mounting and native meshes | [apirrone/Open_Duck_Mini, `v2`](https://github.com/apirrone/Open_Duck_Mini/tree/v2) | `collision/inputs/duck_meshes/`, head/terminal reference; original Apache-2.0 text under `LICENSES/` |
+| Duck simulated links, mass and joint limits | [apirrone/Open_Duck_Playground](https://github.com/apirrone/Open_Duck_Playground) | `legs/duck.xml`, `collision/inputs/robot_motors.xml`; check source-specific license scope |
+| SO-101 arm, wrist, jaw and servo models | [TheRobotStudio/SO-ARM100](https://github.com/TheRobotStudio/SO-ARM100) | `collision/inputs/arm_meshes/`, `cad/under_arm_so101_v1.step`, `collision/inputs/so101.xml`; Apache-2.0 source |
+| Parametric CAD methodology / prior art | [yotown/gym](https://github.com/yotown/gym) | cited as separate precedent; **not asserted as the source** of these study meshes |
+| Derived hybrid forearm | This study, via `cad/build_forearm.py` | `cad/Case_mounted_forearm.step`, `.stl`, `collision/candidate_forearm.stl` |
+| Kinematic/collision/pose analysis | This study | scripts and CSV datasets in `search/`, `legs/`, `study/`, `collision/` |
 
-The case-mounted forearm is an SO-Duck adaptation of the SO-101 wrist-end geometry and the Duck terminal-servo support arrangement. The CAD design is preliminary and may change after physical measurement.
+The upstream license copies are in `LICENSES/`, and the original collision-input directory also retains duplicate copies for provenance. The original repositories may contain separate licenses for specific external or mechanical assets; upstream attribution should be retained when redistributing derived geometry. Original study contributions have **no blanket license declared** without a deliberately added top-level LICENSE.
 
-Public accessibility does **not** itself grant a new license for original SO-Duck materials. Until explicitly licensed, the author's original contributions remain under ordinary copyright; upstream material retains its upstream licensing.
+Model geometry was gathered for research. No bench metrology, mechanical fatigue testing or tested motor thermal envelopes are implied.

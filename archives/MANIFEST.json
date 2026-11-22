@@ -1,0 +1,154 @@
+{
+  "archive_filename": "study-assets.zip",
+  "archive_total_bytes": 12920315,
+  "archive_sha256": "e0b17306c806da70f88c714fa2494c867602da312fd2e3affaae8cfaa69b021c",
+  "parts": [
+    {
+      "filename": "study-assets.zip.part001",
+      "bytes": 450000,
+      "sha256": "5635eb7d6ec4c551dd2e10f6de11eedf4ca8c9bb8b0ea6796b50c055a34c54f7"
+    },
+    {
+      "filename": "study-assets.zip.part002",
+      "bytes": 450000,
+      "sha256": "d85f15cd6fd6131ba9b767cccd2de2de1177fbf9497170c406d4d65145939afc"
+    },
+    {
+      "filename": "study-assets.zip.part003",
+      "bytes": 450000,
+      "sha256": "79fcfcc1dc4d1ab841dce225aa89b5450e1aa84edf2a81fb590d3237b2e2165e"
+    },
+    {
+      "filename": "study-assets.zip.part004",
+      "bytes": 450000,
+      "sha256": "799cc47ae4876d7d3573066b284d6fe75e89aebe687c78e47aceeb765086fb53"
+    },
+    {
+      "filename": "study-assets.zip.part005",
+      "bytes": 450000,
+      "sha256": "3dc4c2158cf8491a2f2c2f09e5949fc2a1e40d515ffe91b4e2a877cadd2eb569"
+    },
+    {
+      "filename": "study-assets.zip.part006",
+      "bytes": 450000,
+      "sha256": "1aeaa4acc4ed3137b5a248512f5db9b92e6ec8599c203ac4e94bc90e4ec754ba"
+    },
+    {
+      "filename": "study-assets.zip.part007",
+      "bytes": 450000,
+      "sha256": "1832f752c524b3e29fbc741ca1227d093c5ce1538dc399b2c419a513c375565b"
+    },
+    {
+      "filename": "study-assets.zip.part008",
+      "bytes": 450000,
+      "sha256": "9b455211df5b355c9c42563afb22d876fbd66fafd06d79031ec548e81475fc05"
+    },
+    {
+      "filename": "study-assets.zip.part009",
+      "bytes": 450000,
+      "sha256": "35e4fb1c698d2861ec65eb47a0b275df0c84cfcd53e80f1f3dd687401a2d1e91"
+    },
+    {
+      "filename": "study-assets.zip.part010",
+      "bytes": 450000,
+      "sha256": "bb9af107c9432f66134a0b7b0848ddcd40a51d2275a12b5e40e992a3b9a3731f"
+    },
+    {
+      "filename": "study-assets.zip.part011",
+      "bytes": 450000,
+      "sha256": "e1707c41ccda55fb138301bd6b5180e4a55ec2af004d4d8186ce73802bd14789"
+    },
+    {
+      "filename": "study-assets.zip.part012",
+      "bytes": 450000,
+      "sha256": "e8c0e2e87302436df6b798be53f80452739ccba2a4d8c56c44b2da9be9bfdc8e"
+    },
+    {
+      "filename": "study-assets.zip.part013",
+      "bytes": 450000,
+      "sha256": "de6b3d4dec1e632f4844e172a5263986a0f1c90b4a11179c0bfc028d9f06ccab"
+    },
+    {
+      "filename": "study-assets.zip.part014",
+      "bytes": 450000,
+      "sha256": "50f5c91ed70313a63d08b467487bddaa95baf39a400d00d6610e481a6c83fbcc"
+    },
+    {
+      "filename": "study-assets.zip.part015",
+      "bytes": 450000,
+      "sha256": "5a079e49a72e9f45941d90fbf50faac06ce8ec32e31ac2078be7c891d757972b"
+    },
+    {
+      "filename": "study-assets.zip.part016",
+      "bytes": 450000,
+      "sha256": "54a01c0a63b25f21ead8d539d884e69d1275161400d29756cc3cc2bf465f3a50"
+    },
+    {
+      "filename": "study-assets.zip.part017",
+      "bytes": 450000,
+      "sha256": "f9624dd106cb23a3ea5a2ae91242e799c6c6058c5dacc5041a6369bc57fdbf52"
+    },
+    {
+      "filename": "study-assets.zip.part018",
+      "bytes": 450000,
+      "sha256": "07e85ace0a8d5eebea7faaf71ea33756157fe6b552dd4e5c6463da7e4522996b"
+    },
+    {
+      "filename": "study-assets.zip.part019",
+      "bytes": 450000,
+      "sha256": "4d3db219ee6f72dddc902756446c67ebe30d8ec124e1f2c4359f5433f78841fe"
+    },
+    {
+      "filename": "study-assets.zip.part020",
+      "bytes": 450000,
+      "sha256": "20e3883e12348d81e82a86e73bf4f4999eca7e9806f050fb4215aa5942160780"
+    },
+    {
+      "filename": "study-assets.zip.part021",
+      "bytes": 450000,
+      "sha256": "6bf25af3d028d671a3a0a063d2c623e827b92c3258f4aa00de1774c0063b4435"
+    },
+    {
+      "filename": "study-assets.zip.part022",
+      "bytes": 450000,
+      "sha256": "2ab7d8fc242b8fd322296b224acff6b4a619d4fc45563eb60b395fa750aa9e11"
+    },
+    {
+      "filename": "study-assets.zip.part023",
+      "bytes": 450000,
+      "sha256": "9083c45cb61821cdd898184b7b089d2d9b58a17e317a8fd820e9fb9022ef51ec"
+    },
+    {
+      "filename": "study-assets.zip.part024",
+      "bytes": 450000,
+      "sha256": "233f415344b099714f0d9e25968a92767940dd35fef16de3a759d2b2f291d800"
+    },
+    {
+      "filename": "study-assets.zip.part025",
+      "bytes": 450000,
+      "sha256": "d26058db48f3fc6b309b15bebf40983498c9f6668d90bd68d67fa5e0a6954ce1"
+    },
+    {
+      "filename": "study-assets.zip.part026",
+      "bytes": 450000,
+      "sha256": "90de89ad2fac32b584f08d4b3fc220f56b2f1cbafee177526e2609bd787cbbba"
+    },
+    {
+      "filename": "study-assets.zip.part027",
+      "bytes": 450000,
+      "sha256": "dedefa85a14e4bbea97a08c379807b730d6f839a2a841acddd516de3f2f2b1ba"
+    },
+    {
+      "filename": "study-assets.zip.part028",
+      "bytes": 450000,
+      "sha256": "048712e955e21688c5f9df32818b8357199aca458991179a44a5712ab8db6932"
+    },
+    {
+      "filename": "study-assets.zip.part029",
+      "bytes": 320315,
+      "sha256": "df1d384e9131a958a4deb822c9768e2e10b1b762c140b6c0d47cfc9c98e526a9"
+    }
+  ],
+  "asset_count": 45,
+  "description": "ZIP restores research native STL, STEP, GLB and PNG files at source paths."
+}

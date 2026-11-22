@@ -1,12 +1,20 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
-.ruff_cache/
 .venv/
 venv/
 *.log
 *.tmp
+*.bak
+*.zip
 .DS_Store
-arm_only_results.csv
+Thumbs.db
 local-output/
 results/private/
+# Reconstructed geometry distributed in archives/study-assets.zip.partNNN
+/collision/**/*.stl
+/legs/*.stl
+/cad/*.stl
+/cad/*.glb
+/cad/*.png
+/cad/under_arm_so101_v1.step

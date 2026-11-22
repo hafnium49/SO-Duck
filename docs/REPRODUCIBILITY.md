@@ -1,34 +1,46 @@
-# Reproducibility manifest — initial public snapshot (2026-11-22)
+# Reproducing the 39 MB study
 
-The complete local whole-body seed produced for the project is larger than the initial GitHub publication. **No missing files are represented as present**.
+The repository can restore the full retained original study tree from Git-tracked lossless asset chunks: the modeling programs, simulation XML inputs, original mesh assets, generated CAD, finite target banks and CSV outputs. Machine-specific build logs, local caches (`__pycache__`) and obsolete draft notes are not research inputs.
 
-| Artifact | In this repo? | What it supports |
-|---|---|---|
-| Custom one-piece forearm STEP | Yes: cad/Case_mounted_forearm.step | Editable proposed hardware geometry |
-| Offline viewer with saved sampled poses | Yes: SO_Duck_pose_explorer.html | Visual inspection, not physics |
-| Six upper-pose-joint kinematics | Yes: search/arm_model.py | Analytic task Jacobian and forward kinematics |
-| Central-difference Jacobian check | Yes: search/check_jacobian.py | Local numerical derivative consistency |
-| Uniform joint-space arm-only sample | Yes: search/scan_arm.py | Recomputable arm-only Jacobian percentiles |
-| Whole-body static support/IK study narrative | Yes: docs/WHOLE_BODY_STUDY.md | Traceable assumptions and previously recorded outcomes |
-| Complete whole-body leg/IK/collision scripts | **No** | Historical study not independently reproducible here |
-| Raw whole-body pose CSV and collision meshes | **No** | Stored in the earlier study archive, not in this source snapshot |
-| Complete physical robot and measured hardware | **No** | No hardware success claim |
+## Requirements
 
-### Verify the published materials
+- Python with NumPy and SciPy for forward kinematics, Jacobian scans, contact/mass and IK optimization. For exact environments inspect `requirements-core.txt` and the scripts; the experiment was not locked to a full historical pip environment.
+- CadQuery and its OpenCascade implementation to regenerate the STEP/STL forearm from `cad/build_forearm.py` (optional).
+- VTK Python bindings, C++17 compiler and Python C++ extension toolchain to rebuild the collision acceleration helper (optional). The cached collision CSVs are included.
+- A local browser to inspect `SO_Duck_pose_explorer.html`. This displays saved poses, not a physics runtime. `Forward_neck_and_wrist.glb` is model geometry, not a joint control model.
 
-1. Install Python 3.11, numpy and scipy from requirements-core.txt.
-2. Run python scripts/verify_repository.py.
-3. Run python search/check_jacobian.py.
-4. Run python search/scan_arm.py --samples 8192 --output arm_only_results.csv.
-5. To inspect CAD in Python, install CadQuery separately and run python scripts/export_step.py --inspect-only.
+## Reproduction order
 
-The emitted arm-only statistics should not be compared directly to the archived **whole-body, contact-constrained** statistics. In particular, the latter allow feasible leg motion while enforcing foot contacts. Workspace coverage, collision screening and torque estimates need the original complete solver and geometry and have not been verified by this CI.
+From repository root:
 
-### Source fidelity
+```sh
+python scripts/restore_assets.py
+python scripts/verify_study.py
+python search/checks.py
+python search/scan_arm.py
+python search/scan_robot.py
+python search/refine_clock.py
+python study/pose_test.py O90 --two --clock 90 --starts 24 --steps 100
+python study/pose_test.py Replant22 --two --clock 90 --starts 24 --steps 100 --replant 0.22
+python study/pose_test.py Replant27 --two --clock 90 --starts 24 --steps 100 --replant 0.27
+python collision/build_bvh.py
+python collision/screen.py study/poses_O90.csv study/poses_Replant22.csv study/poses_Replant27.csv
+python legs/torque.py
+python cad/build_forearm.py
+```
 
-- The editable STEP is a derived CAD model, not merely a screenshot.
-- Upstream source references and license notices appear in docs/PROVENANCE.md and LICENSES/.
-- The included viewer is a single offline HTML file; its collision geometry is simplified for visualization.
-- Published scripts use SI units for kinematics. STEP CAD coordinates are in millimetres.
+**Caution:** several study programs write CSV files into the current directory and may replace the committed snapshots. Run regeneration in a temporary clone or working tree if exact preserved results matter. `scripts/verify_study.py` validates the committed inventory without modifying data. The C++ helper is built from source; no prebuilt native binary is committed.
 
-When the rest of the model is imported, each source/input set should carry its own revision ID and hash to distinguish reproduced results from historical tables.
+## Testing levels
+
+1. **Repository integrity and schemas** — file hashes, required paths, CAD/XML header signatures, known CSV headers; run `python scripts/verify_study.py` (no NumPy required).
+2. **Algorithmic spot checks** — run `python search/checks.py` with numerical dependencies (Jacobian finite differences and constraints).
+3. **Study regeneration** — run optimization, pose-screen and torque scripts, compare generated outputs within numerical tolerance; stochastic initializations and package versions can change some solutions.
+4. **Physical validation, not present** — fit and bearing alignment, electronics, servo model/gear ratio and thermal tests, biped balance under a moving load, safe fall recovery, manipulability with a calibrated gripper.
+
+## Terminology
+
+- `two_part` in the analysis means *two separately orientable axes*; the mechanical concept still has **one custom rigid forearm**.
+- `replant` denotes a solved alternate end stance, not a feasible robot stepping trajectory.
+- `collision_checked` and `hit_count=0` mean *no intersections among tested triangle pairs at that endpoint*, not a guarantee of clearance along motion.
+- Percentile Jacobian gains are for *a specified normalized twist and rate metric*. They do not establish universal conditioning bounds or payload.

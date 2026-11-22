@@ -1,23 +1,23 @@
-# SO-Duck architecture
+# Proposed mechanical and control architecture
 
-**Status: research CAD and kinematic model only; no fully assembled, hardware-validated robot.**
+```text
+Open Duck Mini V2 hips, legs and feet (10 DoFs)
+             │
+Duck torso: battery, power, IMU, controller (floating, unactuated)
+             │
+Duck neck pitch → head pitch → head yaw → terminal roll (4 DoFs)
+             │
+case-mounted one-piece forward SO-Duck forearm (custom part)
+             │
+SO-101 wrist flex → SO-101 wrist roll (2 DoFs)
+             │
+SO-101 jaw gripper (1 DoF)
+```
 
-## Actuation
-- 10 Open Duck Mini V2 leg actuators (5 per leg).
-- 4 original Duck neck/head actuators: neck pitch, head pitch, head yaw, head roll.
-- 2 donor SO-101 wrist joints: wrist flex (sagittal pitch), wrist roll.
-- 1 donor SO-101 gripper-opening actuator.
-- **17 total, of which 16 change the TCP pose or base posture.** Optional Duck antenna servos are excluded.
+**Total: 17 active joints, of which 16 influence the tool's world pose, with constraints imposed by foot contact.** Optional Duck antenna actuators are not retained in this proposed manipulator configuration.
 
-## Proposed chain
+The driving horn and opposite idler support the native Duck terminal roll. The concept bolts the forearm to the *moving servo case*, not to a head shell. The wrist-flex axis runs left-right so the tool bends forward/backward in the sagittal plane. The wrist-roll axis and gripper retain the SO-101 donor geometry. An assembled physical fit, exact hardware screws, load paths and cable routes are still to be verified.
 
-Duck torso -> neck pitch -> head pitch -> head yaw -> terminal head roll -> case-mounted forearm -> SO-101 wrist flex -> SO-101 wrist roll -> 1-DoF gripper.
+The controller is conceptually hierarchical: feet/stance planning and stabilizing locomotion first, then constrained whole-body IK for the gripper while both feet remain supported. The old Duck walking policy is **not validated** for added distal inertia and moving arm mass, and the study does **not** provide an integrated gait/grasp controller.
 
-The terminal horn stays fixed relative to the native yaw-to-roll carrier; the terminal servo case moves with the one-piece forearm. The original Duck head shell does **not** carry the manipulation load. The native rear bearing supports the opposite end.
-
-The stock forward/backward wrist flex needs a transverse shaft; terminal roll is longitudinal. This layout is a proposed compromise between joint independence, tip reach and minimizing custom parts.
-
-## Whole-body study
-The six upper chain joints alone do not guarantee arbitrary 6D pose at every tip position. Leg joints add constrained torso mobility during double support. Stepping expands reachable world-space goals, but is a distinct motion-planning task and is not an additional instantaneous Jacobian column.
-
-See WHOLE_BODY_STUDY.md for the archived sample/IK experiment and VALIDATION.md for the interpretation limits.
+See [Mount fit](../cad/Mount_fit.md), [Methods](METHODS.md), and [Validation](VALIDATION.md).

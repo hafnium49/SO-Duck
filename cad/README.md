@@ -1,11 +1,13 @@
-# Case-mounted forearm
+# Forearm CAD and interface
 
-The editable part is Case_mounted_forearm.step. It represents a **one-piece forearm** that couples the moving terminal-servo case and its opposite rear support bearing to the SO-101 distal wrist assembly. The thin Duck head shell is removed from the load path.
+The candidate is a **single case-mounted forearm** connecting the Duck's terminal neck roll actuator to the SO-101 wrist-flex joint. The Duck head shell is omitted from the load path; its driven-horn side and opposite idler-bearing support remain in the design. The wrist-flex axis is transverse to the robot's forward direction, so the gripper bends **forward/backward**.
 
-Coordinates in the proposed print frame: +X forward, +Y left, +Z up. Terminal neck roll is about forward +X, wrist flex about transverse +Y, and wrist roll about the gripper's length. The gripper's jaw is independently actuated.
+- `Case_mounted_forearm.step`: editable STEP geometry from the study.
+- `Case_mounted_forearm.stl`: 3D-printing mesh derivative.
+- `Forward_neck_and_wrist.glb`: neutral assembly reference for visualization (not dynamic physics).
+- `Forward_mount.png`: reference rendering.
+- `under_arm_so101_v1.step`: upstream SO-101 forearm reference. Retained for provenance and fit comparison.
+- `build_forearm.py`: generating script; depends on CadQuery.
+- `Mount_fit.md`: orientation and nominal clearance; these are CAD-level, not test-bench measurements.
 
-The design originated as a CadQuery-generated STEP and was compared with source Duck and SO-101 mechanical reference models. **Its CAD checks are not manufacturing certification**: the carrier fit, servo case mounting bosses, rear bearing engagement, cable clearance, print anisotropy, real servo speeds and sustained torques have not been measured on a physical fused unit.
-
-The upstream donor geometry comes from TheRobotStudio/SO-ARM100 and apirrone/Open_Duck_Mini. Upstream license texts and citations are recorded in ../LICENSES and ../docs/PROVENANCE.md.
-
-A mesh export can be obtained from the STEP using FreeCAD or a compatible STEP-to-STL CAD exporter. Prefer checking critical mounting holes against actual hardware before fabrication.
+**Critical:** The exact moving-case screw lengths, thread engagement, passive bearing alignment, manufacturing anisotropy, stiffness and dynamic overhung loads have not been verified on physical parts. Rebuild/inspect the geometry before attempting hardware assembly.
