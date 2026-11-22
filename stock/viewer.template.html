@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SO-Duck · Stock arm and neck adapter</title><style>
+*{box-sizing:border-box}html{background:#f6f5f0;color:#182f30;font:15px/1.45 "Inter",Arial,sans-serif}body{max-width:1350px;padding:clamp(17px,3vw,45px);margin:0 auto}h1{font-weight:600;font-size:clamp(32px,5vw,55px);line-height:1.02;letter-spacing:-.055em;margin:.24em 0}.sub{color:#516969;margin:12px 0 22px}main{display:grid;grid-template-columns:minmax(0,1fr) 280px;border:1px solid #cbd3cc;border-radius:10px;overflow:hidden;background:#fcfcf7}.stage{position:relative;min-width:0;height:min(69vh,640px);min-height:425px;background:linear-gradient(#f1f4ef,#e9efe8);overflow:hidden}canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}canvas:active{cursor:grabbing}.tools{position:absolute;bottom:13px;left:15px;display:flex;gap:6px}.tools button,.nav button{background:#fcfcf5;border:1px solid #aebfba;border-radius:5px;color:#1e3b3c;font:inherit;font-weight:600;padding:5px 11px;cursor:pointer}.tag{position:absolute;left:18px;top:15px;font-size:12px;color:#526765;pointer-events:none}aside{padding:20px;border-left:1px solid #cbd3cc}h2{font-weight:600;font-size:18px;letter-spacing:-.02em;margin:0 0 10px}label{display:block;color:#456062;font-weight:600;font-size:12px;margin:13px 0 4px}select{padding:7px;border:1px solid #aebfba;background:white;border-radius:4px;width:100%;color:#173637;font:inherit}.nav{display:flex;gap:7px;margin-top:8px}.stats{border-top:1px solid #ccd7ce;padding-top:4px;margin-top:17px;font-size:13px}.field{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid #dce2db;padding:8px 0}.field strong{font-size:16px}.angles{font:12px/1.5 ui-monospace,monospace}.key{display:flex;flex-wrap:wrap;gap:17px;font-size:13px;color:#455e5f;margin:15px 0 6px}.sw{width:11px;height:11px;display:inline-block;border-radius:2px;margin-right:5px}.note{font-size:13px;color:#516969;max-width:88ch;margin:12px 0}.small{font-size:12px;color:#4d6766;margin:8px 0 0}button:focus-visible,select:focus-visible,canvas:focus-visible{outline:3px solid #207c90}footer{margin-top:15px;color:#526363;font-size:12px}a{color:#285e62}@media(max-width:750px){main{grid-template-columns:1fr}.stage{height:52vh;min-height:310px}aside{border-left:0;border-top:1px solid #cbd3cc;padding:15px 18px}.sub{margin-bottom:15px}}
+#facts{margin:18px 0 0}#facts dt{font-size:12px;color:#516969;margin-top:10px}#facts dd{font-weight:600;margin:0} </style></head><body><h1>SO-Duck pose explorer</h1><p class="sub">Original Duck neck pitch · One printed adapter · Complete SO-101 arm</p>
+<main><div class="stage"><div class="tag">Drag to orbit · scroll to zoom</div><canvas id="cv" tabindex="0" aria-label="Articulated SO-Duck. Use arrow keys to orbit and plus or minus to zoom."></canvas><div class="tools"><button id="reset">Reset view</button><button id="side">Side</button><button id="zoomOut" aria-label="Zoom out">−</button><button id="zoomIn" aria-label="Zoom in">+</button></div></div><aside><h2>Explore the model</h2><label for="mode">View</label><select id="mode"></select><label for="sel">Position</label><select id="sel"></select><div class="nav"><button id="prev">Previous</button><button id="next">Next</button></div><dl id="facts"></dl></aside></main>
+<div class="key"><span><i class="sw" style="background:#278e86"></i>Printed adapter</span><span><i class="sw" style="background:#da9948"></i>Stock SO-101 arm</span><span><i class="sw" style="background:#536573"></i>Fasteners</span><span><i class="sw" style="background:#b94a5a"></i>Test cube</span></div>
+<p class="note" id="description"></p>
+<footer>Geometry from Open Duck Mini V2 and TheRobotStudio SO-101.</footer>
+<script>const data=__POSE_DATA__;
+const C=document.getElementById('cv'),ctx=C.getContext('2d'),el=id=>document.getElementById(id);
+const palette=[[177,197,195],[222,153,72],[66,87,91],[39,142,134],[185,74,90],[83,101,115]];
+const overlay=document.createElement('canvas');let yaw=-1.16,elev=.29,zoom=1,pose,filtered=[],center=[.09,0,.22],last,span=.65,scene=[];
+const pt=(m,x,y,z)=>[m[0]*x+m[1]*y+m[2]*z+m[3],m[4]*x+m[5]*y+m[6]*z+m[7],m[8]*x+m[9]*y+m[10]*z+m[11]];
+function load(){
+ pose=filtered[+el('sel').value];el('description').textContent=pose.note;el('facts').replaceChildren();for(let [key,value] of pose.fields){let term=document.createElement('dt'),definition=document.createElement('dd');term.textContent=key;definition.textContent=value;el('facts').append(term,definition)}
+ let min=[Infinity,Infinity,Infinity], max=[-Infinity,-Infinity,-Infinity];scene=[];
+ for(let [group,col,v,f] of data.meshes){if(!pose.c[group])continue;let ww=[],m=pose.c[group].flat();for(let i=0;i<v.length;i+=3){let p=pt(m,v[i]*.0001,v[i+1]*.0001,v[i+2]*.0001);ww.push(p);for(let j=0;j<3;j++){min[j]=Math.min(min[j],p[j]);max[j]=Math.max(max[j],p[j]);}}
+ let mesh={ww,tri:[]};for(let j=0;j<f.length;j+=3){let a=ww[f[j]],b=ww[f[j+1]],c=ww[f[j+2]],ax=b[0]-a[0],ay=b[1]-a[1],az=b[2]-a[2],bx=c[0]-a[0],by=c[1]-a[1],bz=c[2]-a[2],nx=ay*bz-az*by,ny=az*bx-ax*bz,nz=ax*by-ay*bx,len=Math.hypot(nx,ny,nz)||1;let light=.84+.16*(nx*.18-ny*.48+nz*.85)/len;let color=palette[col].map(v=>Math.max(0,Math.min(255,Math.round(v*light))));mesh.tri.push([f[j],f[j+1],f[j+2],color]);}scene.push(mesh);}
+ span=Math.max(.045,...max.map((v,i)=>v-min[i]));center=min.map((v,i)=>(v+max[i])*.5);schedule();
+}
+let frame=0;function schedule(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;draw()});}
+function draw(){if(!pose)return;let box=C.getBoundingClientRect(),w=box.width,h=box.height,d=Math.min(devicePixelRatio||1,1.6);if(C.width!==Math.round(w*d)||C.height!==Math.round(h*d)){C.width=Math.round(w*d);C.height=Math.round(h*d);}
+ ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,w,h);let cy=Math.cos(yaw),sy=Math.sin(yaw),ce=Math.cos(elev),se=Math.sin(elev),scale=(pose.mode==="Connector"?.72*Math.min(w,h)/span:Math.min(h/.78,w/.67))*zoom;
+ const project=p=>{let x=p[0]-center[0],y=p[1]-center[1],z=p[2]-center[2],a=x*cy+y*sy;return [w*.50+scale*(-x*sy+y*cy),h*.5-scale*(-a*se+z*ce),a*ce+z*se]};
+ function line(a,b,color,width=1){let p=project(a),q=project(b);ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1]);ctx.lineWidth=width;ctx.strokeStyle=color;ctx.stroke();}
+ if(pose.mode!=="Connector"){let cx=Math.round(center[0]*10)/10,gy=Math.round(center[1]*10)/10;
+ for(let i=-8;i<=8;i++){line([cx+i*.05,gy-.4,0],[cx+i*.05,gy+.4,0],'#d0dcd5');line([cx-.4,gy+i*.05,0],[cx+.4,gy+i*.05,0],'#d0dcd5');}
+ let sole=data.sole.map(project);ctx.beginPath();for(let i=0;i<sole.length;i++){(i?ctx.lineTo:ctx.moveTo).call(ctx,sole[i][0],sole[i][1])};ctx.closePath();ctx.fillStyle='#98c5ad80';ctx.fill();ctx.strokeStyle='#6d9b80';ctx.stroke();}
+ // Rasterize the CAD mesh with a depth buffer so inner shell surfaces stay occluded.
+ let pw=C.width,ph=C.height;if(overlay.width!==pw||overlay.height!==ph){overlay.width=pw;overlay.height=ph}
+ let oc=overlay.getContext('2d'),im=oc.createImageData(pw,ph),pix=im.data,depth=new Float32Array(pw*ph);depth.fill(-Infinity);
+ for(let mesh of scene){let vv=mesh.ww.map(p=>{let [x,y,z]=project(p);return [x*d,y*d,z]});for(let t of mesh.tri){
+  let a=vv[t[0]],b=vv[t[1]],c=vv[t[2]],col=t[3],bx=b[0]-a[0],by=b[1]-a[1],cx=c[0]-a[0],cy=c[1]-a[1],det=bx*cy-by*cx;
+  if(Math.abs(det)<.02)continue;let inv=1/det,dz1=b[2]-a[2],dz2=c[2]-a[2],xmin=Math.max(0,Math.floor(Math.min(a[0],b[0],c[0]))),xmax=Math.min(pw-1,Math.ceil(Math.max(a[0],b[0],c[0]))),ymin=Math.max(0,Math.floor(Math.min(a[1],b[1],c[1]))),ymax=Math.min(ph-1,Math.ceil(Math.max(a[1],b[1],c[1])));
+  for(let y=ymin;y<=ymax;y++){let dy=y+.5-a[1],dx=xmin+.5-a[0],u=(dx*cy-dy*cx)*inv,v=(bx*dy-by*dx)*inv,du=cy*inv,dv=-by*inv;
+   for(let x=xmin,i=y*pw+xmin;x<=xmax;x++,i++,u+=du,v+=dv){if(u<0||v<0||u+v>1)continue;let z=a[2]+u*dz1+v*dz2;if(z<=depth[i])continue;depth[i]=z;let j=i*4;pix[j]=col[0];pix[j+1]=col[1];pix[j+2]=col[2];pix[j+3]=255;}}}}
+ oc.putImageData(im,0,0);ctx.drawImage(overlay,0,0,w,h);
+ if(!pose.tcp)return;let tcp=pose.tcp.flat(),o=pt(tcp,0,0,0);for(let [p,col] of [[[.024,0,0],'#c14c3b'],[[0,.024,0],'#427d63'],[[0,0,.024],'#426999']])line(o,pt(tcp,...p),col,2.3);
+}
+function options(){zoom=1;filtered=data.poses.filter(p=>p.mode===el('mode').value);el('sel').replaceChildren(...filtered.map((p,i)=>new Option(p.label,i)));load()}
+el('mode').replaceChildren(...[...new Set(data.poses.map(p=>p.mode))].map(m=>new Option(m,m)));el('mode').onchange=options;el('sel').onchange=load;
+function advance(n){el('sel').selectedIndex=(el('sel').selectedIndex+n+filtered.length)%filtered.length;load()}
+el('prev').onclick=()=>advance(-1);el('next').onclick=()=>advance(1);
+function magnify(n){zoom=Math.max(.5,Math.min(2.5,zoom*n));schedule()}
+el('zoomIn').onclick=()=>magnify(1.2);el('zoomOut').onclick=()=>magnify(1/1.2);
+el('reset').onclick=()=>{yaw=-1.16;elev=.29;zoom=1;schedule()};el('side').onclick=()=>{yaw=-Math.PI/2;elev=.025;zoom=1;schedule()};
+C.onpointerdown=e=>{last=[e.clientX,e.clientY];C.setPointerCapture(e.pointerId)};C.onpointerup=C.onpointercancel=()=>last=null;
+C.onpointermove=e=>{if(!last)return;yaw-=(e.clientX-last[0])*.012;elev=Math.max(-1.48,Math.min(1.48,elev+(e.clientY-last[1])*.009));last=[e.clientX,e.clientY];schedule()};
+C.addEventListener('wheel',e=>{e.preventDefault();magnify(e.deltaY<0?1.08:1/1.08)},{passive:false});
+C.onkeydown=e=>{if(e.key.includes('Arrow')){e.preventDefault();yaw+=e.key==='ArrowLeft'?-.15:e.key==='ArrowRight'?.15:0;elev=Math.max(-1.48,Math.min(1.48,elev+(e.key==='ArrowUp'?.1:e.key==='ArrowDown'?-.1:0)));schedule()}else if(e.key==='+')magnify(1.15);else if(e.key==='-')magnify(1/1.15)};
+new ResizeObserver(schedule).observe(C);options();
+</script></body></html>

@@ -1,0 +1,18 @@
+name: Stock arm and connector
+on: [push, pull_request]
+jobs:
+  donor-fit-and-grasps:
+    runs-on: ubuntu-latest
+    env:
+      OPENBLAS_NUM_THREADS: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: stock/requirements.txt
+      - run: python -m pip install -r stock/requirements.txt
+      - run: python scripts/restore_assets.py
+      - run: python collision/build_bvh.py
+      - run: python stock/verify.py
