@@ -1,10 +1,25 @@
 # SO-Duck
 
-SO-Duck uses a **crosswise forearm connector** on an Open Duck Mini V2 biped. The last Duck neck motor now pitches the stock SO-101 forearm forward and back. The robot has 17 actuators: ten leg joints, four neck/forearm joints, two wrist joints and the gripper. The original head shell is outside the arm load path.
+The revised SO-Duck arm reaches **96/96 published grasp targets** with both feet planted. It keeps the crosswise elbow and repositions an existing motor to roll the forearm. The resulting six-axis arm retains the stock SO-101 gripper and uses 17 actuators across the robot.
+
+![Revised SO-Duck at a broad-orientation target, grasping a floor cube and folded on its rear pad](coverage/preview.png)
+
+| Grasp target set | Previous crosswise arm | Revised arm |
+|---|---:|---:|
+| Forward | 45/64 | 64/64 |
+| Broad orientation | 12/32 | 32/32 |
+
+[Design and validation](coverage/README.md) · [offline 3D pose explorer](coverage/poses.html) · [custom links in STEP](coverage/mounts.step) · [whole-robot MuJoCo model](coverage/robot.xml).
+
+The revised model also grasps a 20 mm floor cube in kinematic replay and seats its fixed fingertip on the rear roof pad. Its parked height is 578 mm. The 96-target result covers individual endpoint poses with unloaded static balance. Hardware grasp reliability and paths between all targets remain open.
+
+## Previous crosswise design
+
+The earlier design uses a **crosswise forearm connector** on an Open Duck Mini V2 biped. The last Duck neck motor now pitches the stock SO-101 forearm forward and back. The robot has 17 actuators: ten leg joints, four neck/forearm joints, two wrist joints and the gripper. The original head shell is outside the arm load path.
 
 ![Folded SO-Duck, floor grasp and high reach](crosswise/poses.png)
 
-| Open the current design | Contents |
+| Open the earlier design | Contents |
 |---|---|
 | [Connector assembly (STEP)](crosswise/connector_assembly.step) | Yaw servo, printed carrier, crosswise terminal servo and stock forearm in their mounting positions |
 | [Carrier STEP](crosswise/carrier.step) · [carrier STL](crosswise/carrier.stl) · [rear pad STL](crosswise/park_pad.stl) | Fabrication geometry in mm |
@@ -15,4 +30,4 @@ With both feet planted, the folded model is **449 mm high**, down from **659 mm*
 
 ## Earlier whole-body study
 
-The original longitudinal-roll design, orientation search, changing-stance experiments and published data remain available through the [study index](docs/STUDY_INDEX.md) and [original pose explorer](study/legacy_pose_explorer.html). The [new target results](crosswise/nominal_targets.csv) use the crosswise model and its revised joint limits. [Upstream geometry and licenses](docs/PROVENANCE.md) cover Open Duck Mini V2, Duck Playground and TheRobotStudio SO-101.
+The original longitudinal-roll design, orientation search, changing-stance experiments and published data remain available through the [study index](docs/STUDY_INDEX.md) and [original pose explorer](study/legacy_pose_explorer.html). The [earlier crosswise results](crosswise/nominal_targets.csv) use the crosswise model and its revised joint limits. [Upstream geometry and licenses](docs/PROVENANCE.md) cover Open Duck Mini V2, Duck Playground and TheRobotStudio SO-101.

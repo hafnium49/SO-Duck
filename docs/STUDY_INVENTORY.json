@@ -11,6 +11,11 @@
       "sha256": "ce3e591fe6f978e8fc071824586bb479f6bfcab019f2783692dc36f5c5cf7168"
     },
     {
+      "path": ".github/workflows/coverage.yml",
+      "bytes": 482,
+      "sha256": "19abe4a440a3b2ab3758378c7b552fd50b5728da7b69ebe99503b415ac9491b6"
+    },
+    {
       "path": ".github/workflows/crosswise.yml",
       "bytes": 556,
       "sha256": "d91cedb360bb9a8c36b2197182ee73a200bdd20901e937f57efc5b15a5d7b0bd"
@@ -42,8 +47,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 2164,
-      "sha256": "6eae5a843eb7618f53a79ab01fc31f023919172302a58514477384adf0825ca9"
+      "bytes": 3252,
+      "sha256": "45b0950f79849c8b2e4161d0668afa5786dcef7b2ddf064d3ea8479a47fe434f"
     },
     {
       "path": "SO_Duck_pose_explorer.html",
@@ -356,6 +361,121 @@
       "sha256": "baa6b19b9af9c868bf098fcfba80aca1cb9d9b604374ff04bae458130d9e416e"
     },
     {
+      "path": "coverage/README.md",
+      "bytes": 6075,
+      "sha256": "b3083db40065c0ee4f988d2b72226cdba5f584bb1aa9e2248c352fe20eddb9b2"
+    },
+    {
+      "path": "coverage/build.py",
+      "bytes": 7978,
+      "sha256": "72acd168f7a24b9423e17f2669c22e6d640d55c9eac96fa23c695ecf5d6984da"
+    },
+    {
+      "path": "coverage/deck.py",
+      "bytes": 1879,
+      "sha256": "d9db983ddbb108671ebc232b44fc0549a28c73e5657f7aaab776da56c1c94aa4"
+    },
+    {
+      "path": "coverage/floor.csv",
+      "bytes": 2953,
+      "sha256": "36784b01c8018b4656089daf03010ffeec5e9ee715fbc4b25a1b052bd21b15e8"
+    },
+    {
+      "path": "coverage/fold_waypoint.csv",
+      "bytes": 193,
+      "sha256": "86a4a6e2bd704a265eb248a9420abe6fe38a8681d9719bfbdd2b58cff00f6b01"
+    },
+    {
+      "path": "coverage/forearm_pitch_link.stl",
+      "bytes": 491784,
+      "sha256": "23a8ba8b470e380718303b57e904b025f77da79f31700f03d087c6f7c594e098"
+    },
+    {
+      "path": "coverage/forearm_roll_link.stl",
+      "bytes": 621284,
+      "sha256": "38c79d7fb2395994a7e06fae6d06ddba0c0d485cff16216f3314e9b1bb49a12a"
+    },
+    {
+      "path": "coverage/high.csv",
+      "bytes": 195,
+      "sha256": "ac398729c119bb79eca8fa9293030661d1d1e26e06c7f1c2a7a60c5c429e6270"
+    },
+    {
+      "path": "coverage/links.py",
+      "bytes": 3169,
+      "sha256": "ecacbc8edcf143260b468dc118ff3762e0c9a0394a40144f35c0cd9720c23283"
+    },
+    {
+      "path": "coverage/mounts.step",
+      "bytes": 3071680,
+      "sha256": "e65361be4cca3ac3919a005c20b1c59da70a4e135c20eab73749bab860094f0d"
+    },
+    {
+      "path": "coverage/park.csv",
+      "bytes": 193,
+      "sha256": "a89c17801d2f7057e24bf883db2de1effe89faf953bea2a910b4cbfd647b64db"
+    },
+    {
+      "path": "coverage/poses.html",
+      "bytes": 1239748,
+      "sha256": "3ab78481296bb1cb33a097e8a82071a7d603024432960c5f8fcc3b2a72c530c6"
+    },
+    {
+      "path": "coverage/preview.png",
+      "bytes": 137941,
+      "sha256": "b43352e272b6af6d42a7c0fd51ae2f85bbea762e9393596340a138c758f76b14"
+    },
+    {
+      "path": "coverage/replay.py",
+      "bytes": 9419,
+      "sha256": "18a80d2fa4c17b6d0e9c854d9c144e8f8a53b92ada2948754deecf103136742b"
+    },
+    {
+      "path": "coverage/robot.xml",
+      "bytes": 30665,
+      "sha256": "314bfb2aef18d59b40b94e075555e8067124aa56e252e8da819c984dc992650f"
+    },
+    {
+      "path": "coverage/roof.stl",
+      "bytes": 402284,
+      "sha256": "4f954f4f83254f36cf9b1edf50721a63537a647bfb08ae798d202111d824be8f"
+    },
+    {
+      "path": "coverage/routing.py",
+      "bytes": 2075,
+      "sha256": "a7943d3116b4fa5dd3eab7c41dbf965fa04ec11cb0c309600b4e131178f600b9"
+    },
+    {
+      "path": "coverage/shoulder_mount.stl",
+      "bytes": 404734,
+      "sha256": "bc72b2e80aae171d580789fed73ab408c2ef014af77fa721ccf13f1603617248"
+    },
+    {
+      "path": "coverage/shoulder_pitch_link.stl",
+      "bytes": 645584,
+      "sha256": "cd3903b00f2c7728a19c5bd2dbc95cce9052e7413881b3a79e0340cba34802dd"
+    },
+    {
+      "path": "coverage/targets.csv",
+      "bytes": 24073,
+      "sha256": "f2527b8dd8b6ff77e16d8ede2bcf3b5c74b31ca22950b3d6cb87c5eb69423882"
+    },
+    {
+      "path": "coverage/viewer.py",
+      "bytes": 3975,
+      "sha256": "d097b9b9b813d7f6bf6a86ede50b9317bc7920c0b58231ef960e9eee7fa5a239"
+    },
+    {
+      "path": "coverage/wrist_flex_link.stl",
+      "bytes": 678134,
+      "sha256": "8b2357ec4e2da3f9253c1db4e2d56b0f9fca52f8c03dba47576de020520cf4f6"
+    },
+    {
+      "path": "coverage/wrist_roll_link.stl",
+      "bytes": 847984,
+      "sha256": "ff7da4c8841ee2ec28a35e4f87b4778ffbccba0dd0bcbc982128513556b873af"
+    },
+    {
       "path": "crosswise/README.md",
       "bytes": 6842,
       "sha256": "4387ea020638250486646c8343e738bf3c55617b1bb5370e01ab6e178a55f9d9"
@@ -392,8 +512,8 @@
     },
     {
       "path": "crosswise/geometry.py",
-      "bytes": 4763,
-      "sha256": "6a384d029c1e0733bf2f0d50f0aec3ac220d1987a24d397bb9b152295120dc58"
+      "bytes": 4873,
+      "sha256": "ce3694a8360c82c1f329f9d8937044212a7c1d2eb4802819ddcca005ce4c9bac"
     },
     {
       "path": "crosswise/motion.py",
@@ -751,5 +871,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 44984986
+  "total_bytes": 53620665
 }

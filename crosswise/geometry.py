@@ -22,20 +22,22 @@ DISTAL = ("carrier", "yaw_case", "pitch_case", "forearm", "wrist", "gripper", FI
 
 
 class Robot:
-    def __init__(self):
-        xml = HERE / "robot.xml"
+    def __init__(self, xml=HERE / "robot.xml", arm=ARM, split_bodies=()):
         self.model = mujoco.MjModel.from_xml_path(str(xml))
         self.data = mujoco.MjData(self.model)
         tree = ET.parse(xml)
         assets = {m.get("name"): m for m in tree.findall("./asset/mesh")}
         groups = defaultdict(list)
         self.body = {}
+        split = {"neck_yaw_assembly", *split_bodies}
         for body in tree.iter("body"):
             for geom in body.findall("geom[@mesh]"):
                 mesh = assets[geom.get("mesh")]
                 scale = np.fromstring(mesh.get("scale", "1 1 1"), sep=" ")
-                part = geom.get("name") if body.get("name") == "neck_yaw_assembly" else body.get("name")
-                triangles = screen.read_stl(HERE / mesh.get("file")) * scale
+                part = body.get("name")
+                if part in split and geom.get("name"):
+                    part = geom.get("name")
+                triangles = screen.read_stl(xml.parent / mesh.get("file")) * scale
                 groups[part].append(screen.move(screen.legs.rest(geom), triangles))
                 self.body[part] = self.model.body(body.get("name")).id
         self.mesh = {k: np.concatenate(v) for k, v in groups.items()}
@@ -46,7 +48,7 @@ class Robot:
             vertices = tris.reshape(-1, 3)
             self.extreme[name] = vertices[ConvexHull(vertices).vertices]
             self.load(name, tris)
-        self.arm_indices = [self.model.joint(j).qposadr[0] for j in (*ARM, "gripper")]
+        self.arm_indices = [self.model.joint(j).qposadr[0] for j in (*arm, "gripper")]
         self.data.qpos[2] = pose_test.W0[2, 3]
         self.leg_indices = [self.model.joint(f"{side}_{joint}").qposadr[0]
                             for side in screen.legs.SIDES for joint in screen.legs.NAMES]
