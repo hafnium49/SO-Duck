@@ -1,0 +1,24 @@
+name: Centered stow geometry
+on:
+  pull_request:
+    paths:
+      - 'stow/**'
+      - 'collision/**'
+      - 'legs/**'
+      - 'search/arm_model.py'
+      - '.github/workflows/centered-stow.yml'
+  workflow_dispatch:
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'cadquery==2.7.0' 'cadquery-ocp==7.8.1.1.post1' 'vtk==9.3.1' numpy scipy
+      - run: python scripts/restore_assets.py
+      - run: python collision/build_bvh.py
+      - run: python stow/verify.py --out "$RUNNER_TEMP/so-duck-stow"
+        env:
+          OPENBLAS_NUM_THREADS: '1'

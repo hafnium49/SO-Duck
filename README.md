@@ -29,6 +29,12 @@ The end-effector can have a rank-six Jacobian in some configurations, but not in
 
 Details, caveats, and derivation are in [Methods](docs/METHODS.md), [Results](docs/RESULTS.md), and [Validation](docs/VALIDATION.md).
 
+## Centered elbow stow
+
+The [17-motor stow revision](stow/README.md) adds a torso-mounted cradle and re-indexes the head-pitch elbow by one spline. The native CAD seats against two compliant pads. The sampled empty-arm approach maintains at least 31.9 mm of static balance margin. The [animated assembly](stow/Centered_stow.glb) shows the folding sequence.
+
+![Seated SO-Duck and the passive cradle](stow/Centered_stow.png)
+
 ## Open the model
 
 - **[Interactive whole-body pose explorer](SO_Duck_pose_explorer.html)** — saved grasp solutions, stance choices, joint angles, conditioning, COM margins. It is not a live dynamics simulation.

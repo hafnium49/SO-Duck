@@ -94,7 +94,7 @@ def build_inputs(path):
     arm_names=[joint+'_rad' for joint in ('neck_pitch','head_pitch','head_yaw','terminal','wrist_flex','wrist_roll')]
     q=np.array([[float(r[k]) for k in leg_names+arm_names] for r in rows])
     return rows,q
-def screen(file):
+def screen(file, output_dir=here):
     rows,q=build_inputs(file)
     geometry,links=build_geometry()
     dyn=motions(q)
@@ -150,7 +150,7 @@ def screen(file):
         tags.append('|'.join(hits))
         if bool(int(r['static_margin_5mm_ok'])):hist.update(hits)
     outname='collision_'+file.name
-    with (here/outname).open('w',newline='') as stream:
+    with (output_dir/outname).open('w',newline='') as stream:
         cols=['target','bank','pose_and_feet_ok','static_margin_5mm_ok','collision_checked','hybrid_arm_intersecting_pairs','min_nonfoot_ground_clearance_mm','hit_count','intersecting_pairs']
         w=csv.DictWriter(stream,fieldnames=cols);w.writeheader()
         for idx,(r,tag) in enumerate(zip(rows,tags)):

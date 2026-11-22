@@ -6,6 +6,16 @@
       "sha256": "4c52e1f62908a05900d73a716459fc8c928a49b7959d3238092c21404cbf65be"
     },
     {
+      "path": ".github/workflows/centered-stow.yml",
+      "bytes": 704,
+      "sha256": "cc94d422968bf48015109e74d009a942fe660fcf2db69034570e4a91ca474b6e"
+    },
+    {
+      "path": ".github/workflows/checks.yml",
+      "bytes": 387,
+      "sha256": "ce3e591fe6f978e8fc071824586bb479f6bfcab019f2783692dc36f5c5cf7168"
+    },
+    {
       "path": ".github/workflows/smoke.yml",
       "bytes": 333,
       "sha256": "226c6fcbd41604f560385e2befac5133d2675a0b6fbe68a0cb91647e72854422"
@@ -17,8 +27,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 294,
-      "sha256": "ee3143ba0f524b53c264fce9849d6ccd7eaeb7254726b403e7127895b9c2ba90"
+      "bytes": 389,
+      "sha256": "7fea9e9104904ef1834fb66884676d83782966642b8c61d84578d774dd2c318a"
     },
     {
       "path": "LICENSES/Open_Duck_Mini_APACHE-2.0.txt",
@@ -32,8 +42,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 5648,
-      "sha256": "33512e1d4033f5fd417c186e249c6f85c4f12985cc23dcb7bc09e7842b5af4ae"
+      "bytes": 6072,
+      "sha256": "cf65224ffbab6d46a632e2590744e7ddf4310d75363ebd5360d0d930e2cd23bd"
     },
     {
       "path": "SO_Duck_pose_explorer.html",
@@ -342,8 +352,8 @@
     },
     {
       "path": "collision/screen.py",
-      "bytes": 8817,
-      "sha256": "baa6b19b9af9c868bf098fcfba80aca1cb9d9b604374ff04bae458130d9e416e"
+      "bytes": 8840,
+      "sha256": "b265e1d4bd62f90377f2a99419fdd9ad2993b524e82822a53fe38e0ea4ed83d4"
     },
     {
       "path": "docs/ARCHITECTURE.md",
@@ -394,6 +404,11 @@
       "path": "docs/VALIDATION.md",
       "bytes": 1733,
       "sha256": "c95fca5613414cabac964704da54cfa9f41802ac10e5a5641c13efe3a723029f"
+    },
+    {
+      "path": "docs/WHOLE_BODY_STUDY.md",
+      "bytes": 13523,
+      "sha256": "db5784927dac385eb4dc9f7f10599af49a6094736a4472e0d6c33be470618fba"
     },
     {
       "path": "legs/README.md",
@@ -461,14 +476,24 @@
       "sha256": "1978c5330a34a48fac00c1107de3949b8c8da3bd11517f59ca9b4510363c6c8a"
     },
     {
+      "path": "scripts/export_step.py",
+      "bytes": 1311,
+      "sha256": "6cd3fbd8070bd794d9c7d0f5bafec21000b50ef455524d9ea32a3ecb78545f4c"
+    },
+    {
       "path": "scripts/restore_assets.py",
       "bytes": 2084,
       "sha256": "3a910bbec1a18238425c3a67298bcbaccd77ed5461d45749be7e0bb135075913"
     },
     {
       "path": "scripts/study_inventory.py",
-      "bytes": 1390,
-      "sha256": "c807a7dfffd0fea5d8a08e6a06ae04c8446a1c97941081d031bdf02b18ef34e9"
+      "bytes": 1410,
+      "sha256": "4049917917ecb95bb03238ccb746e7b7dcdbb66880708e695a7bec8886bb18a7"
+    },
+    {
+      "path": "scripts/verify_repository.py",
+      "bytes": 881,
+      "sha256": "0d468f3fb280184d473e0899de746060c1bc9d8655826f5ac3e1b9f86ce8a2b5"
     },
     {
       "path": "scripts/verify_structure.py",
@@ -504,6 +529,11 @@
       "path": "search/arm_validation_full.csv",
       "bytes": 4048,
       "sha256": "302f2991253afc1baa0eb2a15cfc1afc7fc71ea08133fd4782843184c0d0e4b2"
+    },
+    {
+      "path": "search/check_jacobian.py",
+      "bytes": 1135,
+      "sha256": "d2a64a3c26d8895b8809a0914f22e2c3c47898c18097f088cf93f0cb1e2e0a40"
     },
     {
       "path": "search/checks.py",
@@ -559,6 +589,66 @@
       "path": "search/stance_sensitivity.csv",
       "bytes": 6840,
       "sha256": "dc7dc5c4707bbd78b9caf21b9bfc3b1b312ef044481c9f61b0738072d0c23275"
+    },
+    {
+      "path": "stow/Centered_stow.glb",
+      "bytes": 675688,
+      "sha256": "0f9e502c69d3505274708a82f77cd21e8c47f332427786996b086e1bf0f196b2"
+    },
+    {
+      "path": "stow/Centered_stow.png",
+      "bytes": 270250,
+      "sha256": "2a63311c09cb2c99b53ce7144c239bd617bd300963f3f4593c56a0c359812ce0"
+    },
+    {
+      "path": "stow/Cradle_assembly.step",
+      "bytes": 245623,
+      "sha256": "09d98fb5a344405ba914e03dd93680869c0039892b302a1596a198d816320362"
+    },
+    {
+      "path": "stow/README.md",
+      "bytes": 8401,
+      "sha256": "548f5c88202cb2c6322e253e2ea6f63eb5f4ae20f715ec96f928a31ed55abd39"
+    },
+    {
+      "path": "stow/contact_pad.stl",
+      "bytes": 684,
+      "sha256": "06d17758ace96375509a42f3dce92d1eeffcb08bc606b45259f5ce21fcf05f19"
+    },
+    {
+      "path": "stow/cradle.stl",
+      "bytes": 206684,
+      "sha256": "0f1e8a4ba82a4e658e90d417b308bdc93cff5f954a09db51410f8bc4ad673bca"
+    },
+    {
+      "path": "stow/design.py",
+      "bytes": 6258,
+      "sha256": "d367fcdba23e5f3e2b2c236c40308234d62ce93d1b04478906472679234e3ee6"
+    },
+    {
+      "path": "stow/preview.py",
+      "bytes": 5435,
+      "sha256": "1ed2cfb74038bf9fa1fd7e077f066cb8e100bd5baf8b341b23c237776e99c374"
+    },
+    {
+      "path": "stow/results/grasp_replay.csv",
+      "bytes": 11610,
+      "sha256": "49324f94362760d923326bf40138d40343745591bc422d2bd642e46d80e57146"
+    },
+    {
+      "path": "stow/results/stow_path.csv",
+      "bytes": 16919,
+      "sha256": "ea0f6b0d0151d0969bff3a04d95ffdb5929eba6730fb210368b0c33a36f334cc"
+    },
+    {
+      "path": "stow/roof_drilled.stl",
+      "bytes": 402284,
+      "sha256": "3178a2aa4b90e0b90c9f350376c4fa34dfe8cd2eb0277adf66c9fc3b316f0350"
+    },
+    {
+      "path": "stow/verify.py",
+      "bytes": 12288,
+      "sha256": "39cfa5510d75faad8a6ec7b3dc192fdb49619bb1fed579600078011826e87bcd"
     },
     {
       "path": "study/README.md",
@@ -631,5 +721,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 39667790
+  "total_bytes": 41548417
 }
