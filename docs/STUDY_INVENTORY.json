@@ -116,11 +116,6 @@
       "sha256": "bac12ed3a4d75074507a359b8c2adc0290c99a39e58bd39f1cf6845e99eddd31"
     },
     {
-      "path": "collision/bvh.so",
-      "bytes": 34032,
-      "sha256": "67453361cf951464a0ab33487e945453da85cf27edc4bfa6387823dd6559c9ad"
-    },
-    {
       "path": "collision/candidate_forearm.stl",
       "bytes": 1773484,
       "sha256": "80d7e16707ae3ff8cacb3941a8ed0778c8005d5d39fb6fced6dd6cad2007a5b8"
@@ -577,8 +572,8 @@
     },
     {
       "path": "scripts/study_inventory.py",
-      "bytes": 1390,
-      "sha256": "c807a7dfffd0fea5d8a08e6a06ae04c8446a1c97941081d031bdf02b18ef34e9"
+      "bytes": 1410,
+      "sha256": "4049917917ecb95bb03238ccb746e7b7dcdbb66880708e695a7bec8886bb18a7"
     },
     {
       "path": "scripts/verify_repository.py",
@@ -756,5 +751,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 45018998
+  "total_bytes": 44984986
 }
