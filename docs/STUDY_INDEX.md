@@ -4,7 +4,7 @@ The original full study archive contained **102 files, 39,611,727 uncompressed b
 
 | Path | Purpose | Read first |
 |---|---|---|
-| `SO_Duck_pose_explorer.html` | Standalone viewer for saved poses | Browser |
+| `study/legacy_pose_explorer.html` | Standalone viewer for saved poses | Browser |
 | `cad/` | Forearm design, native STEP, simulation GLB and printed-mesh derivative | `cad/README.md`, `cad/Mount_fit.md` |
 | `search/` | Orientation and joint-space sampling, robot Jacobian including leg constraints | `search/README.md` |
 | `legs/` | Contact, inertial and static torque model | `legs/README.md` |

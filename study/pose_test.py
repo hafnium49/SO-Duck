@@ -106,7 +106,9 @@ def stance_targets(reach=0.):
         offset=p-(srot@rel[...,None])[...,0]
         p=rel;r=srot.transpose(0,2,1)@r
     return p,r,offset,yaw
-def solve(frames,starts,active,steps=55,reach=0.):
+def solve(frames,starts,active,steps=55,reach=0.,arm_limits=None):
+    limits = LIMITS if arm_limits is None else np.vstack((LEG_LIMITS, arm_limits))
+    arm_limits = limits[10:]
     tp,tr,offset,yaw=stance_targets(reach);size=len(tp)
     tg=(np.tile(tp,(starts,1)),np.tile(tr,(starts,1,1)))
     q=np.tile(np.r_[REF.ravel(),np.zeros(6)],(size*starts,1))
@@ -115,10 +117,10 @@ def solve(frames,starts,active,steps=55,reach=0.):
     seeds=np.deg2rad(ax[:,0]+(ax[:,1]-ax[:,0])*u[:starts])
     if starts>8:
         # Additional starts explore the opposite elbow branch and wider yaw/roll.
-        seeds[8:]=arm.LIMITS[:,0]+(arm.LIMITS[:,1]-arm.LIMITS[:,0])*u[8:starts]
+        seeds[8:]=arm_limits[:,0]+(arm_limits[:,1]-arm_limits[:,0])*u[8:starts]
     q[:,10:]=np.repeat(seeds,size,axis=0);ids=np.arange(len(q))
     # allow 2 degrees of physical travel beyond every solved joint value
-    lo,hi=LIMITS.T+np.deg2rad(np.array([[2.],[-2.]]))
+    lo,hi=limits.T+np.deg2rad(np.array([[2.],[-2.]]))
     for i in range(steps):
         if not len(ids):break
         qs=q[ids]

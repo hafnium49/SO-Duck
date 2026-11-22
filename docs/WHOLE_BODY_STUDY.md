@@ -1,5 +1,7 @@
 > **Archive notice (2026-11-22):** This report documents a broader local study package, not all of which is currently in this public GitHub checkout. References below to legs/, collision/, search/scan_robot.py, study/pose_test.py, and raw CSVs describe original study inputs and outputs; only the upper-chain Jacobian tools and the summary were transferred in the initial public commit. The historical claims have not been independently reproduced from this minimal public snapshot. See [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 
+This page records the earlier longitudinal-roll design. The [current crosswise assembly](../crosswise/README.md) uses the stock SO-101 forearm.
+
 # SO-Duck — bipedal manipulation research prototype
 
 **Status:** Archived computational study, not an independent hardware validation. The mechanical fit, stability and pose-coverage figures below are simulated/preliminary; no complete hardware validation has been reported.
@@ -8,7 +10,7 @@
 
 **Read first:** [Architecture](docs/ARCHITECTURE.md) · [Validation limits](docs/VALIDATION.md) · [Provenance & upstream licenses](docs/PROVENANCE.md) · [Design decisions](docs/DECISIONS.md)
 
-**Interactive viewer:** Open [`SO_Duck_pose_explorer.html`](SO_Duck_pose_explorer.html) locally in a browser. It presents recorded poses, not live physics dynamics.
+**Interactive viewer:** Open [the archived pose explorer](../study/legacy_pose_explorer.html) locally in a browser. It presents recorded poses, not live physics dynamics.
 
 **Code check:** `python scripts/verify_structure.py`
 
@@ -70,7 +72,7 @@ The collision check uses 19 rigid mesh groups with over 2.38 million source tria
 
 ## Files and reproduction
 
-- Open `SO_Duck_pose_explorer.html` in a browser for the articulated whole robot. The viewer draws the retained solutions in world coordinates, including changed foot placements. Its reported static margins use the nominal unloaded mass model. The lighter display meshes are separate from the collision meshes.
+- Open `study/legacy_pose_explorer.html` in a browser for the articulated whole robot. The viewer draws the retained solutions in world coordinates, including changed foot placements. Its reported static margins use the nominal unloaded mass model. The lighter display meshes are separate from the collision meshes.
 - The `cad` directory includes the one-piece STEP/STL, mount illustration, neutral neck/wrist GLB, and the parametric construction with its native donor solid. The stock gripper and hardware shown in the GLB are reference geometry.
 - The `search` and `study` directories contain the reproducible orientation scans, target definitions, and per-target outputs. The technical parameter `two_part=True` in the original model denotes independent terminal and wrist axes. The supplied design achieves that geometry with one custom piece.
 - The `collision` directory includes the original screening inputs, rebuildable C++ intersection helper, mesh-pair definitions and per-target results. The `legs` directory contains the contact model and static-load study. Native source licenses accompany the geometry.

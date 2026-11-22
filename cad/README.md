@@ -1,5 +1,7 @@
 # Forearm CAD and interface
 
+This page records the earlier longitudinal-roll design. The [current crosswise assembly](../crosswise/README.md) uses the stock SO-101 forearm.
+
 The candidate is a **single case-mounted forearm** connecting the Duck's terminal neck roll actuator to the SO-101 wrist-flex joint. The Duck head shell is omitted from the load path; its driven-horn side and opposite idler-bearing support remain in the design. The wrist-flex axis is transverse to the robot's forward direction, so the gripper bends **forward/backward**.
 
 - `Case_mounted_forearm.step`: editable STEP geometry from the study.
