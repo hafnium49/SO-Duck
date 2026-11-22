@@ -1,3 +1,5 @@
+> **Archive notice (2026-11-22):** This report documents a broader local study package, not all of which is currently in this public GitHub checkout. References below to legs/, collision/, search/scan_robot.py, study/pose_test.py, and raw CSVs describe original study inputs and outputs; only the upper-chain Jacobian tools and the summary were transferred in the initial public commit. The historical claims have not been independently reproduced from this minimal public snapshot. See [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
+
 # SO-Duck — bipedal manipulation research prototype
 
 **Status:** Archived computational study, not an independent hardware validation. The mechanical fit, stability and pose-coverage figures below are simulated/preliminary; no complete hardware validation has been reported.

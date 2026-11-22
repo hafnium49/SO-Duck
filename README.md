@@ -27,7 +27,7 @@ The stock Duck head shell is *not* the load-bearing arm mount. This design is no
 
 ## Reproduction and provenance
 
-The source is organized into CAD generation, kinematic optimization, biped contact/balance, target IK, and collision experiments. See `docs/ARCHITECTURE.md`, `docs/VALIDATION.md`, and `docs/PROVENANCE.md` for the method and caveats. The interactive viewer visualizes **saved postures**; it is not a live physics simulator.
+This initial public snapshot contains the custom editable STEP, saved-pose 3D viewer, *arm-only* Jacobian source/test, and the archived whole-body study report. The original large collision meshes, foot-contact solvers, full target-IK scripts and per-pose CSVs have **not** all been committed; their archived results are not independently rerunnable from this checkout. See `docs/ARCHITECTURE.md`, `docs/VALIDATION.md`, and `docs/PROVENANCE.md` for the method and caveats. The interactive viewer visualizes **saved postures**; it is not a live physics simulator.
 
 External references: [Duck Playground](https://github.com/apirrone/Open_Duck_Playground) · [SO-101](https://github.com/TheRobotStudio/SO-ARM100) · [Yo.Town Gym](https://github.com/yotown/gym), a parametric CAD reference for both donor designs.
 
@@ -38,3 +38,9 @@ Upstream materials retain their Apache-2.0 notices. Unless explicitly indicated,
 Run `python scripts/verify_structure.py` for the source/asset smoke check. Dependencies for individual studies appear in `requirements-*.txt`.
 
 Contributions and reproducibility reports are welcome; simulation claims should include the model revision, joint axes, chosen task-space metric and feasibility constraints.
+
+## Verified public checks
+
+[![Source and Jacobian checks](https://github.com/hafnium49/SO-Duck/actions/workflows/checks.yml/badge.svg)](https://github.com/hafnium49/SO-Duck/actions/workflows/checks.yml)
+
+The test compares an analytic six-joint Jacobian with a central-difference estimate at one non-singular pose. That is not validation of whole-body walking or grasping.
