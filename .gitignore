@@ -18,3 +18,6 @@ results/private/
 /cad/*.glb
 /cad/*.png
 /cad/under_arm_so101_v1.step
+
+# Platform-specific native collision helper built by collision/build_bvh.py
+/collision/bvh.so
