@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+*.log
+*.tmp
+.DS_Store
+arm_only_results.csv
+local-output/
+results/private/
