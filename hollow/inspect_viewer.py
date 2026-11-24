@@ -1,13 +1,13 @@
 """Inspect the geometry and poses stored in hollow/viewer.html.
 
 Reports the figures quoted in hollow/README.md from the files in this directory.
-This is not a replay of the design: the model that produced the stored poses is
-not part of this revision, so balance, joint limits and target errors are not
-checked here.
+The model that produced the first stored poses is not part of this revision, so
+every check works from the body transforms and meshes stored in the viewer.
 
     python hollow/inspect_viewer.py            # needs NumPy
     python hollow/inspect_viewer.py --screen   # also needs python-fcl
     python hollow/inspect_viewer.py --legs     # also needs python-fcl, MuJoCo and restored assets
+    python hollow/inspect_viewer.py --replay   # also needs SciPy, MuJoCo and restored assets
 """
 import argparse
 import base64
@@ -37,6 +37,10 @@ LEGS = {
     "right": ("right_roll_to_pitch_assembly", "knee_and_ankle_assembly_3", "knee_and_ankle_assembly_4", "foot_assembly_2"),
 }
 LEG_PARTS = ("hip link", "thigh", "shin", "foot")
+SERVO_KG = 0.055
+PRINT_DENSITY = 1240.0  # kg/m3, as assumed for the six-part design
+# Endpoints known to miss the 5 mm support margin with the estimated masses. See README.md.
+SHORT_MARGIN = {89}
 ARM_JOINTS = ("shoulder yaw", "shoulder pitch", "elbow", "forearm roll", "wrist flex", "wrist roll")
 
 
@@ -242,7 +246,7 @@ def screen(data, errors):
             errors.append(f"a hollow part intersects another body: {a} x {b}")
 
 
-def leg_trunk(data):
+def leg_trunk(data, errors):
     """Intersections of the hip links and thighs with the trunk, on the repository's meshes.
 
     The trunk and legs are unchanged from the six-part design, so their meshes come from
@@ -282,6 +286,7 @@ def leg_trunk(data):
 
     objects = {name: collision_object(name) for name in names}
     request = fcl.CollisionRequest()
+    found_any = []
 
     def report(label, frames):
         """frames maps a body name to its (n, 3, 4) world transforms."""
@@ -301,6 +306,7 @@ def leg_trunk(data):
                 hit[f"{side} {part}"] = found
         thigh = sorted(set(hit["left thigh"]) | set(hit["right thigh"]))
         any_part = sorted(set().union(*hit.values()))
+        found_any.append(len(any_part))
         counts = ", ".join(f"{key} {len(found)}" for key, found in hit.items() if found) or "none"
         print(f"  {label}: {counts}")
         print(f"    poses with a thigh in the trunk {len(thigh)} of {count}, with any leg part {len(any_part)} of {count}")
@@ -321,6 +327,8 @@ def leg_trunk(data):
     for name in ("targets", "pickup", "fold"):
         world = decode_clip(data, name)[1]
         thigh = report(f"viewer {name}", {b: world[:, bodies.index(b)] for b in names})
+        if found_any[-1]:
+            errors.append(f"a leg part intersects the trunk in the {name} clip")
         if name == "targets" and thigh:
             print("    targets with a thigh in the trunk: " + " ".join(f"{i:02d}" for i in thigh))
             yaw = np.abs(np.c_[hip_yaw(world, "left", "hip_roll_assembly"), hip_yaw(world, "right", "hip_roll_assembly_2")])
@@ -344,10 +352,122 @@ def leg_trunk(data):
     report("six-part design, coverage/targets.csv", {b: np.array(v) for b, v in frames.items()})
 
 
+def solid(vertices, faces):
+    """Signed volume (m3) and centroid (m) of a triangle surface given on the 0.1 mm grid."""
+    a, b, c = (vertices[faces[:, k]] * 1e-4 for k in range(3))
+    six = np.einsum("ij,ij->i", a, np.cross(b, c))
+    return six.sum() / 6, ((a + b + c) / 4 * six[:, None]).sum(0) / six.sum()
+
+
+def arm_masses(data, world):
+    """Estimated arm masses as body name -> [(kg, centre in the body frame)].
+
+    Servos count 55 g at the centroid of their case mesh. The three hollow parts take the
+    signed volume of their review surface at the print density of the six-part design. The
+    stock SO-101 links take the link inertials of collision/inputs/so101.xml.
+    """
+    bodies = data["bodies"]
+
+    def mesh(body):
+        return next(decode_mesh(g) for g in data["meshes"] if bodies[g["b"]] == body and not g.get("sectionOf"))
+
+    def servo(body):
+        return SERVO_KG, solid(*mesh(body))[1]
+
+    def printed(body):
+        volume, centre = solid(*mesh(body))
+        return volume * PRINT_DENSITY, centre
+
+    def frame(body):
+        pose = np.eye(4)
+        pose[:3] = world[0, bodies.index(body)]
+        return pose
+
+    # The upper-arm frame is the SO-101 one turned about the elbow-parallel axis. The turn is
+    # the angle between the two descriptions of the elbow position. The shoulder frame is the
+    # SO-101 one turned half a turn about its second axis.
+    elbow = (np.linalg.inv(frame("forearm_pitch_link")) @ frame("forearm_roll_link"))[:2, 3]
+    turn = np.arctan2(elbow[1], elbow[0]) - np.arctan2(-0.028, -0.11257)
+    spin = np.array([[np.cos(turn), -np.sin(turn), 0], [np.sin(turn), np.cos(turn), 0], [0, 0, 1]])
+    return {
+        "trunk_assembly": [printed("shoulder_mount"), servo("shoulder_yaw_case")],
+        "shoulder_pitch_link": [(0.100006, np.array([0.0307604, -1.66727e-05, 0.0252713]))],
+        "forearm_pitch_link": [(0.103, spin @ np.array([-0.0898471, -0.00838224, 0.0184089]))],
+        "forearm_roll_link": [printed("forearm_roll_link"), servo("forearm_roll_case")],
+        "wrist_flex_link": [printed("wrist_flex_link"), servo("wrist_flex_case")],
+        "wrist_roll_link": [(0.079, np.array([-0.000103312, -0.0386143, 0.0281156]))],
+        "gripper": [(0.087, np.array([0.000213627, 0.000245138, -0.025187]))],
+        "moving_jaw_so101_v1": [(0.012, np.array([-0.00157495, -0.0300244, 0.0192755]))],
+    }
+
+
+def replay(data, errors):
+    """The 96 stored endpoints against the published targets, the sole anchors and the support margin.
+
+    Tool and sole poses come straight from the stored body transforms. The support margin uses the
+    trunk and leg inertials of coverage/robot.xml and the estimated arm masses above.
+    """
+    sys.path[:0] = [str(HERE.parent / "study")]
+    import mujoco
+    import pose_test
+    from scipy.spatial.transform import Rotation
+
+    bodies = data["bodies"]
+    world = decode_clip(data, "targets")[1]
+
+    def placed(body):
+        pose = np.tile(np.eye(4), (len(world), 1, 1))
+        pose[:, :3] = world[:, bodies.index(body)]
+        return pose
+
+    def turn_between(expected, measured):
+        return np.degrees(Rotation.from_matrix(expected @ measured.transpose(0, 2, 1)).magnitude())
+
+    print("Stored endpoints against the published targets")
+    positions, rotations = pose_test.make_targets()
+    tool = placed("gripper") @ pose_test.arm.TCP
+    tool_mm = 1000 * np.linalg.norm(tool[:, :3, 3] - positions, axis=1)
+    tool_deg = turn_between(rotations, tool[:, :3, :3])
+    print(f"  tool: at most {tool_mm.max():.3f} mm and {tool_deg.max():.3f} deg from its target")
+    if tool_mm.max() >= 1.5 or tool_deg.max() >= 1.0:
+        errors.append("a stored endpoint misses its target by 1.5 mm or 1 deg")
+    for k, side in enumerate(pose_test.legs.SIDES):
+        sole = placed(LEGS[side][-1]) @ pose_test.legs.specs(side)[4]
+        anchor = pose_test.ANCHOR[k]
+        sole_mm = 1000 * np.linalg.norm(sole[:, :3, 3] - anchor[:3, 3], axis=1)
+        sole_deg = turn_between(anchor[None, :3, :3], sole[:, :3, :3])
+        print(f"  {side} sole: at most {sole_mm.max():.3f} mm and {sole_deg.max():.3f} deg from its anchor")
+        if sole_mm.max() >= SOLE_TOLERANCE[0] or sole_deg.max() >= SOLE_TOLERANCE[1]:
+            errors.append(f"the {side} sole leaves its anchor")
+
+    model = mujoco.MjModel.from_xml_path(str(HERE.parent / "coverage" / "robot.xml"))
+    table = arm_masses(data, world)
+    for name in ("trunk_assembly", "hip_roll_assembly", "hip_roll_assembly_2", *LEGS["left"], *LEGS["right"]):
+        k = model.body(name).id
+        table.setdefault(name, []).append((float(model.body_mass[k]), model.body_ipos[k].copy()))
+    total = sum(mass for entries in table.values() for mass, _ in entries)
+    moment = np.zeros((len(world), 3))
+    for name, entries in table.items():
+        pose = world[:, bodies.index(name)]
+        for mass, centre in entries:
+            moment += mass * (pose[:, :, :3] @ centre + pose[:, :, 3])
+    margin = 1000 * pose_test.GROUND.margin(moment / total)
+    short = set(np.flatnonzero(margin < 5.0).tolist())
+    held = len(margin) - len(short)
+    print(f"  estimated mass {total:.3f} kg; support margin at least 5 mm in {held} of {len(margin)} endpoints")
+    print(f"    forward {int((margin[:64] >= 5).sum())}/64, broad {int((margin[64:] >= 5).sum())}/32")
+    print(f"    smallest margin that holds {margin[margin >= 5].min():.2f} mm (target {int(np.where(margin >= 5, margin, np.inf).argmin()):02d})")
+    for i in sorted(short):
+        print(f"    target {i:02d}: {margin[i]:.2f} mm")
+    if short - SHORT_MARGIN:
+        errors.append(f"support margin under 5 mm at targets {sorted(short - SHORT_MARGIN)}")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--screen", action="store_true", help="also intersect the display meshes (needs python-fcl)")
     parser.add_argument("--legs", action="store_true", help="also intersect the repository's leg and trunk meshes")
+    parser.add_argument("--replay", action="store_true", help="also check targets, sole anchors and support margin")
     args = parser.parse_args()
     data = load_viewer()
     errors = []
@@ -357,13 +477,13 @@ def main():
     if args.screen:
         screen(data, errors)
     if args.legs:
-        leg_trunk(data)
+        leg_trunk(data, errors)
+    if args.replay:
+        replay(data, errors)
     if errors:
         print("VIEWER CHECK FAILED\n" + "\n".join("- " + e for e in errors), file=sys.stderr)
         return 1
-    print("VIEWER CHECK PASSED: counts, indices, review meshes and sole closure (not a replay of the design)")
-    if args.legs:
-        print("The leg and trunk intersections above are reported, not failed. See hollow/README.md.")
+    print("VIEWER CHECK PASSED for the checks that ran. See hollow/README.md for what they cover.")
     return 0
 
 

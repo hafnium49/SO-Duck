@@ -22,8 +22,8 @@
     },
     {
       "path": ".github/workflows/hollow.yml",
-      "bytes": 413,
-      "sha256": "5e2a181b353231852af73526a05b59db40981839532ea4a657f3c4e0a27a0846"
+      "bytes": 422,
+      "sha256": "1bbd7d0c8852fc240f2eb419ae4b4784b21043dd2036c103f7216e5122b7406b"
     },
     {
       "path": ".github/workflows/smoke.yml",
@@ -52,8 +52,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 3690,
-      "sha256": "35d930a69be3fd824e758c10e24331de00376bdd85685394e5bf24a5d5674005"
+      "bytes": 3795,
+      "sha256": "0bec9682bd6c5b22496a3b371edc9826a1d52a00d002ae6738028363f3959e62"
     },
     {
       "path": "SO_Duck_pose_explorer.html",
@@ -622,18 +622,23 @@
     },
     {
       "path": "hollow/README.md",
-      "bytes": 4707,
-      "sha256": "ab9dbc648310f8930178c3a808263f8a6e29f07a87a1d6048b12af0b9da41327"
+      "bytes": 6377,
+      "sha256": "58d67860cb8d258ccbbaa7af49ec9cef22a3781a427407addb36ce5680523596"
     },
     {
       "path": "hollow/inspect_viewer.py",
-      "bytes": 17918,
-      "sha256": "9c0598b9df6f2a30e6938c3f6a2c37926ae3cca2c57d07ab1a5f1d7131724aa6"
+      "bytes": 24103,
+      "sha256": "5e032bf63111f8aade7a42de8bf2380227cad3560d06ebbc0af80be97e1bfe16"
+    },
+    {
+      "path": "hollow/pickup.csv",
+      "bytes": 18608,
+      "sha256": "604bee51e02954fd430a734f3497a84ec884e8d7db38393cb4ff7b3c91bc97bb"
     },
     {
       "path": "hollow/requirements.txt",
-      "bytes": 32,
-      "sha256": "acb5efecff8aec9c925f2024a21e95385860f6b7a054b0693aa3b03364aa9311"
+      "bytes": 38,
+      "sha256": "bddcc221b891a90a9b62dca5b489ebf7d739ce8ac466dd12eafe4f689e0e1c42"
     },
     {
       "path": "hollow/review-meshes/elbow-to-forearm-roll.preview.stl",
@@ -651,9 +656,14 @@
       "sha256": "4ca9cf8a8cdb49c4c2186ab3ddc254278b771e4d3ff84d993454058451208471"
     },
     {
+      "path": "hollow/targets.csv",
+      "bytes": 23248,
+      "sha256": "4fe4331c82ffacb07c2618e0920f2d5d295cf4685d1e81082960793842b9b295"
+    },
+    {
       "path": "hollow/viewer.html",
-      "bytes": 2328834,
-      "sha256": "94da5c3b47dff082585288fe995956381760c98f38e5c71cdcc5359955e0ce79"
+      "bytes": 2329327,
+      "sha256": "b02c5d7d8e203f7ae457640df3c7f5b2365fc499e90b0bf31f2fd3684359136e"
     },
     {
       "path": "legs/README.md",
@@ -911,5 +921,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 60215459
+  "total_bytes": 60265783
 }
