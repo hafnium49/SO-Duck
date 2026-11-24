@@ -21,6 +21,11 @@
       "sha256": "d91cedb360bb9a8c36b2197182ee73a200bdd20901e937f57efc5b15a5d7b0bd"
     },
     {
+      "path": ".github/workflows/hollow.yml",
+      "bytes": 413,
+      "sha256": "5e2a181b353231852af73526a05b59db40981839532ea4a657f3c4e0a27a0846"
+    },
+    {
       "path": ".github/workflows/smoke.yml",
       "bytes": 333,
       "sha256": "226c6fcbd41604f560385e2befac5133d2675a0b6fbe68a0cb91647e72854422"
@@ -617,13 +622,18 @@
     },
     {
       "path": "hollow/README.md",
-      "bytes": 3690,
-      "sha256": "c772a04538bb8970e0a7c048ce29ec94e6a70c7680da27d814f4955584bd3f8c"
+      "bytes": 4707,
+      "sha256": "ab9dbc648310f8930178c3a808263f8a6e29f07a87a1d6048b12af0b9da41327"
     },
     {
       "path": "hollow/inspect_viewer.py",
-      "bytes": 10062,
-      "sha256": "cded9ed1247fc1a1fa4c964df3dd41c6572ffb5f3eadf5119e1bdc03fe008da3"
+      "bytes": 17918,
+      "sha256": "9c0598b9df6f2a30e6938c3f6a2c37926ae3cca2c57d07ab1a5f1d7131724aa6"
+    },
+    {
+      "path": "hollow/requirements.txt",
+      "bytes": 32,
+      "sha256": "acb5efecff8aec9c925f2024a21e95385860f6b7a054b0693aa3b03364aa9311"
     },
     {
       "path": "hollow/review-meshes/elbow-to-forearm-roll.preview.stl",
@@ -642,8 +652,8 @@
     },
     {
       "path": "hollow/viewer.html",
-      "bytes": 2328740,
-      "sha256": "ee0a493717adf6d9f5645842b16e74ec85799b791798d74bea6cf06c64f948bf"
+      "bytes": 2328834,
+      "sha256": "94da5c3b47dff082585288fe995956381760c98f38e5c71cdcc5359955e0ce79"
     },
     {
       "path": "legs/README.md",
@@ -901,5 +911,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 60206047
+  "total_bytes": 60215459
 }
