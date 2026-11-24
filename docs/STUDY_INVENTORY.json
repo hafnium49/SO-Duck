@@ -47,8 +47,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 3252,
-      "sha256": "45b0950f79849c8b2e4161d0668afa5786dcef7b2ddf064d3ea8479a47fe434f"
+      "bytes": 3690,
+      "sha256": "35d930a69be3fd824e758c10e24331de00376bdd85685394e5bf24a5d5674005"
     },
     {
       "path": "SO_Duck_pose_explorer.html",
@@ -871,5 +871,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 53620665
+  "total_bytes": 53621103
 }
