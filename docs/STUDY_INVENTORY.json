@@ -616,6 +616,36 @@
       "sha256": "b9158acb044801eaa0c0097d734ec096e4a126464d9bb509578449c617d39cbf"
     },
     {
+      "path": "hollow/README.md",
+      "bytes": 3690,
+      "sha256": "c772a04538bb8970e0a7c048ce29ec94e6a70c7680da27d814f4955584bd3f8c"
+    },
+    {
+      "path": "hollow/inspect_viewer.py",
+      "bytes": 10062,
+      "sha256": "cded9ed1247fc1a1fa4c964df3dd41c6572ffb5f3eadf5119e1bdc03fe008da3"
+    },
+    {
+      "path": "hollow/review-meshes/elbow-to-forearm-roll.preview.stl",
+      "bytes": 1620984,
+      "sha256": "5842bbf39833a18eb0e49d56461efec583b03d9abef3effc9a3abe58af76487b"
+    },
+    {
+      "path": "hollow/review-meshes/forearm-roll-to-wrist.preview.stl",
+      "bytes": 1484184,
+      "sha256": "899a1b45dd13b63ca3da75d1cd67d876d6c78a56d4b26781135216872a968432"
+    },
+    {
+      "path": "hollow/review-meshes/neck-socket-mount.preview.stl",
+      "bytes": 1137284,
+      "sha256": "4ca9cf8a8cdb49c4c2186ab3ddc254278b771e4d3ff84d993454058451208471"
+    },
+    {
+      "path": "hollow/viewer.html",
+      "bytes": 2328740,
+      "sha256": "ee0a493717adf6d9f5645842b16e74ec85799b791798d74bea6cf06c64f948bf"
+    },
+    {
       "path": "legs/README.md",
       "bytes": 689,
       "sha256": "e69f1bd5a75beaf3c9663915178ef993d607f8ebbb1952604a998ee796f4eaad"
@@ -871,5 +901,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 53621103
+  "total_bytes": 60206047
 }
