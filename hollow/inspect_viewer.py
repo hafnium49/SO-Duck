@@ -32,6 +32,27 @@ SOLE_TOLERANCE = (0.2, 0.15)  # mm and degrees, as in coverage/replay.py
 HOLLOW_BODIES = {"shoulder_mount", "forearm_roll_link", "wrist_flex_link"}
 # The fork cheeks of the elbow-to-forearm-roll link seat on the elbow servo.
 HOLLOW_SEATS = {frozenset(("forearm_pitch_case", "forearm_roll_link"))}
+# Contacts that come and go with the pose and are meant to: the jaws on the cube, the
+# fixed finger on the parking pad, and leg links joined by a joint, whose display meshes
+# overlap at the joint.
+EXPECTED_CONTACTS = {
+    frozenset(pair)
+    for pair in [
+        ("gripper", "cube"),
+        ("moving_jaw_so101_v1", "cube"),
+        ("gripper", "park_pad"),
+        ("trunk_assembly", "hip_roll_assembly"),
+        ("hip_roll_assembly", "left_roll_to_pitch_assembly"),
+        ("left_roll_to_pitch_assembly", "knee_and_ankle_assembly"),
+        ("knee_and_ankle_assembly", "knee_and_ankle_assembly_2"),
+        ("knee_and_ankle_assembly_2", "foot_assembly"),
+        ("trunk_assembly", "hip_roll_assembly_2"),
+        ("hip_roll_assembly_2", "right_roll_to_pitch_assembly"),
+        ("right_roll_to_pitch_assembly", "knee_and_ankle_assembly_3"),
+        ("knee_and_ankle_assembly_3", "knee_and_ankle_assembly_4"),
+        ("knee_and_ankle_assembly_4", "foot_assembly_2"),
+    ]
+}
 LEGS = {
     "left": ("left_roll_to_pitch_assembly", "knee_and_ankle_assembly", "knee_and_ankle_assembly_2", "foot_assembly"),
     "right": ("right_roll_to_pitch_assembly", "knee_and_ankle_assembly_3", "knee_and_ankle_assembly_4", "foot_assembly_2"),
@@ -39,13 +60,14 @@ LEGS = {
 LEG_PARTS = ("hip link", "thigh", "shin", "foot")
 SERVO_KG = 0.055
 PRINT_DENSITY = 1240.0  # kg/m3, as assumed for the six-part design
-# Endpoints known to miss the 5 mm support margin with the estimated masses. See README.md.
-SHORT_MARGIN = {89}
+# Endpoints known to miss the 5 mm support margin with the estimated masses, and the
+# margin in mm each must still keep. See README.md.
+SHORT_MARGIN = {89: 4.0}
 ARM_JOINTS = ("shoulder yaw", "shoulder pitch", "elbow", "forearm roll", "wrist flex", "wrist roll")
 
 
-def load_viewer():
-    html = (HERE / "viewer.html").read_text(encoding="utf-8")
+def load_viewer(path=None):
+    html = Path(path or HERE / "viewer.html").read_text(encoding="utf-8")
     found = re.search(r'<script id="payload"[^>]*>(.*?)</script>', html, re.S)
     if not found:
         raise SystemExit("viewer.html has no payload block")
@@ -120,22 +142,7 @@ def check_poses(data, errors):
         if skew > 1e-5:
             errors.append(f"{name} holds a transform that is not a rotation")
 
-    targets, world = decode_clip(data, "targets")
-    _, stance = decode_clip(data, "pickup")
-    print("Sole closure of the 96 endpoints against the stance of the pickup clip")
-    for foot in FEET:
-        b = bodies.index(foot)
-        reference = stance[0, b]
-        shift = np.linalg.norm(world[:, b, :, 3] - reference[:, 3], axis=1) * 1000
-        relative = reference[:, :3].T @ world[:, b, :, :3]
-        cosine = (np.trace(relative, axis1=1, axis2=2) - 1) / 2
-        turn = np.degrees(np.arccos(np.clip(cosine, -1, 1)))
-        print(
-            f"  {foot}: at most {shift.max():.3f} mm (target {shift.argmax():02d}) "
-            f"and {turn.max():.3f} deg (target {turn.argmax():02d})"
-        )
-        if shift.max() >= SOLE_TOLERANCE[0] or turn.max() >= SOLE_TOLERANCE[1]:
-            errors.append(f"{foot} leaves the {SOLE_TOLERANCE[0]} mm / {SOLE_TOLERANCE[1]} deg tolerance")
+    targets = decode_clip(data, "targets")[0]
 
     angles = np.array(targets["q"])[:, :6]
     low, high = angles.min(0), angles.max(0)
@@ -163,7 +170,7 @@ def check_poses(data, errors):
         )
 
 
-def check_pickup(data):
+def check_pickup(data, errors):
     """Clearance between each jaw and the cube through the pickup clip."""
     bodies = data["bodies"]
     world = decode_clip(data, "pickup")[1]
@@ -184,6 +191,8 @@ def check_pickup(data):
         local = np.einsum("fpi,fij->fpj", placed - world[:, cube, None, :, 3], world[:, cube, :, :3])
         gap = np.linalg.norm(np.maximum(np.abs(local) - half, 0), axis=2).min(1) * 1000
         depth = np.maximum((half - np.abs(local)).min(2).max(1), 0) * 1000
+        if depth.max() > 0.05:
+            errors.append(f"the {label} overlaps the cube by {depth.max():.2f} mm")
         touching = np.flatnonzero(gap < 0.05)
         first = f"within 0.05 mm from frame {touching[0]}" if len(touching) else "never within 0.05 mm"
         print(
@@ -244,17 +253,17 @@ def screen(data, errors):
         print(f"  {a} x {b}: {kind} ({where})")
         if HOLLOW_BODIES & {a, b} and frozenset((a, b)) not in HOLLOW_SEATS:
             errors.append(f"a hollow part intersects another body: {a} x {b}")
+        elif frames != total and frozenset((a, b)) not in EXPECTED_CONTACTS:
+            errors.append(f"two bodies intersect in some stored frames: {a} x {b}")
 
 
 def leg_trunk(data, errors):
-    """Intersections of the hip links and thighs with the trunk, on the repository's meshes.
+    """Intersections of every leg link with the trunk, on the repository's meshes.
 
     The trunk and legs are unchanged from the six-part design, so their meshes come from
     coverage/robot.xml and are placed with the body transforms stored in the viewer.
-    coverage/replay.py tests only the shins and feet against the trunk.
+    postures.py additionally requires a gap; this test needs only the viewer.
     """
-    import csv
-
     import fcl
     import mujoco
 
@@ -312,44 +321,13 @@ def leg_trunk(data, errors):
         print(f"    poses with a thigh in the trunk {len(thigh)} of {count}, with any leg part {len(any_part)} of {count}")
         return thigh
 
-    def hip_yaw(world, side, hip):
-        """Hip yaw in degrees, read from the stored trunk and hip transforms."""
-        joint = model.joint(f"{side}_hip_yaw")
-        rest = np.zeros(9)
-        mujoco.mju_quat2Mat(rest, model.body_quat[model.body(hip).id])
-        trunk = world[:, bodies.index("trunk_assembly"), :, :3]
-        turn = rest.reshape(3, 3).T @ (trunk.transpose(0, 2, 1) @ world[:, bodies.index(hip), :, :3])
-        twist = np.stack([turn[:, 2, 1] - turn[:, 1, 2], turn[:, 0, 2] - turn[:, 2, 0], turn[:, 1, 0] - turn[:, 0, 1]], 1) / 2
-        return np.degrees(np.arctan2(twist @ model.jnt_axis[joint.id], (np.trace(turn, axis1=1, axis2=2) - 1) / 2))
-
     bodies = data["bodies"]
     print("Leg meshes of the repository against the trunk")
     for name in ("targets", "pickup", "fold"):
         world = decode_clip(data, name)[1]
-        thigh = report(f"viewer {name}", {b: world[:, bodies.index(b)] for b in names})
+        report(f"viewer {name}", {b: world[:, bodies.index(b)] for b in names})
         if found_any[-1]:
             errors.append(f"a leg part intersects the trunk in the {name} clip")
-        if name == "targets" and thigh:
-            print("    targets with a thigh in the trunk: " + " ".join(f"{i:02d}" for i in thigh))
-            yaw = np.abs(np.c_[hip_yaw(world, "left", "hip_roll_assembly"), hip_yaw(world, "right", "hip_roll_assembly_2")])
-            print(
-                f"    largest hip yaw of those targets {yaw[thigh].max(1).min():.1f} to {yaw[thigh].max(1).max():.1f} deg, "
-                f"of the other targets {np.delete(yaw, thigh, 0).max(1).min():.1f} to {np.delete(yaw, thigh, 0).max(1).max():.1f} deg"
-            )
-
-    with (HERE.parent / "coverage" / "targets.csv").open(newline="", encoding="utf-8") as source:
-        rows = list(csv.DictReader(source))
-    frames = {b: [] for b in names}
-    for row in rows:
-        mujoco.mj_resetData(model, state)
-        for column, value in row.items():
-            if column.endswith("_rad"):
-                state.qpos[model.joint(column[:-4]).qposadr[0]] = float(value)
-        mujoco.mj_kinematics(model, state)
-        for b in names:
-            k = model.body(b).id
-            frames[b].append(np.c_[state.xmat[k].reshape(3, 3), state.xpos[k]])
-    report("six-part design, coverage/targets.csv", {b: np.array(v) for b, v in frames.items()})
 
 
 def solid(vertices, faces):
@@ -459,8 +437,11 @@ def replay(data, errors):
     print(f"    smallest margin that holds {margin[margin >= 5].min():.2f} mm (target {int(np.where(margin >= 5, margin, np.inf).argmin()):02d})")
     for i in sorted(short):
         print(f"    target {i:02d}: {margin[i]:.2f} mm")
-    if short - SHORT_MARGIN:
-        errors.append(f"support margin under 5 mm at targets {sorted(short - SHORT_MARGIN)}")
+    if short - set(SHORT_MARGIN):
+        errors.append(f"support margin under 5 mm at targets {sorted(short - set(SHORT_MARGIN))}")
+    for i, least in SHORT_MARGIN.items():
+        if margin[i] < least:
+            errors.append(f"support margin of target {i} fell to {margin[i]:.2f} mm")
 
 
 def main():
@@ -473,7 +454,7 @@ def main():
     errors = []
     check_meshes(data, errors)
     check_poses(data, errors)
-    check_pickup(data)
+    check_pickup(data, errors)
     if args.screen:
         screen(data, errors)
     if args.legs:

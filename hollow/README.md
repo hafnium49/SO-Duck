@@ -10,41 +10,70 @@
 
 The individual review meshes use millimetres in the corresponding robot body frame. They preserve the viewer's 0.1 mm coordinate grid and all of its triangles. Rounding collapses some triangles. Use these files for visual review only. The fabrication STEP and original STL exports are pending.
 
-The viewer stores 96 grasp endpoint poses, 81 floor-pickup frames and 188 folding frames. [`targets.csv`](targets.csv) and [`pickup.csv`](pickup.csv) give the joint angles of the endpoints and of the pickup.
+The viewer stores 96 grasp endpoint poses, 81 floor-pickup frames and 188 folding frames. [`targets.csv`](targets.csv) and [`pickup.csv`](pickup.csv) give the joint angles of the endpoints and of the pickup. [`robot.xml`](robot.xml) is a model of this design reconstructed from the viewer.
 
-## Coverage with the legs clear of the trunk
+## Coverage with a gap between the legs and the trunk
 
-The three parts are unchanged in this revision. Only stored poses changed.
+The three parts are unchanged since the first revision. Only stored postures changed.
 
 | 96 planted-feet targets | Forward | Broad | Total |
 | --- | ---: | ---: | ---: |
-| First stored poses, as claimed | 64/64 | 32/32 | 96/96 |
-| First stored poses, no leg part in the trunk | 38/64 | 7/32 | 45/96 |
-| Poses in this revision | 64/64 | 31/32 | 95/96 |
+| First stored postures, as claimed | 64/64 | 32/32 | 96/96 |
+| First stored postures, no leg link in the trunk | 38/64 | 7/32 | 45/96 |
+| First stored postures, with the required gap | 30/64 | 6/32 | 36/96 |
+| Postures in this revision, with the required gap | 62/64 | 31/32 | 93/96 |
 
-In 51 of the first stored endpoints a hip link or thigh cut the trunk shell. Those 51 have new whole-body poses. The other 45 are kept as stored. The `source` column of `targets.csv` says which is which. The pickup has a new crouch on the same tool path, because the right hip link cut the trunk in every frame of the first one.
+The required gap is 0.3 mm from each hip link to the trunk and 1 mm from each thigh, shin and foot, as in the [six-part design](../coverage/README.md). The 36 first postures that pass are kept and 57 are new. The `source` column of `targets.csv` says which is which. The pickup has a new crouch on the same tool path.
 
-Target 89 does not pass. Its best pose with clear legs has a 4.59 mm support margin against the 5 mm requirement. The centre of mass sits too close to the front edge of the soles. Leaning the neck mount 10 mm forward gained less than 1 mm in a trial. Forearm and wrist links 15 % lighter gained about 1.5 mm. Neither change is made here.
+Three targets have no passing posture. Their rows hold the last posture tried.
 
-**How the new poses were found.** The model that produced the first poses is not in this branch. The arm's joint frames were recovered from the body transforms stored in the viewer. They reproduce all 368 stored frames to 0.0001 mm. The search used the whole-body solver of [`study/pose_test.py`](../study/pose_test.py) with many starts and several hip-yaw ranges, kept the arm inside the angles of the first stored poses, and took for each target the clear pose with the largest support margin. The search scripts are not in this repository. The checks below do not depend on them.
+- **Targets 12 and 35.** Every balanced candidate brings the left hip link closer to the trunk than 0.3 mm. These targets need more hip roll toward the trunk than the gap allows.
+- **Target 89.** The best posture with the gap has a 4.62 mm support margin against the 5 mm requirement. The centre of mass sits too close to the front edge of the soles. Leaning the neck mount 10 mm forward gained less than 1 mm in a trial, and forearm and wrist links 15 % lighter gained about 1.5 mm. Neither change is made here.
 
-**What still needs the original model.** The joint limits of the arm, the masses of the three parts and full-resolution arm meshes. Until then the support margins rest on estimated masses and the arm clearances on the viewer's display meshes.
+## Reconstructed model
+
+The model that produced the first postures is not in this branch. [`model.py`](model.py) rebuilds one from the viewer and wrote `robot.xml` and the meshes in `meshes/`.
+
+- **Joints.** Each arm joint is a hinge fitted to the stored body transforms. The model reproduces the 96 first endpoints to 0.0000001 in every transform entry.
+- **Joint ranges.** The largest and smallest angle stored for each joint, widened by the 2° reserve of the replay. The real ranges are unknown.
+- **Meshes.** The arm uses the viewer's display meshes on a 0.1 mm grid, and the three review meshes for the hollow parts. The gripper and jaw use the full SO-101 meshes, whose frames they share. The trunk, legs and parking pad use the repository meshes of the six-part model, with the original roof.
+- **Masses.** Estimates: the SO-101 link inertials, 55 g per servo and the enclosed volume of each review mesh at 1.24 g/cm³. The robot comes to 2.192 kg. Screws, horns, wiring and any payload are not counted.
+
+**Still needed from the original design files:** the STEP and STL exports of the three parts, the real joint ranges, the real part masses and full-resolution arm meshes.
 
 ## Checks
 
-The "Hollow parts inspection" job runs every check on each pull request. They work from the body transforms and meshes stored in the viewer.
+The "Hollow parts inspection" job runs both scripts on each pull request.
 
 ```sh
-python -m pip install -r hollow/requirements.txt
+python -m pip install -r crosswise/requirements.txt
 python scripts/restore_assets.py
+python collision/build_bvh.py
 python hollow/inspect_viewer.py --screen --legs --replay
+OPENBLAS_NUM_THREADS=1 python hollow/postures.py
 ```
 
-- **Files.** Without options the script needs only NumPy. It checks the frame counts, the triangle indices and that each review mesh holds the same triangles as the viewer.
-- **Targets and soles.** `--replay` compares the stored tool pose of each endpoint with the [published target generator](../study/pose_test.py) and both soles with their anchors. The tool is within 0.522 mm and 0.129° of every target. The right sole is within 0.143 mm and 0.060° of its anchor. The limits are 1.5 mm and 1° for the tool, 0.2 mm and 0.15° for a sole.
-- **Support margin.** `--replay` also estimates the centre of mass. It uses the trunk and leg inertials of `coverage/robot.xml`, the SO-101 link inertials, 55 g per servo and the volume of each review mesh at 1.24 g/cm³. The estimated robot mass is 2.192 kg. 95 of the 96 endpoints keep at least 5 mm of margin. The smallest that holds is 5.57 mm at target 60. The job fails if any endpoint other than 89 drops below 5 mm.
-- **Legs and trunk.** `--legs` places the repository's trunk and leg meshes with the stored body transforms. No hip link, thigh, shin or foot meets the trunk in any endpoint, pickup frame or folding frame. The job fails if one does. `coverage/replay.py` tests only the shins and feet against the trunk. The same test on `coverage/targets.csv` finds a thigh in the trunk in 24 of the 96 endpoints of the six-part design, and any leg part in 33.
-- **Hollow parts.** `--screen` intersects the viewer's display meshes for every pair of separately moving bodies in all 368 stored frames. The three hollow parts meet no such body except the elbow servo (`forearm_pitch_case`) that the fork cheeks seat on. The job fails if that changes. The display meshes sit on a 0.1 mm grid and overlap at every driven joint, so this is a screen and not a clearance measurement.
-- **Joint angles.** 44 of the 96 endpoints hold at least one arm joint at the largest or smallest stored angle. The stored angles span ±108.0° at shoulder yaw, −73.2° to 98.0° at shoulder pitch, ±94.8° at the elbow, ±153.0° at forearm roll, −92.3° to 93.0° at wrist flex and −141.6° to 160.8° at wrist roll. The largest hip yaw is 21.3°. The joint ranges of the revised model are not published here.
-- **Pickup approach.** From frame 16 of the pickup clip the fixed jaw lowers along one cube face with less than 0.05 mm of clearance and no overlap. The moving jaw stops 0.10 mm from the opposite face. A physical approach needs clearance on the fixed side.
+[`postures.py`](postures.py) replays the CSV postures on the reconstructed model with the checks of the six-part replay. It fails unless exactly targets 12, 35 and 89 fail.
+
+- **Targets.** Joint ranges with the 2° reserve, tool within 1.5 mm and 1°, soles within 0.2 mm and 0.15°, support margin of at least 5 mm, nothing below the floor, the leg gap, no mesh intersection, and all of that again at ten jaw openings up to 20°. The 93 passing endpoints are within 0.517 mm and 0.109° of their targets. The smallest support margin is 5.55 mm at target 60. The smallest gaps are 0.30 mm at a hip link and 1.19 mm at a thigh. The largest hip yaw is 22.0°.
+- **Pickup.** The 81 frames hold one crouch. The support margin stays above 38.99 mm, the hip link gap is 0.32 mm and the thigh gap 6.44 mm. The tool stays on a vertical line.
+- **Fold, overhead and parked postures.** They use the reference stance. The support margin stays above 9.58 mm. The fixed finger meets the parking pad only in the last frame.
+- **Viewer.** The transforms stored in the viewer equal the model's for every endpoint and pickup frame.
+- **Mesh pairs.** Meshes on the two sides of one arm joint touch on the display grid, and the triangle test of the replay counts touching faces as a hit. Those pairs get a test that ignores touching faces. Four of them overlap in every frame, a link seated on the servo horn before it, and are skipped.
+
+`python hollow/postures.py --search` searches postures for every target whose row fails, with [`coverage/resolve.py`](../coverage/resolve.py). `--search-pickup` searches a pickup crouch and `--write-viewer` stores the CSV postures in the viewer.
+
+[`inspect_viewer.py`](inspect_viewer.py) works from the viewer alone. Without options it needs only NumPy.
+
+- **Files.** Frame counts, triangle indices, and each review mesh holding the same triangles as the viewer. It fails if either jaw overlaps the cube in the pickup clip.
+- **Mesh screen.** `--screen` intersects the display meshes of every pair of separately moving bodies in all 368 stored frames. It fails if a hollow part meets any body other than the elbow servo its fork seats on, or if any other pair intersects in some frames only. The jaws on the cube, the finger on the parking pad and leg links joined by a joint are expected.
+- **Legs.** `--legs` fails if a leg link intersects the trunk in any endpoint, pickup frame or folding frame, on the repository meshes.
+- **Targets and margin.** `--replay` compares the stored tool poses and soles with the targets and anchors and estimates the support margin from the stored transforms. Its margins differ from the model's by up to 0.03 mm. It fails if an endpoint other than 89 drops below 5 mm, or if 89 drops below 4 mm.
+
+These are reported and not checked: the heights, the joint-angle statistics and the defects of the review meshes.
+
+- **Joint angles.** 43 of the 96 endpoints hold at least one arm joint at the largest or smallest stored angle. The stored angles span ±108.0° at shoulder yaw, −73.2° to 98.0° at shoulder pitch, −94.9° to 94.8° at the elbow, ±153.0° at forearm roll, −92.6° to 93.0° at wrist flex and −141.6° to 160.8° at wrist roll.
+- **Pickup approach.** From frame 16 of the pickup clip the fixed jaw lowers along one cube face with less than 0.05 mm of clearance. The moving jaw stops 0.11 mm from the opposite face. A physical approach needs clearance on the fixed side.
 - **Heights.** The parked robot is 524.8 mm tall and the overhead pose 661.8 mm. The lowest geometry other than the feet is 24.54 mm above the floor across the 96 endpoints and 2.47 mm during the pickup.
+
+Not checked anywhere: joint torques, motion between the endpoints, and any payload in the gripper.

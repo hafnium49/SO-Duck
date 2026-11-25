@@ -1,4 +1,0 @@
-numpy
-scipy
-mujoco==3.17.0
-python-fcl
