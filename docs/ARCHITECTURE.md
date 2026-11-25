@@ -1,5 +1,7 @@
 # Proposed mechanical and control architecture
 
+This page records the earlier longitudinal-roll design. The [current crosswise assembly](../crosswise/README.md) uses the stock SO-101 forearm.
+
 ```text
 Open Duck Mini V2 hips, legs and feet (10 DoFs)
              │

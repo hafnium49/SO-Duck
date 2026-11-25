@@ -1,5 +1,7 @@
 # Results and interpretation
 
+This page records the earlier longitudinal-roll design. The [current crosswise assembly](../crosswise/README.md) uses the stock SO-101 forearm.
+
 **All figures below are saved computational observations from the study**, not real-hardware measurements. For generation commands, see [Reproducibility](REPRODUCIBILITY.md) and the original source.
 
 ## Servo orientation — sampled kinematic conditioning

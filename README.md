@@ -1,65 +1,33 @@
-# SO-Duck | whole-body bipedal manipulation research
+# SO-Duck
 
-**Public computational study · 22 November 2026 · hardware not yet validated**
+The revised SO-Duck arm reaches **95 of the 96 published grasp targets** with both feet planted and a required gap between the legs and the trunk. It keeps the crosswise elbow and repositions an existing motor to roll the forearm. The resulting six-axis arm retains the stock SO-101 gripper and uses 17 actuators across the robot.
 
-SO-Duck studies a **six-joint end-effector pose chain** made by retaining Open Duck Mini V2's four-axis neck and adding the final two SO-101 wrist axes, plus an independently actuated SO-101 gripper. The robot retains Duck's ten actuated leg joints and uses one proposed custom, case-mounted forearm. The shell is not intended to carry the manipulator's structural load.
+![Revised SO-Duck at a broad-orientation target, grasping a floor cube and folded on its rear pad](coverage/preview.png)
 
-**Status:** This repository records CAD, kinematics, finite joint-space surveys, numerical whole-body IK, endpoint collision screening, and estimated static torque/balance. It is *not* a physically demonstrated, walking-and-grasping robot. The workspace counts are results on specified finite target banks, not guarantees of arbitrary pose reachability.
+| Grasp target set | Previous crosswise arm | Revised arm |
+|---|---:|---:|
+| Forward | 45/64 | 64/64 |
+| Broad orientation | 12/32 | 31/32 |
 
-## At a glance
+[Design and validation](coverage/README.md) · [offline 3D pose explorer](coverage/poses.html) · [custom links in STEP](coverage/mounts.step) · [whole-robot MuJoCo model](coverage/robot.xml).
 
-| System | Joint count | Role |
-|---|---:|---|
-| Duck legs | 10 | Locomotion and constrained torso pose |
-| Duck neck | 4 | Neck pitch, head pitch, yaw, terminal roll |
-| SO-101 distal wrist | 2 | Wrist flex and wrist roll |
-| SO-101 gripper | 1 | Jaw opening |
-| **Total** | **17** | **16 pose-changing joints + 1 gripper** |
+The revised model also grasps a 20 mm floor cube in kinematic replay and seats its fixed fingertip on the rear roof pad. Its parked height is 578 mm. The target result covers individual endpoint poses with unloaded static balance. Each leg link below the hip-yaw link keeps a gap to the trunk: 0.3 mm for the hip link and 1 mm for the thigh, shin and foot. Target 64 has no posture that passes. The crosswise counts predate this rule and have not been recounted. Hardware grasp reliability and paths between all targets remain open.
 
-**After cloning:** run `python scripts/restore_assets.py` to unpack 45 native geometry files from the lossless Git-tracked chunks, then run `python scripts/verify_study.py` to validate the entire asset/source inventory. See [archive details](archives/README.md).
+## Previous crosswise design
 
-The end-effector can have a rank-six Jacobian in some configurations, but not in all configurations. With both soles fixed, the legs supply four **constrained** torso-motion directions in the nominal stance; leg DoFs are not unrestricted independent end-effector coordinates.
+The earlier design uses a **crosswise forearm connector** on an Open Duck Mini V2 biped. The last Duck neck motor now pitches the stock SO-101 forearm forward and back. The robot has 17 actuators: ten leg joints, four neck/forearm joints, two wrist joints and the gripper. The original head shell is outside the arm load path.
 
-## Study snapshot
+![Folded SO-Duck, floor grasp and high reach](crosswise/poses.png)
 
-- **Mechanical concept:** one replacement forearm retaining the moving-case terminal roll joint, mounting via the terminal servo and opposite support bearing; no load transmitted through the stock Duck head shell.
-- **Geometric conditioning:** sampled forward-facing orthogonal-shaft layout: fifth-percentile minimum gain 0.162, 95th-percentile maximum gain 4.602, 95th-percentile Jacobian condition number 22.86, in the specified *dimensionless* task scaling; these are separate sampled percentiles.
-- **Finite target bank:** 45/64 forward grasps reached, balanced and collision-screened at a nominal planted stance; 62/64 among three tested stances; 26/32 all-orientation samples among those stances. The replant counts are **endpoint-only** tests; there is no verified walking trajectory between stances.
-- **Static torque:** calculated maximum second-neck-pitch torque across 45 accepted forward grasps 0.756 N·m unloaded and 0.929 N·m with 50 g, in a specified heavier-link sensitivity model. Not a sustained motor torque rating.
-
-Details, caveats, and derivation are in [Methods](docs/METHODS.md), [Results](docs/RESULTS.md), and [Validation](docs/VALIDATION.md).
-
-## Open the model
-
-- **[Interactive whole-body pose explorer](SO_Duck_pose_explorer.html)** — saved grasp solutions, stance choices, joint angles, conditioning, COM margins. It is not a live dynamics simulation.
-- [One-piece forearm (STEP)](cad/Case_mounted_forearm.step) is available directly. After restoring geometry, `cad/Forward_neck_and_wrist.glb`, `cad/Case_mounted_forearm.stl`, and `cad/Forward_mount.png` are available locally.
-
-## Repository map
-
-| Directory | Source and results |
+| Open the earlier design | Contents |
 |---|---|
-| [`cad/`](cad/) | Construction program, reference STEP, candidate STEP/STL, GLB, fit analysis |
-| [`search/`](search/) | Upper-chain FK/Jacobians, orientation scans, percentiles, sampling and cross-checks |
-| [`legs/`](legs/) | Duck MJCF, sole mesh, double/single-support kinematics, mass and static loads |
-| [`study/`](study/) | Whole-body target solver, sampled end-effector poses, candidate stance results |
-| [`collision/`](collision/) | Upstream STL meshes, hybrid mesh, BVH/VTK intersection source, endpoint results |
-| [`docs/`](docs/) | Methods, findings, provenance, raw-data schema, limitations, reproduction |
-| [`scripts/`](scripts/) | Inventory and repository integrity checks |
+| [Connector assembly (STEP)](crosswise/connector_assembly.step) | Yaw servo, printed carrier, crosswise terminal servo and stock forearm in their mounting positions |
+| [Carrier STEP](crosswise/carrier.step) · [carrier STL](crosswise/carrier.stl) · [rear pad STL](crosswise/park_pad.stl) | Fabrication geometry in mm |
+| [Whole-robot pose explorer](SO_Duck_pose_explorer.html) | Download and open locally to orbit the assembled robot through the fold, floor pickup and upper reach |
+| [MuJoCo model](crosswise/robot.xml) · [assembly and reproduction guide](crosswise/README.md) | Complete joint chain, actuator bindings, parking-pad placement, six keyframes and replay checks |
 
-## Reproduction
+With both feet planted, the folded model is **449 mm high**, down from **659 mm** upright. The fixed finger seats on a small pad bonded to the rear roof. At the floor, the jaws can enclose a 20 mm cube 140 mm ahead of the toes and follow a 30 mm lift. At a separate overhead pose, the gripper reference point reaches **651 mm above the floor** at 200 mm forward of the torso origin. These results come from CAD and kinematic replay. Printed fit, harness clearance, motor duty, grip friction and walking with the arm parked remain unverified.
 
-Python 3.11+ is a reasonable development baseline; the original study source does not enforce this minimum. Core Python dependencies are NumPy and SciPy. CadQuery is optional for CAD regeneration; VTK and a C++17 compiler are optional for rebuilding collision checks. See [the reproduction guide](docs/REPRODUCIBILITY.md) for commands, requirements, expected outputs, and distinctions between checks and validation.
+## Earlier whole-body study
 
-```bash
-python scripts/restore_assets.py
-python scripts/verify_study.py
-python search/checks.py
-# Later, on a machine with NumPy, SciPy, VTK and C++17 as needed:
-python study/pose_test.py O90 --two --clock 90 --starts 24 --steps 100
-```
-
-## Attribution and scope
-
-Upstream: [Open Duck Mini V2](https://github.com/apirrone/Open_Duck_Mini/tree/v2), [Duck Playground](https://github.com/apirrone/Open_Duck_Playground), [SO-101](https://github.com/TheRobotStudio/SO-ARM100), plus parametric mechanical precedents in [Yo.Town Gym](https://github.com/yotown/gym). See [Provenance](docs/PROVENANCE.md), [Prior art](docs/PRIOR_ART.md), and bundled upstream Apache-2.0 licenses. This repository is public; no new blanket license is inferred for original material unless a separate license is explicitly added.
-
-**Engineering boundary:** simulation feasibility, static balancing, finite-mesh intersection, and modeled servo torques do not prove real-world strength, contact stability, motor speed/gear-ratio suitability, safe thermal duty, cable clearance, or walking while grasping.
+The original longitudinal-roll design, orientation search, changing-stance experiments and published data remain available through the [study index](docs/STUDY_INDEX.md) and [original pose explorer](study/legacy_pose_explorer.html). The [earlier crosswise results](crosswise/nominal_targets.csv) use the crosswise model and its revised joint limits. [Upstream geometry and licenses](docs/PROVENANCE.md) cover Open Duck Mini V2, Duck Playground and TheRobotStudio SO-101.

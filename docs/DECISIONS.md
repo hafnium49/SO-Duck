@@ -1,5 +1,7 @@
 # Design decision log
 
+This page records the earlier longitudinal-roll design. The [current crosswise assembly](../crosswise/README.md) uses the stock SO-101 forearm.
+
 | Decision | Rationale | Unresolved consequence |
 |---|---|---|
 | Preserve all four Duck neck joints | Use pre-existing motors; gain yaw/pitch/roll repertoire | Torques and gear speed may be limiting |
