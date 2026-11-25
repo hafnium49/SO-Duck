@@ -35,17 +35,23 @@ RESERVE = np.deg2rad(2)
 # Solver tolerances sit inside the replay limits of 1.5 mm, 1 deg, 0.2 mm and 0.15 deg.
 SOLVED = np.array([1.2, 0.8, 0.15, 0.12])
 MARGIN = 0.005
-# Hip-yaw ranges in degrees (toes-out positive) and the spread of the starting leg
-# posture in radians. A narrow yaw range keeps the thighs away from the trunk shell.
+# Hip-yaw range in degrees (toes-out positive), spread of the starting leg posture in
+# radians, and the largest hip roll toward the trunk in degrees. A narrow yaw range keeps
+# the thighs away from the trunk shell. The roll limit keeps the hip link away from it:
+# the hip link is 0.37 mm from the trunk at 15 degrees of roll in the reference stance.
 SEARCHES = [
-    ((-28, 28), 0.0),
-    ((-12, 18), 0.0),
-    ((-6, 14), 0.10),
-    ((2, 12), 0.10),
-    ((-12, 18), 0.20),
-    ((-20, 22), 0.25),
-    ((-28, 28), 0.30),
-    ((-8, 16), 0.30),
+    ((-28, 28), 0.0, None),
+    ((-12, 18), 0.0, None),
+    ((-6, 14), 0.10, None),
+    ((2, 12), 0.10, None),
+    ((-12, 18), 0.20, None),
+    ((-20, 22), 0.25, None),
+    ((-28, 28), 0.30, None),
+    ((-8, 16), 0.30, None),
+    ((-28, 28), 0.20, 14),
+    ((-12, 18), 0.20, 14),
+    ((-20, 22), 0.30, 12),
+    ((-6, 14), 0.25, 10),
 ]
 
 
@@ -96,7 +102,7 @@ def free_arm_ranges(robot, pairs):
     return np.deg2rad(ranges)
 
 
-def joint_limits(robot, yaw=None, free=None):
+def joint_limits(robot, yaw=None, free=None, roll=None):
     """Lower and upper solver bounds of the 16 joints, inside the 2 degree reserve."""
     names = [f"{s}_{j}" for s in screen.legs.SIDES for j in screen.legs.NAMES] + list(JOINTS)
     limits = np.array([robot.model.joint(n).range for n in names])
@@ -107,6 +113,8 @@ def joint_limits(robot, yaw=None, free=None):
         inward, outward = np.deg2rad(yaw)
         low[0], high[0] = max(low[0], inward), min(high[0], outward)
         low[5], high[5] = max(low[5], -outward), min(high[5], -inward)
+    if roll is not None:
+        high[1], low[6] = min(high[1], np.deg2rad(roll)), max(low[6], -np.deg2rad(roll))
     return low, high
 
 
@@ -151,8 +159,8 @@ def candidates(robot, frames, pairs, targets, positions, rotations, starts):
     reference = np.r_[pose_test.REF.ravel(), np.zeros(6)]
     free = free_arm_ranges(robot, pairs)
     print("Arm joint ranges with neighbouring links apart (deg):", np.rad2deg(free).round().astype(int).tolist())
-    for k, (yaw, spread) in enumerate(SEARCHES):
-        low, high = joint_limits(robot, yaw, free)
+    for k, (yaw, spread, roll) in enumerate(SEARCHES):
+        low, high = joint_limits(robot, yaw, free, roll)
         draws = qmc.Sobol(16, scramble=True, seed=900 + k).random(starts)
         start = np.tile(reference, (starts, 1))
         start[:, 10:] = low[10:] + (high[10:] - low[10:]) * draws[:, :6]
@@ -220,8 +228,13 @@ def passes(robot, pairs, q, targets, positions, rotations, full=True):
     return ok, margin
 
 
-def choose(robot, pairs, found, positions, rotations, block=8, depth=640):
-    """For each target the passing candidate with the largest support margin."""
+def choose(robot, pairs, found, positions, rotations, block=8, depth=240):
+    """For each target the passing candidate with the largest support margin.
+
+    Candidates are tried in order of falling margin. A target still open after the first
+    candidates has the leg gap measured for all of them, and only those with the gap are
+    tried further.
+    """
     ranked = {}
     for t, q in found.items():
         if len(q):
@@ -240,8 +253,19 @@ def choose(robot, pairs, found, positions, rotations, block=8, depth=640):
             chosen.setdefault(int(t), row)  # rows are in order of falling margin
         print(f"  candidates {first + 1} to {first + block}: {len(waiting)} targets tried, {len(chosen)} of {len(found)} settled", flush=True)
     for t in found:
-        if t not in chosen:
-            print(f"  target {t}: {len(found[t])} converged, {len(ranked.get(t, []))} with margin and floor, none passes")
+        if t in chosen or not len(ranked.get(t, [])):
+            continue
+        q = ranked[t]
+        arm = np.c_[np.rad2deg(q[:, 10:]), np.zeros(len(q))]
+        gap = leg_clearance(robot, robot.placements(arm, q[:, :10])[0])
+        q = q[(gap >= LEG_GAP).all(axis=(1, 2))]
+        ok, _ = passes(robot, pairs, q, np.full(len(q), t), positions, rotations) if len(q) else (np.zeros(0, bool), None)
+        if ok.any():
+            chosen[t] = q[np.flatnonzero(ok)[0]]
+        print(f"  target {t}: {len(found[t])} converged, {len(ranked[t])} with margin and floor, {len(q)} with the leg gap, {int(ok.sum())} pass", flush=True)
+    for t in found:
+        if t not in chosen and not len(ranked.get(t, [])):
+            print(f"  target {t}: {len(found[t])} converged, none with margin and floor")
     return chosen
 
 

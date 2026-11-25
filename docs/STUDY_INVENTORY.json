@@ -427,13 +427,13 @@
     },
     {
       "path": "coverage/replay.py",
-      "bytes": 12279,
-      "sha256": "59639307617ff006abb9d762888e759b36cd59ed94bd6b25c6f113497853573e"
+      "bytes": 12330,
+      "sha256": "cea28518fa5bfdb60411873786c1e486924aee1e9f3678bb646f1520b09266e7"
     },
     {
       "path": "coverage/resolve.py",
-      "bytes": 13216,
-      "sha256": "e4b1aa9085449a94da7c30410292f364dfd81e8a20adf5f413488b00b5760f0a"
+      "bytes": 14544,
+      "sha256": "f0988ea6852d77c4b4139eb63d1befdb001570e6fc11c616de83bf6d08a2a4ab"
     },
     {
       "path": "coverage/robot.xml",
@@ -876,5 +876,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 53638155
+  "total_bytes": 53639534
 }

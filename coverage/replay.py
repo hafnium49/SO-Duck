@@ -33,7 +33,7 @@ def robot_model():
     return Robot(HERE / "robot.xml", JOINTS, UPPER)
 
 
-def collision_pairs(robot, seats=()):
+def collision_pairs(robot, seats=(), more_parts=()):
     # Native wrist servo to stock gripper, closed donor jaw, and deck/bolted plate.
     # All other adjacent moving arm surfaces are tested, including each pitch joint's two links.
     # A design whose meshes overlap where a link seats on a servo passes those pairs as seats.
@@ -46,9 +46,10 @@ def collision_pairs(robot, seats=()):
             *seats,
         ]
     }
+    parts = PARTS | set(more_parts)
     for a, b in combinations(robot.mesh, 2):
         if (
-            (a in PARTS or b in PARTS)
+            (a in parts or b in parts)
             and robot.body[a] != robot.body[b]
             and frozenset((a, b)) not in skip
         ):
