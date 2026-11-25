@@ -31,7 +31,17 @@ Gravity torque at the shoulder-pitch servo, with estimated masses. The STS3215 i
 | Forearm 40 mm shorter, wrist axis 40 mm closer to the roll axis | 0.91 N m | 1.29 N m |
 | Forearm 55 mm shorter, wrist axis 50 mm closer | 0.83 N m | 1.16 N m |
 
-The shortened rows moved joints only. No part was drawn and arm collisions were not checked. In that rough test the shorter arms reached as many targets as the present one (81 to 85 of 96 at a low search budget, not comparable with the 93 above). Moving the neck mount 40 mm forward helped little and lost targets.
+The shortened rows moved joints only. No part was drawn and arm collisions were not checked. Moving the neck mount 40 mm forward helped little and lost targets.
+
+Coverage of the 96 targets by the same joints-only method, with reach, joint ranges, the 5 mm support margin and the leg gap, and a deeper search for targets the first pass missed:
+
+| Arm | Forward | Broad | Total |
+| --- | ---: | ---: | ---: |
+| Present lengths | 58/64 | 31/32 | 89/96 |
+| Forearm 40 mm shorter, wrist axis 40 mm closer | 63/64 | 28/32 | 91/96 |
+| Forearm 55 mm shorter, wrist axis 50 mm closer | 63/64 | 26/32 | 89/96 |
+
+The method finds 89 for the present arm where the full search found 93, so differences of a few targets are noise. It is an upper bound for the shortened arms, because their parts have no meshes to collide yet.
 
 ## Goals
 

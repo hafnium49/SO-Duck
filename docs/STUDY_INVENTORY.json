@@ -627,8 +627,8 @@
     },
     {
       "path": "docs/superpowers/specs/2026-11-25-buildable-hollow-arm-design.md",
-      "bytes": 13082,
-      "sha256": "7b09811d7d4a81117f90c77571231059ce9b97ab4e50e7412063d6ef4b277684"
+      "bytes": 13580,
+      "sha256": "0b02a092a8ab80b174228888a6cce6c382c4dde296b6427b098929e3327870b7"
     },
     {
       "path": "hollow/README.md",
@@ -991,5 +991,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 61640217
+  "total_bytes": 61640715
 }
