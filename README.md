@@ -1,5 +1,13 @@
 # SO-Duck
 
+## Hollow three-part design at the original neck socket
+
+The neck mount, elbow-to-forearm-roll link and wrist carrier use hollow sections adapted from the SO-101 donor parts. The mount uses the four original neck screws. The arm retains six positioning axes and the gripper. With a required gap between the legs and the trunk, 93 of the 96 published grasp targets pass the replay on a model reconstructed from the viewer. The fabrication files of the three parts are still pending.
+
+[Inspect the three parts and their sections](hollow/README.md) · [download the assembly viewer](hollow/viewer.html).
+
+## Earlier six-part grasp-coverage design
+
 The revised SO-Duck arm reaches **95 of the 96 published grasp targets** with both feet planted and a required gap between the legs and the trunk. It keeps the crosswise elbow and repositions an existing motor to roll the forearm. The resulting six-axis arm retains the stock SO-101 gripper and uses 17 actuators across the robot.
 
 ![Revised SO-Duck at a broad-orientation target, grasping a floor cube and folded on its rear pad](coverage/preview.png)
