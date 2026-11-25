@@ -37,8 +37,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 312,
-      "sha256": "1dbb2e3f06fb738884de97503472efb0738e5bf189e6285a4a9d00e8ae34e67f"
+      "bytes": 341,
+      "sha256": "d7e659440cafc85c1c39472a2de6a197ac47bd39e15866698610200f942d8fe2"
     },
     {
       "path": "LICENSES/Open_Duck_Mini_APACHE-2.0.txt",
@@ -552,8 +552,8 @@
     },
     {
       "path": "crosswise/requirements.txt",
-      "bytes": 93,
-      "sha256": "8f58bc594e8313ba4cfd4e315bee7afb5143450b6909eca46a01b172b8f998c1"
+      "bytes": 114,
+      "sha256": "a4142d2351a276fd2a10512a86209c35c94491ac5729504b95a9ace834b9ea73"
     },
     {
       "path": "crosswise/robot.xml",
@@ -597,8 +597,8 @@
     },
     {
       "path": "docs/PROVENANCE.md",
-      "bytes": 2342,
-      "sha256": "3c7204b123e6f8b7fbd07f4956ec130b17bfd9c306115492496b01ea86162b27"
+      "bytes": 2440,
+      "sha256": "b3fea18b9dce3c83d313668385a4ae82a77c2ade03c8de4a3fdf46b118bc1d30"
     },
     {
       "path": "docs/REPRODUCIBILITY.md",
@@ -639,6 +639,56 @@
       "path": "hollow/README.md",
       "bytes": 8369,
       "sha256": "692b5141b33c61257fcc7f02a3eb13fe248c66177de148eb095939bebf0f9b61"
+    },
+    {
+      "path": "hollow/cad/donors/Base_motor_holder_SO101.step",
+      "bytes": 300211,
+      "sha256": "f13462eea875727ae7cec7d190c59642444b9076c76cf2423bbe3c5b6c469587"
+    },
+    {
+      "path": "hollow/cad/donors/Motor_holder_SO101_Base.step",
+      "bytes": 352248,
+      "sha256": "fb2ef4603324ddea53ab655f6ecd48c7f5a72dd7603e57e92c60c0a8e67a9083"
+    },
+    {
+      "path": "hollow/cad/donors/Motor_holder_SO101_Wrist.step",
+      "bytes": 346197,
+      "sha256": "e58d86502535a5a4936677e9d934f1bda9417e83f7480f475061728c146739c4"
+    },
+    {
+      "path": "hollow/cad/donors/README.md",
+      "bytes": 907,
+      "sha256": "606ec40d731ad35e9ebdb7dd52cc7baed89d092cdf652a7908f84607fea4835b"
+    },
+    {
+      "path": "hollow/cad/donors/Rotation_Pitch_SO101.step",
+      "bytes": 370844,
+      "sha256": "a392681efb05bf4009c17115a9b3e37bbee9d2fcfe25e2066b11b95aaa380915"
+    },
+    {
+      "path": "hollow/cad/donors/SHA256SUMS",
+      "bytes": 646,
+      "sha256": "bbedf44c255712e986c72f2bc023a75ffac36a28ca86a9d2bb880091f4d6fa40"
+    },
+    {
+      "path": "hollow/cad/donors/Under_arm_SO101.step",
+      "bytes": 626245,
+      "sha256": "677a1a57efeddc439d97ebdc309b1c2853cfcb83f14c7d695c312fcf13a89713"
+    },
+    {
+      "path": "hollow/cad/donors/Upper_arm_SO101.step",
+      "bytes": 551437,
+      "sha256": "efa19a6dd2ccb459248500c76629cfa840630e7e15d9e146394d31da1525dd61"
+    },
+    {
+      "path": "hollow/cad/donors/Wrist_Roll_Pitch_SO101.step",
+      "bytes": 1203030,
+      "sha256": "39c5e78647d471ab4e4328ec6d00f06ad90dc48a0b1ffe4baf1a951c1304f74b"
+    },
+    {
+      "path": "hollow/cad/params.py",
+      "bytes": 3055,
+      "sha256": "49ef89d91b84b72bf6142a93521ed710cf26884b15ee56c335cec4686090061a"
     },
     {
       "path": "hollow/inspect_viewer.py",
@@ -736,6 +786,16 @@
       "sha256": "5378f21934d01e9ab4acb524b06665d6aa489d493de0cb9e97cda728af6ecb89"
     },
     {
+      "path": "hollow/tests/conftest.py",
+      "bytes": 370,
+      "sha256": "2b463426b9bcab4792507d1dc18af4741994212a246cd3127d89eedbe2e903d1"
+    },
+    {
+      "path": "hollow/tests/test_params.py",
+      "bytes": 2612,
+      "sha256": "8a5a2d59c6de5d2f72b2b0cc55cc5365e6f1f9145b7a2da7183b63d0d35dcc79"
+    },
+    {
       "path": "hollow/viewer.html",
       "bytes": 2330742,
       "sha256": "0a6e06a8e21d226fd4fe6ee15e07cf35fe038292024e0eda9977420abe34740e"
@@ -817,8 +877,8 @@
     },
     {
       "path": "scripts/study_inventory.py",
-      "bytes": 1410,
-      "sha256": "4049917917ecb95bb03238ccb746e7b7dcdbb66880708e695a7bec8886bb18a7"
+      "bytes": 1436,
+      "sha256": "c0da6d0b694d8336a0c6cd1b55726def46d164a78b7850f447324d1ff7283dc4"
     },
     {
       "path": "scripts/verify_repository.py",
@@ -996,5 +1056,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 61679301
+  "total_bytes": 65437277
 }

@@ -19,3 +19,5 @@ results/private/
 /cad/*.png
 /cad/under_arm_so101_v1.step
 /collision/bvh.so
+.pytest_cache/
+.superpowers/
