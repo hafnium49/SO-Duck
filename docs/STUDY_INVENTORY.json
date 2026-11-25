@@ -47,8 +47,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 3252,
-      "sha256": "45b0950f79849c8b2e4161d0668afa5786dcef7b2ddf064d3ea8479a47fe434f"
+      "bytes": 3538,
+      "sha256": "b5dd3943415c86798df17a17a0926ad9989cd74a1fbdc78dce4602f311143e93"
     },
     {
       "path": "SO_Duck_pose_explorer.html",
@@ -362,8 +362,8 @@
     },
     {
       "path": "coverage/README.md",
-      "bytes": 6075,
-      "sha256": "b3083db40065c0ee4f988d2b72226cdba5f584bb1aa9e2248c352fe20eddb9b2"
+      "bytes": 7599,
+      "sha256": "ebd823facd364baf5fc56c2b17d7341917260188f3536253894a5b8513575181"
     },
     {
       "path": "coverage/build.py",
@@ -417,8 +417,8 @@
     },
     {
       "path": "coverage/poses.html",
-      "bytes": 1239748,
-      "sha256": "3ab78481296bb1cb33a097e8a82071a7d603024432960c5f8fcc3b2a72c530c6"
+      "bytes": 1239195,
+      "sha256": "b42aac720c3a5be29720a8fb890c60bcf131f039a93d17efff4c0103e6523b08"
     },
     {
       "path": "coverage/preview.png",
@@ -427,8 +427,13 @@
     },
     {
       "path": "coverage/replay.py",
-      "bytes": 9419,
-      "sha256": "18a80d2fa4c17b6d0e9c854d9c144e8f8a53b92ada2948754deecf103136742b"
+      "bytes": 12154,
+      "sha256": "fa55ddb7fd1d9966652f1ba7ba9b508385745036477a7fc6bb409e7bb96ec50a"
+    },
+    {
+      "path": "coverage/resolve.py",
+      "bytes": 12772,
+      "sha256": "09b2ed3650f90a3fdb751837a1d2ad4108df057c05a28df97728aac7aa380a41"
     },
     {
       "path": "coverage/robot.xml",
@@ -457,13 +462,13 @@
     },
     {
       "path": "coverage/targets.csv",
-      "bytes": 24073,
-      "sha256": "f2527b8dd8b6ff77e16d8ede2bcf3b5c74b31ca22950b3d6cb87c5eb69423882"
+      "bytes": 24150,
+      "sha256": "a1b1032dbf5e8dff4602e2e2c122896012cf583041fd5cfc12729eae02acad54"
     },
     {
       "path": "coverage/viewer.py",
-      "bytes": 3975,
-      "sha256": "d097b9b9b813d7f6bf6a86ede50b9317bc7920c0b58231ef960e9eee7fa5a239"
+      "bytes": 4044,
+      "sha256": "acbe5e3b5175040b80f5c5cabac39d350ae63056cece2df5e4f1ccb51aab3657"
     },
     {
       "path": "coverage/wrist_flex_link.stl",
@@ -542,8 +547,8 @@
     },
     {
       "path": "crosswise/requirements.txt",
-      "bytes": 82,
-      "sha256": "aadc47d95dd11b2c9a3c84dd40d8bea979c2671c4063a6cd6848e3c1c7400992"
+      "bytes": 93,
+      "sha256": "8f58bc594e8313ba4cfd4e315bee7afb5143450b6909eca46a01b172b8f998c1"
     },
     {
       "path": "crosswise/robot.xml",
@@ -871,5 +876,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 53620665
+  "total_bytes": 53637586
 }

@@ -19,6 +19,16 @@ PARTS = (
 )
 
 
+# Required gap between each leg link and the trunk, metres. The stock leg alone brings
+# the hip link within 0.02 mm of the trunk at 23 degrees of hip roll, so the hip link
+# gets a smaller gap than the links below it.
+LEG_LINKS = ("hip link", "thigh", "shin", "foot")
+LEG_GAP = np.array([0.0003, 0.001, 0.001, 0.001])
+# Targets with no posture that passes every check. resolve.py found none for them.
+# Their rows in targets.csv hold the earlier posture, in which a leg link meets the trunk.
+UNREACHED = (64,)
+
+
 def robot_model():
     return Robot(HERE / "robot.xml", JOINTS, UPPER)
 
@@ -41,7 +51,17 @@ def collision_pairs(robot):
             and frozenset((a, b)) not in skip
         ):
             yield a, b
-    legs = [
+    legs = leg_bodies(robot)
+    yield from ((a, b) for a in legs[0] for b in legs[1])
+    for leg in legs:
+        yield from ((a, b) for i, a in enumerate(leg) for b in leg[i + 2 :])
+        # Every link below the hip-yaw link, which is the trunk's own joint partner.
+        yield from ((a, "trunk_assembly") for a in leg[1:])
+
+
+def leg_bodies(robot):
+    """Body names of each leg in joint order, from the hip-yaw link to the foot."""
+    return [
         [
             robot.model.body(
                 robot.model.jnt_bodyid[robot.model.joint(f"{s}_{n}").id]
@@ -50,10 +70,46 @@ def collision_pairs(robot):
         ]
         for s in screen.legs.SIDES
     ]
-    yield from ((a, b) for a in legs[0] for b in legs[1])
-    for leg in legs:
-        yield from ((a, b) for i, a in enumerate(leg) for b in leg[i + 2 :])
-        yield from ((a, "trunk_assembly") for a in leg[3:])
+
+
+def leg_clearance(robot, frames):
+    """Distance in metres from each hip link, thigh, shin and foot to the trunk.
+
+    Returns one row per posture, shaped (postures, 2 legs, 4 links). An intersecting
+    link reports a distance of zero or less.
+    """
+    import fcl
+
+    if not hasattr(robot, "solids"):
+        robot.solids = {}
+
+    def placed(name, i):
+        if name not in robot.solids:
+            points = np.ascontiguousarray(robot.mesh[name].reshape(-1, 3))
+            faces = np.arange(len(points)).reshape(-1, 3)
+            shape = fcl.BVHModel()
+            shape.beginModel(len(points), len(faces))
+            shape.addSubModel(points, faces)
+            shape.endModel()
+            robot.solids[name] = fcl.CollisionObject(shape, fcl.Transform())
+        pose = frames[name][i]
+        robot.solids[name].setTransform(
+            fcl.Transform(
+                np.ascontiguousarray(pose[:3, :3]), np.ascontiguousarray(pose[:3, 3])
+            )
+        )
+        return robot.solids[name]
+
+    links = [leg[1:] for leg in leg_bodies(robot)]
+    gap = np.empty((len(frames["trunk_assembly"]), 2, 4))
+    for i in range(len(gap)):
+        trunk = placed("trunk_assembly", i)
+        for s, leg in enumerate(links):
+            for k, name in enumerate(leg):
+                gap[i, s, k] = fcl.distance(
+                    placed(name, i), trunk, fcl.DistanceRequest(), fcl.DistanceResult()
+                )
+    return gap
 
 
 def report(robot, q):
@@ -101,7 +157,9 @@ def verify(robot):
         return mm, degrees
 
     mm, deg = error(tcp, positions, rotations)
+    gap = leg_clearance(robot, frames)
     ok = (mm < 1.5) & (deg < 1) & (margin >= 0.005) & (floor >= -0.0001) & ~collision
+    ok &= (gap >= LEG_GAP).all(axis=(1, 2))
     print(f"Maximum TCP error {mm.max():.3f} mm and {deg.max():.3f} deg")
     for k, side in enumerate(screen.legs.SIDES):
         foot_id = robot.model.jnt_bodyid[robot.model.joint(side + "_ankle").id]
@@ -110,12 +168,18 @@ def verify(robot):
         ok &= (distance < 0.2) & (angle < 0.15)
         print(f"{side} foot max error {distance.max():.3f} mm, {angle.max():.3f} deg")
     print(
-        f"Minimum support margin {margin.min()*1000:.2f} mm, floor gap {floor.min()*1000:.2f} mm"
+        f"Minimum support margin {margin[ok].min()*1000:.2f} mm, floor gap {floor[ok].min()*1000:.2f} mm"
+    )
+    closest = 1000 * gap[ok].min(axis=(0, 1))
+    print(
+        "Smallest gap to the trunk: "
+        + ", ".join(f"{name} {value:.2f} mm" for name, value in zip(LEG_LINKS, closest))
     )
     print(
         f"Front {ok[:64].sum()}/64. Broad {ok[64:].sum()}/32. Failed IDs {np.flatnonzero(~ok).tolist()}"
     )
-    assert ok.all()
+    assert np.flatnonzero(~ok).tolist() == list(UNREACHED)
+    q = q[ok]
 
     # The moving finger is the only mesh that changes with aperture. The jaw
     # changes whole-body COM too, so repeat the balance check at each angle.
@@ -128,7 +192,7 @@ def verify(robot):
             assert not hits.any(), (opening, a, b, np.flatnonzero(hits))
         assert robot.lowest(FINGER, sweep).min() >= -0.0001
         assert pose_test.GROUND.margin(com).min() >= 0.005
-    print("All 96 targets clear at 11 sampled jaw angles from 0 to 20 degrees")
+    print(f"All {len(q)} passing targets clear at 11 sampled jaw angles from 0 to 20 degrees")
 
 
 def read_arm(name):
@@ -169,6 +233,9 @@ def fixed_stance(robot, joints, seated=False):
             assert low.min() > -0.00001, (n, low.min())
     margin = pose_test.GROUND.margin(com)
     assert margin.min() >= 0.005
+    # The legs do not move in this stance, so one posture gives the gap for all.
+    first = {name: value[:1] for name, value in frames.items()}
+    assert (leg_clearance(robot, first) >= LEG_GAP).all()
     return frames
 
 
