@@ -61,7 +61,7 @@ def chain_frames(robot):
     return np.array(frames + [screen.a.TCP])
 
 
-def free_arm_ranges(robot):
+def free_arm_ranges(robot, pairs):
     """For each arm joint, the range around zero in which its two neighbouring links stay apart.
 
     The model ranges of some joints reach past the angle at which the link on one side
@@ -74,7 +74,7 @@ def free_arm_ranges(robot):
         if name in robot.mesh:
             geoms.setdefault(robot.model.geom_bodyid[i], []).append(name)
     geoms.update({robot.body[n]: geoms.get(robot.body[n], []) + [n] for n in ("gripper", FINGER)})
-    pairs = {frozenset(pair) for pair in collision_pairs(robot)}
+    tested = {frozenset(pair) for pair in pairs}
     angles = np.arange(-180, 181)
     ranges = []
     for k, joint in enumerate(JOINTS):
@@ -86,7 +86,7 @@ def free_arm_ranges(robot):
         hit = np.zeros(len(angles), bool)
         for a in set(geoms.get(parent, [])):
             for b in set(geoms.get(child, [])):
-                if frozenset((a, b)) in pairs:
+                if frozenset((a, b)) in tested:
                     hit |= robot.hits(a, b, frames)
         zero = len(angles) // 2
         assert not hit[zero], joint
@@ -145,11 +145,11 @@ def converge(q, frames, positions, rotations, low, high, steps=110):
     return q, (size < SOLVED).all(axis=1)
 
 
-def candidates(robot, frames, targets, positions, rotations, starts):
+def candidates(robot, frames, pairs, targets, positions, rotations, starts):
     """Converged postures for each requested target, from every search in SEARCHES."""
     found = {t: [] for t in targets}
     reference = np.r_[pose_test.REF.ravel(), np.zeros(6)]
-    free = free_arm_ranges(robot)
+    free = free_arm_ranges(robot, pairs)
     print("Arm joint ranges with neighbouring links apart (deg):", np.rad2deg(free).round().astype(int).tolist())
     for k, (yaw, spread) in enumerate(SEARCHES):
         low, high = joint_limits(robot, yaw, free)
@@ -165,7 +165,7 @@ def candidates(robot, frames, targets, positions, rotations, starts):
     return {t: np.array(rows).reshape(-1, 16) for t, rows in found.items()}
 
 
-def passes(robot, q, targets, positions, rotations, full=True):
+def passes(robot, pairs, q, targets, positions, rotations, full=True):
     """Every check of replay.verify for postures q of the given targets.
 
     Returns the pass flag and the support margin of each posture. With full=False the
@@ -200,7 +200,7 @@ def passes(robot, q, targets, positions, rotations, full=True):
     if not len(keep):
         return ok, margin
     hit = np.zeros(len(keep), bool)
-    for a, b in collision_pairs(robot):
+    for a, b in pairs:
         hit |= robot.hits(a, b, part)
     ok[keep[hit]] = False
     keep = keep[~hit]
@@ -208,7 +208,7 @@ def passes(robot, q, targets, positions, rotations, full=True):
         return ok, margin
 
     # The moving finger is the only mesh that changes with the jaw opening.
-    finger_pairs = [(a, b) for a, b in collision_pairs(robot) if FINGER in (a, b)]
+    finger_pairs = [(a, b) for a, b in pairs if FINGER in (a, b)]
     bad = np.zeros(len(keep), bool)
     for opening in range(2, 21, 2):
         sweep, com = robot.placements(np.c_[np.rad2deg(q[keep, 10:]), np.full(len(keep), opening)], q[keep, :10])
@@ -220,12 +220,12 @@ def passes(robot, q, targets, positions, rotations, full=True):
     return ok, margin
 
 
-def choose(robot, found, positions, rotations, block=8, depth=640):
+def choose(robot, pairs, found, positions, rotations, block=8, depth=640):
     """For each target the passing candidate with the largest support margin."""
     ranked = {}
     for t, q in found.items():
         if len(q):
-            ok, margin = passes(robot, q, np.full(len(q), t), positions, rotations, full=False)
+            ok, margin = passes(robot, pairs, q, np.full(len(q), t), positions, rotations, full=False)
             order = np.argsort(-margin)
             ranked[t] = q[order[ok[order]]]
     chosen = {}
@@ -235,7 +235,7 @@ def choose(robot, found, positions, rotations, block=8, depth=640):
             break
         q = np.concatenate([ranked[t][first : first + block] for t in waiting])
         owner = np.concatenate([np.full(len(ranked[t][first : first + block]), t) for t in waiting])
-        ok, _ = passes(robot, q, owner, positions, rotations)
+        ok, _ = passes(robot, pairs, q, owner, positions, rotations)
         for t, row in zip(owner[ok], q[ok]):
             chosen.setdefault(int(t), row)  # rows are in order of falling margin
         print(f"  candidates {first + 1} to {first + block}: {len(waiting)} targets tried, {len(chosen)} of {len(found)} settled", flush=True)
@@ -245,6 +245,33 @@ def choose(robot, found, positions, rotations, block=8, depth=640):
     return chosen
 
 
+def search(robot, pairs, stored, starts):
+    """Keep the stored postures that pass and search the others.
+
+    Returns the postures, the pass flag of each and the flag of the stored ones kept.
+    A target with no passing posture keeps its stored row.
+    """
+    frames = chain_frames(robot)
+    positions, rotations = pose_test.make_targets()
+    everything = np.arange(len(stored))
+    kept, _ = passes(robot, pairs, stored, everything, positions, rotations)
+    print(f"Stored postures that pass every check: {kept.sum()} of {len(stored)}")
+
+    missing = np.flatnonzero(~kept).tolist()
+    result = stored.copy()
+    solved = kept.copy()
+    if missing:
+        found = candidates(robot, frames, pairs, missing, positions, rotations, starts)
+        print(f"Converged candidates: {sum(len(q) for q in found.values())} for {len(missing)} targets")
+        for t, row in choose(robot, pairs, found, positions, rotations).items():
+            result[t], solved[t] = row, True
+    ok, margin = passes(robot, pairs, result, everything, positions, rotations)
+    assert (ok == solved).all()
+    print(f"Front {ok[:64].sum()}/64. Broad {ok[64:].sum()}/32. No passing posture for {np.flatnonzero(~ok).tolist()}")
+    print(f"Smallest support margin of a passing posture {1000 * margin[ok].min():.2f} mm")
+    return result, ok, kept
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--starts", type=int, default=128, help="starting postures per search")
@@ -252,25 +279,9 @@ def main():
     args = parser.parse_args()
 
     robot = robot_model()
-    frames = chain_frames(robot)
-    positions, rotations = pose_test.make_targets()
-    tags, stored = read_targets()
-    everything = np.arange(len(stored))
-    kept, _ = passes(robot, stored, everything, positions, rotations)
-    print(f"Stored postures that pass every check: {kept.sum()} of {len(stored)}")
-
+    _, stored = read_targets()
+    result, ok, kept = search(robot, list(collision_pairs(robot)), stored, args.starts)
     missing = np.flatnonzero(~kept).tolist()
-    result = stored.copy()
-    solved = kept.copy()
-    if missing:
-        found = candidates(robot, frames, missing, positions, rotations, args.starts)
-        print(f"Converged candidates: {sum(len(q) for q in found.values())} for {len(missing)} targets")
-        for t, row in choose(robot, found, positions, rotations).items():
-            result[t], solved[t] = row, True
-    ok, margin = passes(robot, result, everything, positions, rotations)
-    assert (ok == solved).all()
-    print(f"Front {ok[:64].sum()}/64. Broad {ok[64:].sum()}/32. No passing posture for {np.flatnonzero(~ok).tolist()}")
-    print(f"Smallest support margin of a passing posture {1000 * margin[ok].min():.2f} mm")
     if args.dry_run:
         return
     with (HERE / "targets.csv").open() as stream:
