@@ -25,10 +25,10 @@ The three parts are unchanged since the first revision. Only stored postures cha
 
 The required gap is 0.3 mm from each hip link to the trunk and 1 mm from each thigh, shin and foot, as in the [six-part design](../coverage/README.md). The 36 first postures that pass are kept and 57 are new. The `source` column of `targets.csv` says which is which. The pickup has a new crouch on the same tool path.
 
-Three targets have no passing posture. Their rows hold the last posture tried.
+Three targets have no passing posture. Their rows hold an earlier posture that fails the gap.
 
-- **Targets 12 and 35.** Every balanced candidate brings the left hip link closer to the trunk than 0.3 mm. These targets need more hip roll toward the trunk than the gap allows.
-- **Target 89.** The best posture with the gap has a 4.62 mm support margin against the 5 mm requirement. The centre of mass sits too close to the front edge of the soles. Leaning the neck mount 10 mm forward gained less than 1 mm in a trial, and forearm and wrist links 15 % lighter gained about 1.5 mm. Neither change is made here.
+- **Targets 12 and 35.** Every balanced candidate brings the left hip link closer to the trunk than 0.3 mm. These targets need more hip roll toward the trunk than the gap allows. The stored rows have hip-link gaps of 0.26 mm and 0.01 mm.
+- **Target 89.** No candidate reached the 5 mm support margin, with or without the gap. The centre of mass sits too close to the front edge of the soles. The stored row has a 4.62 mm margin and a thigh 0.003 mm from the trunk. Leaning the neck mount 10 mm forward gained less than 1 mm in a trial, and forearm and wrist links 15 % lighter gained about 1.5 mm. Neither change is made here.
 
 ## Reconstructed model
 
