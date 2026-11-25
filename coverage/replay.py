@@ -75,6 +75,26 @@ def leg_bodies(robot):
     ]
 
 
+def placed(robot, name, pose):
+    """The mesh group as an fcl object at the given pose."""
+    import fcl
+
+    if not hasattr(robot, "solids"):
+        robot.solids = {}
+    if name not in robot.solids:
+        points = np.ascontiguousarray(robot.mesh[name].reshape(-1, 3))
+        faces = np.arange(len(points)).reshape(-1, 3)
+        shape = fcl.BVHModel()
+        shape.beginModel(len(points), len(faces))
+        shape.addSubModel(points, faces)
+        shape.endModel()
+        robot.solids[name] = fcl.CollisionObject(shape, fcl.Transform())
+    robot.solids[name].setTransform(
+        fcl.Transform(np.ascontiguousarray(pose[:3, :3]), np.ascontiguousarray(pose[:3, 3]))
+    )
+    return robot.solids[name]
+
+
 def leg_clearance(robot, frames):
     """Distance in metres from each hip link, thigh, shin and foot to the trunk.
 
@@ -83,36 +103,45 @@ def leg_clearance(robot, frames):
     """
     import fcl
 
-    if not hasattr(robot, "solids"):
-        robot.solids = {}
-
-    def placed(name, i):
-        if name not in robot.solids:
-            points = np.ascontiguousarray(robot.mesh[name].reshape(-1, 3))
-            faces = np.arange(len(points)).reshape(-1, 3)
-            shape = fcl.BVHModel()
-            shape.beginModel(len(points), len(faces))
-            shape.addSubModel(points, faces)
-            shape.endModel()
-            robot.solids[name] = fcl.CollisionObject(shape, fcl.Transform())
-        pose = frames[name][i]
-        robot.solids[name].setTransform(
-            fcl.Transform(
-                np.ascontiguousarray(pose[:3, :3]), np.ascontiguousarray(pose[:3, 3])
-            )
-        )
-        return robot.solids[name]
-
     links = [leg[1:] for leg in leg_bodies(robot)]
     gap = np.empty((len(frames["trunk_assembly"]), 2, 4))
     for i in range(len(gap)):
-        trunk = placed("trunk_assembly", i)
+        trunk = placed(robot, "trunk_assembly", frames["trunk_assembly"][i])
         for s, leg in enumerate(links):
             for k, name in enumerate(leg):
                 gap[i, s, k] = fcl.distance(
-                    placed(name, i), trunk, fcl.DistanceRequest(), fcl.DistanceResult()
+                    placed(robot, name, frames[name][i]),
+                    trunk,
+                    fcl.DistanceRequest(),
+                    fcl.DistanceResult(),
                 )
     return gap
+
+
+def pair_hits(robot, pair, frames):
+    """Whether two mesh groups intersect, per posture.
+
+    A pair of two names uses the triangle test of the collision helper, which counts
+    touching faces as a hit. A pair with a third item, "crossing", uses a test that
+    ignores touching faces. It is for meshes that touch by design.
+    """
+    if len(pair) == 2:
+        return robot.hits(*pair, frames)
+    import fcl
+
+    a, b = pair[:2]
+    return np.array(
+        [
+            fcl.collide(
+                placed(robot, a, frames[a][i]),
+                placed(robot, b, frames[b][i]),
+                fcl.CollisionRequest(),
+                fcl.CollisionResult(),
+            )
+            > 0
+            for i in range(len(frames[a]))
+        ]
+    )
 
 
 def report(robot, q):

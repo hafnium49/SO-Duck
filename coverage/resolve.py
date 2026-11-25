@@ -24,6 +24,7 @@ from replay import (
     LEG_GAP,
     collision_pairs,
     leg_clearance,
+    pair_hits,
     pose_test,
     read_targets,
     robot_model,
@@ -80,7 +81,7 @@ def free_arm_ranges(robot, pairs):
         if name in robot.mesh:
             geoms.setdefault(robot.model.geom_bodyid[i], []).append(name)
     geoms.update({robot.body[n]: geoms.get(robot.body[n], []) + [n] for n in ("gripper", FINGER)})
-    tested = {frozenset(pair) for pair in pairs}
+    tested = {frozenset(pair[:2]): pair for pair in pairs}
     angles = np.arange(-180, 181)
     ranges = []
     for k, joint in enumerate(JOINTS):
@@ -93,7 +94,7 @@ def free_arm_ranges(robot, pairs):
         for a in set(geoms.get(parent, [])):
             for b in set(geoms.get(child, [])):
                 if frozenset((a, b)) in tested:
-                    hit |= robot.hits(a, b, frames)
+                    hit |= pair_hits(robot, tested[frozenset((a, b))], frames)
         zero = len(angles) // 2
         assert not hit[zero], joint
         below = np.flatnonzero(hit[:zero])
@@ -208,20 +209,20 @@ def passes(robot, pairs, q, targets, positions, rotations, full=True):
     if not len(keep):
         return ok, margin
     hit = np.zeros(len(keep), bool)
-    for a, b in pairs:
-        hit |= robot.hits(a, b, part)
+    for pair in pairs:
+        hit |= pair_hits(robot, pair, part)
     ok[keep[hit]] = False
     keep = keep[~hit]
     if not len(keep):
         return ok, margin
 
     # The moving finger is the only mesh that changes with the jaw opening.
-    finger_pairs = [(a, b) for a, b in pairs if FINGER in (a, b)]
+    finger_pairs = [pair for pair in pairs if FINGER in pair[:2]]
     bad = np.zeros(len(keep), bool)
     for opening in range(2, 21, 2):
         sweep, com = robot.placements(np.c_[np.rad2deg(q[keep, 10:]), np.full(len(keep), opening)], q[keep, :10])
-        for a, b in finger_pairs:
-            bad |= robot.hits(a, b, sweep)
+        for pair in finger_pairs:
+            bad |= pair_hits(robot, pair, sweep)
         bad |= robot.lowest(FINGER, sweep) < -0.0001
         bad |= pose_test.GROUND.margin(com) < MARGIN
     ok[keep[bad]] = False
