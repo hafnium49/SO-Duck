@@ -8,18 +8,18 @@ The neck mount, elbow-to-forearm-roll link and wrist carrier use hollow sections
 
 ## Earlier six-part grasp-coverage design
 
-The revised SO-Duck arm reaches **96/96 published grasp targets** with both feet planted. It keeps the crosswise elbow and repositions an existing motor to roll the forearm. The resulting six-axis arm retains the stock SO-101 gripper and uses 17 actuators across the robot.
+The revised SO-Duck arm reaches **95 of the 96 published grasp targets** with both feet planted and a required gap between the legs and the trunk. It keeps the crosswise elbow and repositions an existing motor to roll the forearm. The resulting six-axis arm retains the stock SO-101 gripper and uses 17 actuators across the robot.
 
 ![Revised SO-Duck at a broad-orientation target, grasping a floor cube and folded on its rear pad](coverage/preview.png)
 
 | Grasp target set | Previous crosswise arm | Revised arm |
 |---|---:|---:|
 | Forward | 45/64 | 64/64 |
-| Broad orientation | 12/32 | 32/32 |
+| Broad orientation | 12/32 | 31/32 |
 
 [Design and validation](coverage/README.md) · [offline 3D pose explorer](coverage/poses.html) · [custom links in STEP](coverage/mounts.step) · [whole-robot MuJoCo model](coverage/robot.xml).
 
-The revised model also grasps a 20 mm floor cube in kinematic replay and seats its fixed fingertip on the rear roof pad. Its parked height is 578 mm. The 96-target result covers individual endpoint poses with unloaded static balance. Hardware grasp reliability and paths between all targets remain open.
+The revised model also grasps a 20 mm floor cube in kinematic replay and seats its fixed fingertip on the rear roof pad. Its parked height is 578 mm. The target result covers individual endpoint poses with unloaded static balance. Each leg link below the hip-yaw link keeps a gap to the trunk: 0.3 mm for the hip link and 1 mm for the thigh, shin and foot. Target 64 has no posture that passes. The crosswise counts predate this rule and have not been recounted. Hardware grasp reliability and paths between all targets remain open.
 
 ## Previous crosswise design
 

@@ -15,6 +15,7 @@ from replay import (
     read_targets,
     robot_model,
     screen,
+    UNREACHED,
 )
 from export_explorer import simplify
 from motion import CUBE_SIDE, cube_frames
@@ -68,7 +69,7 @@ def main():
     for i in range(len(q)):
         add(
             "Forward" if i < 64 else "Broad orientation",
-            f"Target {i:02}",
+            f"Target {i:02}" + (" (no passing posture)" if i in UNREACHED else ""),
             i,
             arm,
             frames,
