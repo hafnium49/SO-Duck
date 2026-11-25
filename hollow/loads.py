@@ -1,0 +1,99 @@
+"""Gravity loads on the arm servos, and the stock SO-101 arm's loads for comparison.
+
+    python hollow/loads.py
+
+Torques are static gravity torques in N m. They leave out motion, friction, grip force
+and heat. The stock baseline is the load this servo is known to carry in practice.
+"""
+
+import sys
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+import mujoco
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+sys.path[:0] = [str(HERE / "cad"), str(HERE.parent / "coverage"), str(HERE.parent / "crosswise")]
+
+import params  # noqa: E402
+
+GRAVITY = 9.81
+SHOULDER = 1  # column of shoulder pitch in arm_torques
+STRIPPED = ("geom", "asset", "default", "actuator", "contact", "sensor", "equality", "tendon", "keyframe")
+
+
+def stock_baseline(samples=params.LOAD_SAMPLES, seed=0):
+    """Worst shoulder-lift gravity torque of the stock SO-101 arm, empty and with the payload.
+
+    The arm of collision/inputs/so101.xml stands on a table with its link inertials. The
+    worst case is taken over random poses inside its joint ranges. The payload is a point
+    mass at the gripperframe site.
+    """
+    root = ET.parse(HERE.parent / "collision" / "inputs" / "so101.xml").getroot()
+    for parent in list(root.iter()):
+        for child in list(parent):
+            if child.tag in STRIPPED:
+                parent.remove(child)
+    for element in root.iter():
+        element.attrib.pop("class", None)
+        element.attrib.pop("childclass", None)
+    model = mujoco.MjModel.from_xml_string(ET.tostring(root, encoding="unicode"))
+    data = mujoco.MjData(model)
+    shoulder = model.joint("shoulder_lift").dofadr[0]
+    site = model.site("gripperframe").id
+    weight = np.array([0, 0, params.PAYLOAD_KG * GRAVITY])
+    low, high = model.jnt_range.T
+    rng = np.random.default_rng(seed)
+    jacobian = np.zeros((3, model.nv))
+    empty = loaded = 0.0
+    for _ in range(samples):
+        data.qpos[:] = low + (high - low) * rng.random(model.nq)
+        mujoco.mj_forward(model, data)
+        mujoco.mj_jacSite(model, data, jacobian, None, site)
+        torque = data.qfrc_bias[shoulder]
+        empty = max(empty, abs(torque))
+        loaded = max(loaded, abs(torque + jacobian[:, shoulder] @ weight))
+    return empty, loaded
+
+
+def arm_torques(robot, q, payload_kg=0.0):
+    """Absolute gravity torque at the six arm joints, shape (n, 6), for postures q of shape (n, 16)."""
+    from replay import JOINTS
+
+    model, data = robot.model, robot.data
+    model.opt.disableflags |= mujoco.mjtDisableBit.mjDSBL_CONTACT
+    dofs = [model.joint(name).dofadr[0] for name in JOINTS]
+    site = model.site("gripperframe").id
+    weight = np.array([0, 0, payload_kg * GRAVITY])
+    jacobian = np.zeros((3, model.nv))
+    torques = np.zeros((len(q), 6))
+    for i, row in enumerate(np.asarray(q)):
+        robot.placements(np.c_[np.rad2deg(row[None, 10:16]), [0.0]], row[None, :10])
+        mujoco.mj_forward(model, data)
+        mujoco.mj_jacSite(model, data, jacobian, None, site)
+        torques[i] = data.qfrc_bias[dofs] + jacobian[:, dofs].T @ weight
+    return np.abs(torques)
+
+
+def main():
+    import model as hollow_model
+    import postures
+
+    empty, loaded = stock_baseline()
+    grams = round(1000 * params.PAYLOAD_KG)
+    print(f"Stock SO-101 shoulder, worst pose: {empty:.2f} N m empty, {loaded:.2f} N m with {grams} g")
+    robot = hollow_model.robot_model()
+    q, _ = postures.read_targets()
+    q = np.delete(q, list(postures.UNREACHED), axis=0)
+    for label, payload, limit in (("empty", 0.0, empty), (f"with {grams} g", params.PAYLOAD_KG, loaded)):
+        shoulder = arm_torques(robot, q, payload)[:, SHOULDER]
+        verdict = "within" if shoulder.max() <= limit else "over"
+        print(
+            f"Hollow arm shoulder over {len(q)} stored postures, {label}: "
+            f"worst {shoulder.max():.2f} N m, median {np.median(shoulder):.2f} N m ({verdict} the stock limit)"
+        )
+
+
+if __name__ == "__main__":
+    main()

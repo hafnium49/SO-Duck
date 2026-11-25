@@ -12,3 +12,21 @@ for folder in ("study", "crosswise", "coverage", "hollow", "hollow/cad"):
 @pytest.fixture(scope="session")
 def root():
     return ROOT
+
+
+@pytest.fixture(scope="session")
+def robot():
+    """The hollow-arm model with its meshes loaded."""
+    import model
+
+    return model.robot_model()
+
+
+@pytest.fixture(scope="session")
+def passing_q():
+    """Stored postures of the targets that have a passing posture, shape (n, 16)."""
+    import numpy as np
+    import postures
+
+    q, _ = postures.read_targets()
+    return np.delete(q, list(postures.UNREACHED), axis=0)
