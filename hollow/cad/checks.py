@@ -149,3 +149,32 @@ def fits_bed(solid):
     """Whether the part lies on the bed in some axis-aligned orientation."""
     box = solid.BoundingBox()
     return sorted([box.xlen, box.ylen, box.zlen])[1] <= params.BED_MM
+
+
+def joint_range(robot, joint, step_deg=1.0):
+    """The widest interval around zero, degrees, in which the links on the two sides of a joint stay apart.
+
+    The joint is turned with every other arm joint at zero. Every tested pair with one
+    mesh on the joint's own body and the other on its parent is checked.
+    """
+    import model
+    from replay import FINGER, JOINTS, pair_hits
+
+    tested = {frozenset(pair[:2]): pair for pair in model.tested_pairs(robot)}
+    child = robot.model.jnt_bodyid[robot.model.joint(joint).id]
+    parent = robot.model.body_parentid[child]
+    on = lambda body: [name for name in robot.mesh if robot.body[name] == body and name not in ("gripper", FINGER) or (name in ("gripper", FINGER) and robot.body[name] == body)]
+    angles = np.arange(-180.0, 180.0 + step_deg / 2, step_deg)
+    sweep = np.zeros((len(angles), 7))
+    sweep[:, JOINTS.index(joint)] = angles
+    frames, _ = robot.placements(sweep)
+    hit = np.zeros(len(angles), bool)
+    for a in on(parent):
+        for b in on(child):
+            if frozenset((a, b)) in tested:
+                hit |= pair_hits(robot, tested[frozenset((a, b))], frames)
+    zero = int(np.argmin(np.abs(angles)))
+    if hit[zero]:
+        raise ValueError(f"{joint}: the neighbouring links meet at zero")
+    below, above = np.flatnonzero(hit[:zero]), np.flatnonzero(hit[zero:])
+    return (float(angles[below[-1] + 1]) if len(below) else -180.0, float(angles[zero + above[0] - 1]) if len(above) else 180.0)

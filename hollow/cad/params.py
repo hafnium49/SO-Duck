@@ -36,6 +36,17 @@ WRIST_AXIAL_MAX = 0.012
 # of the mount's tabs; measured on trunk_top of coverage/robot.xml.
 NECK_SCREWS_MM = [(-9.25, -13.45, 57.27), (11.25, -13.45, 57.27), (-9.25, 13.45, 61.02), (11.25, 13.45, 61.02)]
 NECK_SCREW_AXIS = (0.0, 1.0, 0.0)
+# Arm joint ranges of the built model, degrees. Each is inside the sweep that the part
+# tests cover, or for the two joints between stock parts inside the earlier range, and
+# inside the range in which the neighbouring links stay apart (hollow/tests/test_build.py).
+RANGES_DEG = {
+    "shoulder_yaw": (-108.0, 108.0),
+    "shoulder_pitch": (-81.0, 100.0),
+    "forearm_pitch": (-95.0, 95.0),
+    "forearm_roll": (-155.0, 155.0),
+    "wrist_flex": (-95.0, 95.0),
+    "wrist_roll": (-143.0, 162.0),
+}
 MOVING_CLEARANCE_MM = 1.5  # between parts that move relative to each other
 MIN_WALL_MM = 1.6
 BED_MM = 180.0

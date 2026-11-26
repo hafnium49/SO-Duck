@@ -51,6 +51,16 @@ PRESENT_MASSES = {
 }
 
 
+CUSTOM = {"shoulder_mount": "neck_socket_mount", "forearm_roll_link": "elbow_to_forearm_roll", "wrist_flex_link": "forearm_roll_to_wrist"}
+# The Duck's neck servo and its horns, which the neck socket mount replaces.
+NECK_SERVO = {"wj-wk00-0123middlecase_56", "wj-wk00-0124bottomcase_45", "wj-wk00-0122topcabinetcase_95", "drive_palonier", "passive_palonier"}
+
+
+def built_meshes():
+    """Body name to (geom name, mesh file relative to hollow/) for the parts cad/build_parts.py writes."""
+    return {body: [(part, f"parts/{CUSTOM[part]}.stl" if part in CUSTOM else f"parts/stock/{part}.stl") for part in parts] for body, parts in DISPLAY.items()}
+
+
 def display_meshes():
     """Body name to (geom name, mesh file relative to hollow/) for the present display meshes."""
     return {body: [(part, REVIEW.get(part, f"meshes/{part}.stl")) for part in parts] for body, parts in DISPLAY.items()}
@@ -92,12 +102,13 @@ def _numbers(values):
     return " ".join(f"{v:.10g}" for v in np.asarray(values, dtype=float).ravel())
 
 
-def write_model(path, frames, masses, meshes, ranges):
+def write_model(path, frames, masses, meshes, ranges, neck_servo=True):
     """Write the model next to hollow/robot.xml, so that its mesh paths resolve.
 
     frames: joint name to (position m, quaternion wxyz), as params.joint_frames gives.
     masses: body name to (kg, centre m). meshes: body name to (geom name, mesh file in
     millimetres, relative to the model). ranges: joint name to (low, high) in degrees.
+    neck_servo: whether the trunk keeps the Duck's neck servo; the built mount replaces it.
     """
     path = Path(path)
     if path.parent.resolve() != HOLLOW.resolve():
@@ -109,6 +120,11 @@ def write_model(path, frames, masses, meshes, ranges):
     old = trunk.find("body[@name='upper_mount']")
     gripper = deepcopy(old.find(".//body[@name='gripper']"))
     trunk.remove(old)
+    if not neck_servo:
+        for geom in trunk.findall("geom"):
+            # the hip-yaw servos use the same meshes, further back
+            if geom.get("mesh") in NECK_SERVO and float(geom.get("pos").split()[0]) > -0.005:
+                trunk.remove(geom)
     assets = root.find("asset")
     roof = assets.find("mesh[@name='body_middle_top']")
     roof.attrib.pop("scale", None)
@@ -130,7 +146,7 @@ def write_model(path, frames, masses, meshes, ranges):
         ET.SubElement(body, "inertial", pos=_numbers(centre), mass=f"{mass:.9g}", diaginertia="1e-5 1e-5 1e-5")
         for geom, file in meshes[body_name]:
             ET.SubElement(assets, "mesh", name=geom, file=file, scale=".001 .001 .001", inertia="shell")
-            colour = ".24 .26 .29 1" if geom.endswith("_case") else ".12 .57 .55 1" if geom in REVIEW else ".62 .68 .71 1"
+            colour = ".24 .26 .29 1" if geom.endswith("_case") else ".12 .57 .55 1" if geom in CUSTOM else ".62 .68 .71 1"
             ET.SubElement(body, "geom", type="mesh", mesh=geom, name=geom, rgba=colour)
         parent = body
     position, quaternion = frames["wrist_roll"]

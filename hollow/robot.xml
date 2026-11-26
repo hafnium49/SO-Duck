@@ -1,4 +1,4 @@
-<mujoco model="SO-Duck hollow design, reconstructed">
+<mujoco model="SO-Duck hollow arm">
   <compiler angle="radian" />
   <asset>
     <mesh name="body_front" file="../collision/inputs/duck_meshes/body_front.stl" />
@@ -38,19 +38,19 @@
     <mesh name="wrist_roll_follower_so101_v1" file="../collision/inputs/arm_meshes/wrist_roll_follower_so101_v1.stl" />
     <mesh name="moving_jaw_so101_v1" file="../collision/inputs/arm_meshes/moving_jaw_so101_v1.stl" />
     <mesh name="park_pad" file="../crosswise/park_pad.stl" scale=".001 .001 .001" />
-    <mesh name="shoulder_yaw_case" file="meshes/shoulder_yaw_case.stl" scale=".001 .001 .001" inertia="shell" />
-    <mesh name="shoulder_mount" file="review-meshes/neck-socket-mount.preview.stl" scale=".001 .001 .001" inertia="shell" />
-    <mesh name="shoulder_pitch_case" file="meshes/shoulder_pitch_case.stl" scale=".001 .001 .001" inertia="shell" />
-    <mesh name="shoulder_collar" file="meshes/shoulder_collar.stl" scale=".001 .001 .001" inertia="shell" />
-    <mesh name="shoulder_pitch_link" file="meshes/shoulder_pitch_link.stl" scale=".001 .001 .001" inertia="shell" />
-    <mesh name="forearm_pitch_case" file="meshes/forearm_pitch_case.stl" scale=".001 .001 .001" inertia="shell" />
-    <mesh name="forearm_pitch_link" file="meshes/forearm_pitch_link.stl" scale=".001 .001 .001" inertia="shell" />
-    <mesh name="forearm_roll_case" file="meshes/forearm_roll_case.stl" scale=".001 .001 .001" inertia="shell" />
-    <mesh name="forearm_roll_link" file="review-meshes/elbow-to-forearm-roll.preview.stl" scale=".001 .001 .001" inertia="shell" />
-    <mesh name="wrist_flex_case" file="meshes/wrist_flex_case.stl" scale=".001 .001 .001" inertia="shell" />
-    <mesh name="wrist_flex_link" file="review-meshes/forearm-roll-to-wrist.preview.stl" scale=".001 .001 .001" inertia="shell" />
-    <mesh name="wrist_roll_case" file="meshes/wrist_roll_case.stl" scale=".001 .001 .001" inertia="shell" />
-    <mesh name="wrist_roll_link" file="meshes/wrist_roll_link.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="shoulder_yaw_case" file="parts/stock/shoulder_yaw_case.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="shoulder_mount" file="parts/neck_socket_mount.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="shoulder_pitch_case" file="parts/stock/shoulder_pitch_case.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="shoulder_collar" file="parts/stock/shoulder_collar.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="shoulder_pitch_link" file="parts/stock/shoulder_pitch_link.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="forearm_pitch_case" file="parts/stock/forearm_pitch_case.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="forearm_pitch_link" file="parts/stock/forearm_pitch_link.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="forearm_roll_case" file="parts/stock/forearm_roll_case.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="forearm_roll_link" file="parts/elbow_to_forearm_roll.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="wrist_flex_case" file="parts/stock/wrist_flex_case.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="wrist_flex_link" file="parts/forearm_roll_to_wrist.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="wrist_roll_case" file="parts/stock/wrist_roll_case.stl" scale=".001 .001 .001" inertia="shell" />
+    <mesh name="wrist_roll_link" file="parts/stock/wrist_roll_link.stl" scale=".001 .001 .001" inertia="shell" />
   </asset>
   <default>
     <geom contype="1" conaffinity="1" />
@@ -78,11 +78,6 @@
         <geom pos="-0.019 0 0.0648909" type="mesh" rgba="0.180392 0.180392 0.180392 1" mesh="trunk_bottom" />
         <geom pos="-0.019 0 0.0648909" type="mesh" rgba="0.180392 0.180392 0.180392 1" mesh="trunk_top" />
         <geom pos="-0.019 -0.07 0.0648909" type="mesh" rgba="0.6 0.6 0.6 1" mesh="roll_bearing" />
-        <geom pos="0.001 0.0097 0.0645009" quat="0.707107 0 0.707107 0" type="mesh" rgba="0.247059 0.243137 0.243137 1" mesh="wj-wk00-0123middlecase_56" />
-        <geom pos="0.001 0.0097 0.0645009" quat="0.707107 0 0.707107 0" type="mesh" rgba="0.623529 0.666667 0.701961 1" mesh="drive_palonier" />
-        <geom pos="0.001 0.0097 0.0645009" quat="0.707107 0 0.707107 0" type="mesh" rgba="0.247059 0.243137 0.243137 1" mesh="wj-wk00-0124bottomcase_45" />
-        <geom pos="0.001 0.0097 0.0645009" quat="0.707107 0 0.707107 0" type="mesh" rgba="0.247059 0.243137 0.243137 1" mesh="wj-wk00-0122topcabinetcase_95" />
-        <geom pos="0.001 0.0126 0.0645009" quat="0.707107 0 0.707107 0" type="mesh" rgba="0.623529 0.666667 0.701961 1" mesh="passive_palonier" />
         <geom pos="-0.0445 -0.035 0.0553909" quat="0 0 -0.707107 0.707107" type="mesh" rgba="0.247059 0.243137 0.243137 1" mesh="wj-wk00-0123middlecase_56" />
         <geom pos="-0.0445 -0.035 0.0553909" quat="0 0 -0.707107 0.707107" type="mesh" rgba="0.623529 0.666667 0.701961 1" mesh="drive_palonier" />
         <geom pos="-0.0445 -0.035 0.0553909" quat="0 0 -0.707107 0.707107" type="mesh" rgba="0.247059 0.243137 0.243137 1" mesh="wj-wk00-0124bottomcase_45" />
@@ -214,37 +209,37 @@
           <geom type="mesh" mesh="park_pad" density="1200" rgba=".64 .17 .23 1" />
         </body>
         <body name="upper_mount">
-          <inertial pos="-0.01512950395 0.000102271628 0.1406688398" mass="0.0923735322" diaginertia="1e-5 1e-5 1e-5" />
+          <inertial pos="-0.01460084262 0.0001491287439 0.1424429327" mass="0.105688924" diaginertia="1e-5 1e-5 1e-5" />
           <geom type="mesh" mesh="shoulder_yaw_case" name="shoulder_yaw_case" rgba=".24 .26 .29 1" />
           <geom type="mesh" mesh="shoulder_mount" name="shoulder_mount" rgba=".12 .57 .55 1" />
           <body name="shoulder_yaw_linkage" pos="0.001000000011 9.999971545e-05 0.177000007" quat="1 -6.177711678e-10 2.242059479e-10 2.750608807e-06">
-            <joint name="shoulder_yaw" type="hinge" axis="0 0 1" range="-1.92003671 1.92003671" />
-            <inertial pos="0.0307604 -1.66727e-05 0.0252713" mass="0.100006" diaginertia="1e-5 1e-5 1e-5" />
+            <joint name="shoulder_yaw" type="hinge" axis="0 0 1" range="-1.884955592 1.884955592" />
+            <inertial pos="0.03076 -1.7e-05 0.025271" mass="0.100006" diaginertia="1e-5 1e-5 1e-5" />
             <geom type="mesh" mesh="shoulder_pitch_case" name="shoulder_pitch_case" rgba=".24 .26 .29 1" />
             <geom type="mesh" mesh="shoulder_collar" name="shoulder_collar" rgba=".62 .68 .71 1" />
             <geom type="mesh" mesh="shoulder_pitch_link" name="shoulder_pitch_link" rgba=".62 .68 .71 1" />
             <body name="shoulder_pitch_linkage" pos="0.0303991998 -0.01827775876 0.05419999652" quat="0.6678264187 -0.6678264172 0.2323959454 0.2323959455">
-              <joint name="shoulder_pitch" type="hinge" axis="0 0 1" range="-1.428726526 1.745503785" />
-              <inertial pos="-0.04920537803 -0.07564121957 0.0184089" mass="0.103" diaginertia="1e-5 1e-5 1e-5" />
+              <joint name="shoulder_pitch" type="hinge" axis="0 0 1" range="-1.413716694 1.745329252" />
+              <inertial pos="-0.049205 -0.075641 0.018409" mass="0.103" diaginertia="1e-5 1e-5 1e-5" />
               <geom type="mesh" mesh="forearm_pitch_case" name="forearm_pitch_case" rgba=".24 .26 .29 1" />
               <geom type="mesh" mesh="forearm_pitch_link" name="forearm_pitch_link" rgba=".62 .68 .71 1" />
               <body name="forearm_pitch_linkage" pos="-0.0479319306 -0.1056339645 -4.13096353e-08" quat="-0.4354342695 2.506430322e-10 -6.718601977e-10 0.9002205268">
-                <joint name="forearm_pitch" type="hinge" axis="0 0 1" range="-1.690525913 1.690176848" />
-                <inertial pos="0.09431596262 -0.0336303042 0.01820084087" mass="0.106274684" diaginertia="1e-5 1e-5 1e-5" />
+                <joint name="forearm_pitch" type="hinge" axis="0 0 1" range="-1.658062789 1.658062789" />
+                <inertial pos="0.07182271532 -0.04058981766 0.01661020532" mass="0.11754687" diaginertia="1e-5 1e-5 1e-5" />
                 <geom type="mesh" mesh="forearm_roll_case" name="forearm_roll_case" rgba=".24 .26 .29 1" />
                 <geom type="mesh" mesh="forearm_roll_link" name="forearm_roll_link" rgba=".12 .57 .55 1" />
-                <body name="forearm_roll_linkage" pos="0.1400000007 -0.02600000073 0.01819999992" quat="0.5000003498 0.4999996508 0.5000003493 0.4999996502">
-                  <joint name="forearm_roll" type="hinge" axis="0 0 1" range="-2.705434874 2.705434874" />
-                  <inertial pos="-0.0547708158 -8.175918424e-05 0.05145203318" mass="0.0868626234" diaginertia="1e-5 1e-5 1e-5" />
+                <body name="forearm_roll_linkage" pos="0.1000000007 -0.02600000073 0.01819999992" quat="0.5000003498 0.4999996508 0.5000003493 0.4999996502">
+                  <joint name="forearm_roll" type="hinge" axis="0 0 1" range="-2.705260341 2.705260341" />
+                  <inertial pos="-0.0185457483 -0.0004082596223 0.0480112412" mass="0.0984298213" diaginertia="1e-5 1e-5 1e-5" />
                   <geom type="mesh" mesh="wrist_flex_case" name="wrist_flex_case" rgba=".24 .26 .29 1" />
                   <geom type="mesh" mesh="wrist_flex_link" name="wrist_flex_link" rgba=".12 .57 .55 1" />
-                  <body name="wrist_flex_linkage" pos="-0.08000000012 -0.01870000033 0.06199999952" quat="-0.4999985457 0.4999985454 0.5000014539 0.500001455">
-                    <joint name="wrist_flex" type="hinge" axis="0 0 1" range="-1.658237322 1.658237322" />
-                    <inertial pos="-0.000103312 -0.0386143 0.0281156" mass="0.079" diaginertia="1e-5 1e-5 1e-5" />
+                  <body name="wrist_flex_linkage" pos="-0.04000000012 -0.01870000033 0.04999999952" quat="-0.4999985457 0.4999985454 0.5000014539 0.500001455">
+                    <joint name="wrist_flex" type="hinge" axis="0 0 1" range="-1.658062789 1.658062789" />
+                    <inertial pos="-0.000103 -0.038614 0.028116" mass="0.079" diaginertia="1e-5 1e-5 1e-5" />
                     <geom type="mesh" mesh="wrist_roll_case" name="wrist_roll_case" rgba=".24 .26 .29 1" />
                     <geom type="mesh" mesh="wrist_roll_link" name="wrist_roll_link" rgba=".62 .68 .71 1" />
                     <body name="gripper" pos="7.562153178e-10 -0.06110000031 0.01809999854" quat="0.01721081203 -0.01721081204 0.7068972967 0.7068972965">
-                      <joint axis="0 0 1" name="wrist_roll" type="hinge" range="-2.505769207 2.841396022" />
+                      <joint axis="0 0 1" name="wrist_roll" type="hinge" range="-2.49582083 2.827433388" />
                       <inertial pos="0.000213627 0.000245138 -0.025187" mass="0.087" fullinertia="2.75087e-05 4.33657e-05 3.45059e-05 -3.35241e-07 -5.7352e-06 -5.17847e-08" />
                       <geom type="mesh" pos="0.0077 0.0001 -0.0234" quat="0.707107 -0.707107 1.66015e-15 6.45094e-15" mesh="sts3215_03a_v1" name="gripper_sts3215_03a_v1" rgba=".21 .26 .29 1" />
                       <geom type="mesh" pos="8.32667e-17 -0.000218214 0.000949706" quat="0 1 0 0" mesh="wrist_roll_follower_so101_v1" name="gripper_wrist_roll_follower_so101_v1" rgba=".83 .55 .2 1" />

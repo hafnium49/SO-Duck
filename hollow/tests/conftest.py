@@ -19,6 +19,10 @@ def robot():
     """The hollow-arm model with its meshes loaded."""
     import model
 
+    if not (ROOT / "hollow" / "parts" / "stock" / "shoulder_yaw_case.stl").exists():
+        import build_parts  # the stock meshes are derived, not committed
+
+        build_parts.write_stock()
     return model.robot_model()
 
 

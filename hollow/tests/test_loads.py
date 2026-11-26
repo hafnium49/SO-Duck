@@ -6,11 +6,6 @@ def test_stock_baseline():
     assert 0.84 < empty < 0.88 and 1.24 < loaded < 1.29  # spike: 0.863 and 1.265
 
 
-def test_present_arm_is_over_the_limit(robot, passing_q):
-    empty = loads.arm_torques(robot, passing_q)[:, loads.SHOULDER].max()
-    assert 1.10 < empty < 1.25 and empty > loads.stock_baseline()[0]
-
-
 def test_payload_never_lowers_the_worst_case(robot, passing_q):
     loaded = loads.arm_torques(robot, passing_q, 0.1)[:, loads.SHOULDER].max()
     assert loaded > loads.arm_torques(robot, passing_q)[:, loads.SHOULDER].max()

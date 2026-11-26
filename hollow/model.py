@@ -1,7 +1,14 @@
-"""Reconstructed model of the hollow design: robot.xml and the arm meshes in meshes/.
+"""The hollow design's model: its tested pairs, and the earlier reconstruction.
 
-The author's model of this design is not in the repository. This script rebuilds one
-from what the viewer stores:
+robot.xml is written by cad/build_parts.py from the three CAD parts. robot_model() and
+tested_pairs() serve that model.
+
+build() is the earlier reconstruction, kept for reference. It rebuilt a model from what
+the review viewer stored, before the parts were drawn, and writes robot.xml and meshes/:
+run it only to reproduce the earlier results, then run cad/build_parts.py again.
+
+The author's model of the review design is not in the repository. The reconstruction
+takes from the viewer:
 
 - Joint frames come from the stored body transforms. Each arm joint is a hinge whose
   child origin stays fixed in the parent. The fit reproduces every stored frame.
@@ -52,11 +59,13 @@ VIEWER_BODY = {model: viewer for model, viewer, _ in BODIES}
 # meshes on the two sides of one joint get the test that ignores touching faces.
 NEIGHBOURS = [(a, b) for (_, _, near), (_, _, far) in zip(BODIES[:5], BODIES[1:6]) for a in near for b in far]
 NEIGHBOURS += [("wrist_roll_link", "gripper")]
-# Four of them overlap in every stored frame: a link seated on the servo horn before it.
+# Five of them are a link seated on the horn of the servo before it. They touch by design.
+# The part tests in tests/ sweep each of them with only the 13 mm around the horn left out.
 SEATS = [
     ("shoulder_yaw_case", "shoulder_pitch_link"),
     ("shoulder_pitch_case", "forearm_pitch_link"),
     ("forearm_pitch_case", "forearm_roll_link"),
+    ("forearm_roll_case", "wrist_flex_link"),
     ("wrist_flex_case", "wrist_roll_link"),
 ]
 # Stored angles are rounded to 0.01 degree.
@@ -68,8 +77,14 @@ def robot_model():
 
 
 def tested_pairs(robot):
-    pairs = list(collision_pairs(robot, seats=NEIGHBOURS, more_parts=("shoulder_collar",)))
-    return pairs + [(a, b, "crossing") for a, b in NEIGHBOURS if (a, b) not in SEATS]
+    """Pairs of mesh groups that must not intersect, for the model that cad/build_parts.py writes.
+
+    Every pair across a joint gets the triangle test, which counts touching faces as a
+    hit. The seats are left out, and so is the stock gripper on its stock wrist link.
+    The mount is tested against the trunk: the neck servo it replaces is not in the model.
+    """
+    seats = SEATS + [("wrist_roll_link", "gripper")]
+    return list(collision_pairs(robot, seats=seats, more_parts=("shoulder_collar",))) + [("shoulder_mount", "trunk_assembly")]
 
 
 def all_frames(data):

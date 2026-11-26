@@ -45,7 +45,8 @@ def test_donor_is_one_valid_solid(name):
 
 def test_frames_match_model(root):
     model = ET.parse(root / "hollow/robot.xml")
-    frames = params.joint_frames(0, 0, 0)
+    # the model carries the chosen lengths
+    frames = params.joint_frames(params.FOREARM_SHORTEN, params.WRIST_SIDE_SHORTEN, params.WRIST_AXIAL_SHORTEN)
     assert list(frames) == list(BODY)
     for joint, body in BODY.items():
         element = model.find(f".//body[@name='{body}']")

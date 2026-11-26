@@ -45,9 +45,12 @@ SERVO_CONNECTORS = (
 )
 
 
-def tessellate(solid, tolerance=0.02):
+def tessellate(solid, tolerance=0.02, angular=0.1):
     """A CadQuery solid as a triangle mesh in the same units."""
-    vertices, faces = solid.tessellate(tolerance, 0.1)
+    from OCP.BRepTools import BRepTools
+
+    BRepTools.Clean_s(solid.wrapped)  # otherwise a triangulation made earlier, finer or coarser, is reused
+    vertices, faces = solid.tessellate(tolerance, angular)
     mesh = trimesh.Trimesh([v.toTuple() for v in vertices], faces, process=True)
     # The SO-101 solids come out with a few vertices doubled a ten-thousandth of a
     # millimetre apart, which leaves hairline cracks. Joining them closes the mesh.
