@@ -51,6 +51,10 @@ def measure(solid):
     return solid.Volume(), np.array([box.xmin, box.ymin, box.zmin, box.xmax, box.ymax, box.zmax])
 
 
+def _same(drawn, stored):
+    return abs(drawn[0] - stored[0]) < 1.0 and np.abs(drawn[1] - stored[1]).max() < 0.01  # 0.001 cm3, 0.01 mm
+
+
 def masses(solids):
     """Body name to (kg, centre m): solid volume at the print density, 55 g per servo, stock link inertials."""
     frames = servo_frames()
@@ -89,7 +93,10 @@ def write(out=OUT, model=True):
     out.mkdir(parents=True, exist_ok=True)
     for geom, solid in solids.items():
         name = assemble.CUSTOM[geom]
-        cq.exporters.export(cq.Workplane("XY").add(solid), str(out / f"{name}.step"))
+        step = out / f"{name}.step"
+        # A STEP file carries the time it was written. One that already holds this solid is kept.
+        if not (step.exists() and _same(measure(solid), measure(cq.importers.importStep(str(step)).val()))):
+            cq.exporters.export(cq.Workplane("XY").add(solid), str(step))
         mesh = stock.tessellate(solid, *MESH_TOLERANCE)
         if not mesh.is_watertight:
             raise ValueError(f"{name}: the mesh is not closed")
@@ -108,7 +115,7 @@ def check():
         name = assemble.CUSTOM[geom]
         drawn = measure(draw())
         stored = measure(cq.importers.importStep(str(OUT / f"{name}.step")).val())
-        same = abs(drawn[0] - stored[0]) < 1.0 and np.abs(drawn[1] - stored[1]).max() < 0.01  # 0.001 cm3, 0.01 mm
+        same = _same(drawn, stored)
         print(f"{name}: {drawn[0] / 1000:.3f} cm3 drawn, {stored[0] / 1000:.3f} cm3 stored: {'same' if same else 'DIFFERENT'}")
         good &= same
     return good

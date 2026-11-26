@@ -647,8 +647,8 @@
     },
     {
       "path": "hollow/cad/build_parts.py",
-      "bytes": 5800,
-      "sha256": "c1a3a63e712f12d0d4c54939cd07bfc78644a09764a71afe8d4a5c8518c0e1ab"
+      "bytes": 6091,
+      "sha256": "d8d78159c214f2b434577e19b35fc16105e13638fbae4e99186e54f27500abbd"
     },
     {
       "path": "hollow/cad/checks.py",
@@ -818,7 +818,7 @@
     {
       "path": "hollow/parts/neck_socket_mount.step",
       "bytes": 1073308,
-      "sha256": "94f52aefb6f9558da29ee7406013f951e2bafa1dcfc2bde781954c4afc60fd3f"
+      "sha256": "9d38fc35a71f94dd2d353bc7c3606a928b1f403b6f189c2caba355b9c595f338"
     },
     {
       "path": "hollow/parts/neck_socket_mount.stl",
@@ -1176,5 +1176,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 70454861
+  "total_bytes": 70455152
 }
