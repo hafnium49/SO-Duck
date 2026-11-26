@@ -47,6 +47,17 @@ RANGES_DEG = {
     "wrist_flex": (-95.0, 95.0),
     "wrist_roll": (-143.0, 162.0),
 }
+# Tool poses of the clips, in the world frame of the reference stance: millimetres, and
+# quaternions (w, x, y, z). They are those of the earlier design, so the cube, the pad
+# and the way the gripper meets them are unchanged.
+PAD_XY_MM = (-104.0, 23.0)  # centre of the parking pad on the roof, trunk frame
+CUBE_XY_MM = (182.098, -0.102)  # centre of the 20 mm cube on the floor
+PICKUP_TOOL_XY_MM = (172.107, 0.172)
+PICKUP_TOOL_Z_MM = (40.375, 10.375)  # above the cube, and at the grasp
+PICKUP_TOOL_QUAT = (0.7069126, 0.0172385, 0.7068812, -0.0172154)
+PARK_TOOL_MM = (-101.185, 23.347, 281.359)
+PARK_TOOL_QUAT = (0.6714828, -0.0351548, 0.6269751, -0.3934173)
+OVERHEAD_XY_MM = (200.0, 0.0)  # the overhead posture holds the tool on the centre line, as high as it passes
 MOVING_CLEARANCE_MM = 1.5  # between parts that move relative to each other
 MIN_WALL_MM = 1.6
 BED_MM = 180.0

@@ -712,8 +712,8 @@
     },
     {
       "path": "hollow/cad/params.py",
-      "bytes": 3954,
-      "sha256": "ad398af08644d70f74cbdb130a86a1e5e1866bbdef71d5c9519286c1bd58dc24"
+      "bytes": 4725,
+      "sha256": "f6f07d5e7a720b9a4f4bfcdeb9fcd6d7427a972d8adc890941bf5087f74e1ce1"
     },
     {
       "path": "hollow/cad/parts.py",
@@ -729,6 +729,11 @@
       "path": "hollow/cad/stock.py",
       "bytes": 7243,
       "sha256": "b9b203acb2a9e3ac2644267060960ad2db95811903d48b3d093d9531fb851081"
+    },
+    {
+      "path": "hollow/fold_waypoint.csv",
+      "bytes": 183,
+      "sha256": "96b7f9831fc6ca18e1673bf69f5f69bb4ef771759c51b94e34adbe854fba7e4b"
     },
     {
       "path": "hollow/inspect_viewer.py",
@@ -796,6 +801,16 @@
       "sha256": "eac13661381dcd5abbb6a06c12a711f24d3b4c4d53780066be9baf258fae8a71"
     },
     {
+      "path": "hollow/overhead.csv",
+      "bytes": 179,
+      "sha256": "7cb1ef6144424b973504f57108a5a11de4de9417597b742e2ece3a7cb8875e25"
+    },
+    {
+      "path": "hollow/park.csv",
+      "bytes": 183,
+      "sha256": "b1dac244b6bc0dbfce03e473d7c34a9e5b99bce745838533f02e1636fa52194d"
+    },
+    {
       "path": "hollow/parts/elbow_to_forearm_roll.step",
       "bytes": 1382752,
       "sha256": "b9806dc641ee6a22eb75bce5b172cc61a825a508abc1b1b530972ef3f2d8650d"
@@ -827,13 +842,13 @@
     },
     {
       "path": "hollow/pickup.csv",
-      "bytes": 18748,
-      "sha256": "c7ddbdbfff1a8e099fa07d815550e90a5c611772cbfbce0e567e7c7ead060850"
+      "bytes": 18991,
+      "sha256": "ec08ad27258b9be13d92d1fb11f470327eacd9b040f34b7abd6ac0bd274ae915"
     },
     {
       "path": "hollow/postures.py",
-      "bytes": 17400,
-      "sha256": "4226fd1157f0cd0e29cd0982c2cb14ace2297bc54934c2ac01e5e009628ac31b"
+      "bytes": 27423,
+      "sha256": "14b3d0ba8179fa62abc33c33f5ad93ae82bd611c71a2a952d75949d234b3cce9"
     },
     {
       "path": "hollow/review-meshes/elbow-to-forearm-roll.preview.stl",
@@ -874,6 +889,11 @@
       "path": "hollow/tests/test_checks.py",
       "bytes": 4806,
       "sha256": "580b8688e01cd0b06f93739f4de08dda6699d69de542cfdbb5353aa21b8cfabe"
+    },
+    {
+      "path": "hollow/tests/test_clips.py",
+      "bytes": 2064,
+      "sha256": "653da63c35c211b25bedd6fda4787b5ad331597974d178d4125def54c608f9d0"
     },
     {
       "path": "hollow/tests/test_forearm_link.py",
@@ -1176,5 +1196,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 70455152
+  "total_bytes": 70468798
 }
