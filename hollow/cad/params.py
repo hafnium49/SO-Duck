@@ -24,9 +24,9 @@ FRAME = {
 }
 
 # Shortening of the two links, metres. Chosen by hollow/cad/lengths.py from the load limit.
-FOREARM_SHORTEN = 0.0  # elbow axis to forearm-roll joint, along the forearm
-WRIST_SIDE_SHORTEN = 0.0  # wrist-flex axis toward the roll axis
-WRIST_AXIAL_SHORTEN = 0.0  # wrist-flex axis along the roll axis
+FOREARM_SHORTEN = 0.040  # elbow axis to forearm-roll joint, along the forearm
+WRIST_SIDE_SHORTEN = 0.040  # wrist-flex axis toward the roll axis
+WRIST_AXIAL_SHORTEN = 0.012  # wrist-flex axis along the roll axis
 FOREARM_RANGE = (0.040, 0.055)
 WRIST_SIDE_RANGE = (0.040, 0.050)
 WRIST_AXIAL_MAX = 0.012

@@ -437,8 +437,8 @@
     },
     {
       "path": "coverage/resolve.py",
-      "bytes": 14608,
-      "sha256": "13f8f42ddd4d71b05fe2fe8eea38789c9e0f9eccd608112d72182a5a3660ef52"
+      "bytes": 14724,
+      "sha256": "4fc82efd724d7a8bfcd7cad94e9b4f889fb8a78d5f72326382abac60428ae3b8"
     },
     {
       "path": "coverage/robot.xml",
@@ -641,6 +641,16 @@
       "sha256": "692b5141b33c61257fcc7f02a3eb13fe248c66177de148eb095939bebf0f9b61"
     },
     {
+      "path": "hollow/cad/assemble.py",
+      "bytes": 6698,
+      "sha256": "6163d539dba7e1586565d41e24a209ecfb42151efbfb8fdaa2177522a8ee427c"
+    },
+    {
+      "path": "hollow/cad/checks.py",
+      "bytes": 5924,
+      "sha256": "3a5214f16d0000c2759094401f0bd191a549256b5b4f411d57e9a742965dff9a"
+    },
+    {
       "path": "hollow/cad/donors/Base_motor_holder_SO101.step",
       "bytes": 300211,
       "sha256": "f13462eea875727ae7cec7d190c59642444b9076c76cf2423bbe3c5b6c469587"
@@ -686,9 +696,19 @@
       "sha256": "39c5e78647d471ab4e4328ec6d00f06ad90dc48a0b1ffe4baf1a951c1304f74b"
     },
     {
+      "path": "hollow/cad/length_study.csv",
+      "bytes": 141,
+      "sha256": "0db52f9afc998267e2c3e94977e36e78873d03ef0a24cec574b77ace8bc270aa"
+    },
+    {
+      "path": "hollow/cad/lengths.py",
+      "bytes": 7605,
+      "sha256": "6ac42fb7aa6b61f94b4a7d688f60475257ec02410f4db283c68668eb5ec4253f"
+    },
+    {
       "path": "hollow/cad/params.py",
-      "bytes": 3055,
-      "sha256": "49ef89d91b84b72bf6142a93521ed710cf26884b15ee56c335cec4686090061a"
+      "bytes": 3061,
+      "sha256": "99a22bc336fb884b11140ea84ada0607bfc4d53f4062dffd9f19caf19c08a947"
     },
     {
       "path": "hollow/cad/placements.json",
@@ -804,6 +824,16 @@
       "path": "hollow/tests/conftest.py",
       "bytes": 796,
       "sha256": "3691c19937abeb852397adb276c8b0ad1401dd7580509f4158c5fa07c7f65c6c"
+    },
+    {
+      "path": "hollow/tests/test_checks.py",
+      "bytes": 4806,
+      "sha256": "580b8688e01cd0b06f93739f4de08dda6699d69de542cfdbb5353aa21b8cfabe"
+    },
+    {
+      "path": "hollow/tests/test_lengths.py",
+      "bytes": 3809,
+      "sha256": "7fbc19dbed7d9baad9baea4c3b647cf86630a0211e37dfc25a7ce20ac18f421f"
     },
     {
       "path": "hollow/tests/test_loads.py",
@@ -1081,5 +1111,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 65454867
+  "total_bytes": 65483972
 }
