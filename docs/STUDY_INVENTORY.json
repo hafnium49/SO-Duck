@@ -647,8 +647,8 @@
     },
     {
       "path": "hollow/cad/checks.py",
-      "bytes": 5924,
-      "sha256": "3a5214f16d0000c2759094401f0bd191a549256b5b4f411d57e9a742965dff9a"
+      "bytes": 6420,
+      "sha256": "4d34c415ec7ffceec5b35cb3e7009642e65fa968b2839426c5f660acae3d9886"
     },
     {
       "path": "hollow/cad/donors/Base_motor_holder_SO101.step",
@@ -707,13 +707,13 @@
     },
     {
       "path": "hollow/cad/params.py",
-      "bytes": 3061,
-      "sha256": "99a22bc336fb884b11140ea84ada0607bfc4d53f4062dffd9f19caf19c08a947"
+      "bytes": 3455,
+      "sha256": "21d8a88287e0906909e1c9e67bee2a24c02927fd16b0e3b063acd76fcc2feb21"
     },
     {
       "path": "hollow/cad/parts.py",
-      "bytes": 10471,
-      "sha256": "263a71b207569b97eb5b4adb18916feaa317151cfa7734684c937656182c52f7"
+      "bytes": 15003,
+      "sha256": "05c267ecaff3b758deb3e2c8083dca084932a2504f5335beba350e21366ff6f0"
     },
     {
       "path": "hollow/cad/placements.json",
@@ -849,6 +849,11 @@
       "path": "hollow/tests/test_loads.py",
       "bytes": 754,
       "sha256": "0c43fd4d2cc33fb3eea572e604e7e5898164a0973e13de756669f8441208ca76"
+    },
+    {
+      "path": "hollow/tests/test_neck_mount.py",
+      "bytes": 5893,
+      "sha256": "83294e5700fd50a53aa330b33e33386348db69ef1dcc7cc1e980140d96cb603f"
     },
     {
       "path": "hollow/tests/test_params.py",
@@ -1126,5 +1131,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 65501106
+  "total_bytes": 65512421
 }

@@ -31,6 +31,11 @@ FOREARM_RANGE = (0.040, 0.055)
 WRIST_SIDE_RANGE = (0.040, 0.050)
 WRIST_AXIAL_MAX = 0.012
 
+# The Duck's neck servo sat in a socket in the trunk top, held by four M2 screws through
+# the socket's two side walls. Hole centres in the trunk frame, millimetres, at the middle
+# of the mount's tabs; measured on trunk_top of coverage/robot.xml.
+NECK_SCREWS_MM = [(-9.25, -13.45, 57.27), (11.25, -13.45, 57.27), (-9.25, 13.45, 61.02), (11.25, 13.45, 61.02)]
+NECK_SCREW_AXIS = (0.0, 1.0, 0.0)
 MOVING_CLEARANCE_MM = 1.5  # between parts that move relative to each other
 MIN_WALL_MM = 1.6
 BED_MM = 180.0

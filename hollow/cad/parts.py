@@ -215,3 +215,81 @@ def wrist_link():
         path = cq.Solid.makeCylinder(DRIVER_RADIUS_MM, top - BRIDGE_Z_MM[0] - 4, cq.Vector(x, y, BRIDGE_Z_MM[0] + 4))
         link = _join("wrist link", link.cut(path))
     return link
+
+
+# --- neck socket mount, in the trunk frame ---------------------------------------------
+# The socket in the trunk top that held the Duck's neck servo: floor at z = 54.9, side
+# walls 16.1 mm either side of the middle, up to z = 72.5, a back wall at x = -11.4.
+PLUG_X_MM = (-11.2, 15.5)
+PLUG_HALF_MM = 15.9
+PLUG_Z_MM = (55.0, 73.0)
+PLUG_TAB_MM = 4.9  # the tabs that take the neck screws
+PLUG_END_MM = 3.0
+NECK_PILOT_RADIUS_MM = 0.9  # an M2 screw cuts its own thread
+NECK_SCREW_ROWS_MM = (57.27, 61.02)  # either row may be the one a wall uses
+# The shoulder stage hooks under the yaw servo and sweeps z 131 to 144 out to 51 mm from
+# the axis, except behind x = -35. The upright leans back under the trunk's cover line
+# and is behind x = -36 before it reaches that height. Side profile: (x, z).
+UPRIGHT_FRONT_MM = [(15.5, 71.0), (-36.0, 127.0), (-36.0, 149.0)]
+UPRIGHT_BACK_MM = [(-11.2, 71.0), (-11.2, 88.0), (-52.0, 128.0), (-52.0, 149.0)]
+UPRIGHT_HALF_MM = 15.9  # as wide as the plug; the servo screws' driver paths run inside the side walls
+UPRIGHT_WALL_MM = 3.0
+UPRIGHT_WEB_MM = 4.0  # along x; the web is the channel's front, its back is open
+# Behind this the stock holder is a 1 mm cover over the SO-101 base's electronics. It is left off.
+HOLDER_BACK_MM = -52.0
+DECK_MM = ((-51.7, -36.0), (-22.0, 22.1), (147.5, 150.5))  # joins the holder's side walls to the upright
+# The STS3215 has two tapped M2 holes on its back face near the tail. A shelf under the
+# tail carries the servo's weight and takes two screws from below.
+YAW_SERVO_HOLES_MM = [(-20.30, 10.27), (-20.30, -10.27)]  # in the servo's frame
+YAW_SERVO_BACK_FACE_MM = -15.9
+SHELF_MM = 2.9
+SHELF_X_MM = (-36.5, -29.2)  # the servo's back is flat only this far from the tail; then its cover stands proud
+SHELF_HALF_MM = 13.5
+SERVO_SCREW_RADIUS_MM = 1.2
+
+
+def _yaw_servo_screws():
+    """Where the two shelf screws enter the yaw servo: trunk frame, on its back face."""
+    frame = stock.placement("shoulder_yaw_case")
+    return [tuple(float(v) for v in (frame @ [x, y, YAW_SERVO_BACK_FACE_MM, 1.0])[:3]) for x, y in YAW_SERVO_HOLES_MM]
+
+
+YAW_SERVO_SCREWS_MM = _yaw_servo_screws()
+
+
+def _base_holder():
+    """The SO-101 base motor holder, placed around the yaw servo as it is in the stock base."""
+    holder, servo = so101("base", "base_motor_holder_so101_v1"), so101("base", "sts3215_03a_v1")
+    placed = stock.moved(params.donor("Base_motor_holder_SO101"), stock.placement("shoulder_yaw_case") @ np.linalg.inv(servo) @ holder)
+    return _join("base holder", placed.intersect(_box(HOLDER_BACK_MM, 100, -100, 100, 0, 300)))
+
+
+def _extrude_xz(points, half):
+    """A side profile given as (x, z) points, extruded to both sides of y = 0."""
+    return cq.Workplane("XZ").polyline(points).close().extrude(half, both=True).val()
+
+
+def neck_mount():
+    """Neck socket mount: a plug in the trunk's neck socket, a channel upright, the SO-101 base holder."""
+    (x0, x1), (z0, z1) = PLUG_X_MM, PLUG_Z_MM
+    plug = _box(x0, x1, -PLUG_HALF_MM, PLUG_HALF_MM, z0, z1).cut(
+        _box(x0 + PLUG_END_MM, x1 - PLUG_END_MM, -PLUG_HALF_MM + PLUG_TAB_MM, PLUG_HALF_MM - PLUG_TAB_MM, z0 - 1, z1 + 1)
+    )
+    profile = UPRIGHT_FRONT_MM + UPRIGHT_BACK_MM[::-1]
+    hollow = [(x - UPRIGHT_WEB_MM, z + shift) for (x, z), shift in zip(profile, [-1, 0, 1, 1, 0, 0, -1])]
+    upright = _extrude_xz(profile, UPRIGHT_HALF_MM).cut(_extrude_xz(hollow, UPRIGHT_HALF_MM - UPRIGHT_WALL_MM))
+    (dx0, dx1), (dy0, dy1), (dz0, dz1) = DECK_MM
+    deck = _box(dx0, dx1, dy0, dy1, dz0, dz1)
+    middle = stock.placement("shoulder_yaw_case")[1, 3]
+    top = stock.placement("shoulder_yaw_case")[2, 3] + YAW_SERVO_BACK_FACE_MM - 0.1
+    shelf = _box(SHELF_X_MM[0], SHELF_X_MM[1], middle - SHELF_HALF_MM, middle + SHELF_HALF_MM, top - SHELF_MM, top)
+    mount = _join("neck mount", _base_holder(), deck, upright, plug, shelf)
+    for x, y, z in YAW_SERVO_SCREWS_MM:
+        mount = mount.cut(cq.Solid.makeCylinder(SERVO_SCREW_RADIUS_MM, SHELF_MM + 2, cq.Vector(x, y, top - SHELF_MM - 1)))
+        mount = mount.cut(cq.Solid.makeCylinder(DRIVER_RADIUS_MM, 70, cq.Vector(x, y, top - SHELF_MM - 70)))
+    for x in sorted({centre[0] for centre in params.NECK_SCREWS_MM}):
+        for z in NECK_SCREW_ROWS_MM:
+            for sign in (1, -1):
+                start = cq.Vector(x, sign * (PLUG_HALF_MM - PLUG_TAB_MM - 0.5), z)
+                mount = mount.cut(cq.Solid.makeCylinder(NECK_PILOT_RADIUS_MM, PLUG_TAB_MM + 1.0, start, cq.Vector(0, sign, 0)))
+    return _join("neck mount", mount)

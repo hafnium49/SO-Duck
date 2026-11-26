@@ -13,6 +13,7 @@ from stock import tessellate  # noqa: F401  (re-exported)
 # The stock SO-101 holder sits 0.40 mm inside the servo mesh along one edge of the cover.
 # A holder may go that deep before it counts as cutting into the servo.
 SERVO_ALLOWANCE_MM = 0.45
+RAY_BATCH = 400  # points per ray query, to bound trimesh's memory
 
 
 def min_wall_mm(solid, samples=20000):
@@ -25,8 +26,12 @@ def min_wall_mm(solid, samples=20000):
     points, faces = trimesh.sample.sample_surface(mesh, samples, seed=0)
     inward = -mesh.face_normals[faces]
     origins = np.asarray(points) + 1e-3 * inward
-    hits, rays, _ = mesh.ray.intersects_location(origins, inward, multiple_hits=False)
-    return float(np.percentile(np.linalg.norm(hits - origins[rays], axis=1), 1))
+    depths = []
+    for start in range(0, samples, 10 * RAY_BATCH):
+        batch = slice(start, start + 10 * RAY_BATCH)
+        hits, rays, _ = mesh.ray.intersects_location(origins[batch], inward[batch], multiple_hits=False)
+        depths.append(np.linalg.norm(hits - origins[batch][rays], axis=1))
+    return float(np.percentile(np.concatenate(depths), 1))
 
 
 # Collision objects are built once per mesh and kept: a sweep asks about the same two
@@ -93,7 +98,10 @@ def _depth_inside(mesh, points):
     points = points[np.all((points > low) & (points < high), axis=1)]
     if not len(points):
         return 0.0
-    points = points[mesh.contains(points)]
+    # In pieces: trimesh gathers every candidate triangle of every ray at once, which
+    # for a large part takes gigabytes.
+    inside = np.concatenate([mesh.contains(points[start : start + RAY_BATCH]) for start in range(0, len(points), RAY_BATCH)])
+    points = points[inside]
     if not len(points):
         return 0.0
     return float(trimesh.proximity.closest_point(mesh, points)[1].max())
