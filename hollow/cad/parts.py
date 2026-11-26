@@ -42,7 +42,7 @@ ROOT_END_MM = 18.0
 ROOT_HALF_MM = 10.5
 PLATE_START_MM = 14.0  # the plates begin here, inside the root and beyond the screw passages
 PLATE_BORDER_MM = 7.0  # width of the frame left around each plate's window
-STRIP_MM = 4.0  # thickness of the strips joining the plates to the pocket
+STRIP_MM = 3.0  # thickness of the strips joining the plates to the seat
 HORN_PLANE_GAP_MM = 1.5  # the link ends this far before the roll joint's plane
 
 
@@ -99,19 +99,38 @@ def roll_servo_frame():
     return frame
 
 
-def _wrist_pocket(servo_frame):
-    """The pocket that holds the SO-101 wrist servo, placed around a servo at servo_frame.
+# The servo's body ends this far behind its centre, and its two wide faces are this far
+# either side of it. The seat's own screw passages meet two of the servo's tapped M2 holes:
+# (x, y) in the servo's frame, and the face they are on (-1 back, +1 horn side).
+SERVO_TAIL_MM = 22.7
+SERVO_FACE_MM = 15.9
+SEAT_BACK_MM = 4.0  # of the under arm kept behind the tail; less leaves walls under 1 mm
+SEAT_SCREWS_MM = (((-20.30, -10.27), -1), ((-16.58, -10.25), 1))
 
-    It is the end of the under arm, which seats the servo's tail, and the wrist motor
-    holder that clips onto it and closes it into a band. The under arm is kept as far
-    toward the elbow as the holder reaches, so the two meet as they do in the stock arm.
+
+def _servo_seat(servo_frame, mirrored=False):
+    """The end of the SO-101 under arm that seats the wrist servo, placed around a servo at servo_frame.
+
+    It holds the servo on four sides and takes two of its screws. The stock arm closes
+    the open side with a separate clip-on holder and two more screws; that holder is
+    left off, which halves the weight at the end of the link. mirrored turns the open
+    side to the servo's other flank; the servo is the same on both.
     """
-    under, holder, servo = (so101("lower_arm", m) for m in ("under_arm_so101_v1", "motor_holder_so101_wrist_v1", "sts3215_03a_v1"))
-    onto = servo_frame @ np.linalg.inv(servo)
-    clip = stock.moved(params.donor("Motor_holder_SO101_Wrist"), holder)  # in the lower arm's frame
-    reach = clip.BoundingBox().xmax  # the elbow is toward +x
-    seat = stock.moved(params.donor("Under_arm_SO101"), under).intersect(_box(-200, reach, -100, 100, -100, 100))
-    return stock.moved(_join("servo pocket", seat, clip), onto)
+    under, servo = so101("lower_arm", "under_arm_so101_v1"), so101("lower_arm", "sts3215_03a_v1")
+    whole = stock.moved(params.donor("Under_arm_SO101"), np.linalg.inv(servo) @ under)  # in the servo's frame
+    seat = _join("servo seat", whole.intersect(_box(-SERVO_TAIL_MM - SEAT_BACK_MM, 200, -100, 100, -100, 100)))
+    if mirrored:
+        seat = seat.mirror("XZ")
+    return stock.moved(seat, servo_frame)
+
+
+def seat_screws(servo_frame, mirrored=False):
+    """Centre and outward direction of the seat's two screw passages, where servo_frame puts them."""
+    out = []
+    for (x, y), side in SEAT_SCREWS_MM:
+        centre = np.array([x, -y if mirrored else y, side * (SERVO_FACE_MM + 3.0), 1.0])
+        out.append((tuple((servo_frame @ centre)[:3]), tuple(servo_frame[:3, 2] * side)))
+    return out
 
 
 def _horn_cheek():
@@ -162,8 +181,8 @@ def _plate(z, x0, x1, y_back):
 
 
 def forearm_link():
-    """Elbow-to-forearm-roll link: the SO-101 ends on the elbow horns, two plates, a pocket for the roll servo."""
-    pocket = _wrist_pocket(roll_servo_frame())
+    """Elbow-to-forearm-roll link: the SO-101 ends on the elbow horns, two plates, the SO-101 seat for the roll servo."""
+    pocket = _servo_seat(roll_servo_frame())
     box = pocket.BoundingBox()
     x0 = box.xmin
     x1 = min(box.xmax, 1000 * (params.FRAME["forearm_roll"][0][0] - params.FOREARM_SHORTEN) - HORN_PLANE_GAP_MM)
@@ -202,10 +221,11 @@ def wrist_servo_frame():
 
 
 def wrist_link():
-    """Forearm-roll-to-wrist link: an SO-101 cheek on the roll horn, a channel, the SO-101 pocket for the wrist servo."""
+    """Forearm-roll-to-wrist link: an SO-101 cheek on the roll horn, a channel, the SO-101 seat for the wrist servo."""
     # The cheek turned over: its horn face on the roll horn, the cheek beyond it.
     seat = stock.moved(_horn_cheek(), _frame([0, 0, ROLL_HORN_FACE_MM], [0, 1, 0, 0]))
-    pocket = _wrist_pocket(wrist_servo_frame())
+    # The seat's closed flank is toward the roll servo, on top of the channel.
+    pocket = _servo_seat(wrist_servo_frame(), mirrored=True)
     (x0, x1), (z0, z1), half, wall = BRIDGE_X_MM, BRIDGE_Z_MM, BRIDGE_HALF_MM, BRIDGE_WALL_MM
     # A channel closed on three sides; the screws' paths run inside it and past its open side.
     channel = _box(x0, x1, -half, half, z0, z1).cut(_box(x0 + wall, x1 + 1, -half + wall, half - wall, z0 - 1, z1 + 1))

@@ -42,6 +42,16 @@ def test_wrist_servo_can_be_inserted(mesh):
         assert depth <= checks.SERVO_ALLOWANCE_MM, (out, depth)
 
 
+def test_wrist_servo_is_screwed_to_its_seat(link):
+    for centre, axis in parts.seat_screws(parts.wrist_servo_frame(), mirrored=True):
+        assert checks.hole_is_open(link, centre, axis, radius=0.9, depth=5.0), centre  # the stock 2 mm passage
+
+
+def test_seat_holds_the_wrist_servo_on_four_sides(mesh):
+    for push in ((-2, 0, 0), (0, 2, 0), (0, 0, 2), (0, 0, -2)):  # the closed flank is the mirrored one
+        assert checks.servo_penetration_mm(mesh, "wrist_flex_case", shift=push, placement=parts.wrist_servo_frame()) > 1.5, push
+
+
 def test_connectors_are_open(link):
     assert checks.connector_blocked_mm3(link, "wrist_flex_case", placement=parts.wrist_servo_frame()) < 1.0
 

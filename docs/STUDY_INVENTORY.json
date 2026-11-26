@@ -717,8 +717,8 @@
     },
     {
       "path": "hollow/cad/parts.py",
-      "bytes": 15003,
-      "sha256": "05c267ecaff3b758deb3e2c8083dca084932a2504f5335beba350e21366ff6f0"
+      "bytes": 15940,
+      "sha256": "b2fcff89e7679863543ae70abc10809013d33a9058944cdbb3eb45eaf73a21a9"
     },
     {
       "path": "hollow/cad/placements.json",
@@ -797,28 +797,28 @@
     },
     {
       "path": "hollow/parts/elbow_to_forearm_roll.step",
-      "bytes": 2481157,
-      "sha256": "a46f383bd9347b5474e5f4ae1b93a33e8bbb1dfc8e7308b11292f63045953774"
+      "bytes": 1382752,
+      "sha256": "b9806dc641ee6a22eb75bce5b172cc61a825a508abc1b1b530972ef3f2d8650d"
     },
     {
       "path": "hollow/parts/elbow_to_forearm_roll.stl",
-      "bytes": 983984,
-      "sha256": "3bf75c8be4a0e57e6f7b24304bdedd6b0c22f832782e494205b27e404c43e68a"
+      "bytes": 459284,
+      "sha256": "3256f5f8e2bba37e1b8e2934a39068e69c9497a068cf4c987b11feb1d499a1a0"
     },
     {
       "path": "hollow/parts/forearm_roll_to_wrist.step",
-      "bytes": 2333354,
-      "sha256": "8b9fe5b8af01ad8a4f94567ae73f5166565417abfeee7bdef27c2ced15e3d635"
+      "bytes": 946156,
+      "sha256": "40dbd293107efb5c3bcb4e0f58a707816ca58435a686ee848b37de37a4fcd8e3"
     },
     {
       "path": "hollow/parts/forearm_roll_to_wrist.stl",
-      "bytes": 937384,
-      "sha256": "f29380467782eabf68c3f8dc5e20868993a6e4f2516b0a5bf3b90f89588ec03e"
+      "bytes": 331584,
+      "sha256": "0fa383b0e408566b72a097dfe2a63f6d3f6b4765b5cf429575c7c4a866259add"
     },
     {
       "path": "hollow/parts/neck_socket_mount.step",
       "bytes": 1073308,
-      "sha256": "9d38fc35a71f94dd2d353bc7c3606a928b1f403b6f189c2caba355b9c595f338"
+      "sha256": "94f52aefb6f9558da29ee7406013f951e2bafa1dcfc2bde781954c4afc60fd3f"
     },
     {
       "path": "hollow/parts/neck_socket_mount.stl",
@@ -832,8 +832,8 @@
     },
     {
       "path": "hollow/postures.py",
-      "bytes": 14311,
-      "sha256": "c3358d86bf598c848a62a69e87cf2d3d02803a78cdb365f6fc4d9b95dce42823"
+      "bytes": 17400,
+      "sha256": "4226fd1157f0cd0e29cd0982c2cb14ace2297bc54934c2ac01e5e009628ac31b"
     },
     {
       "path": "hollow/review-meshes/elbow-to-forearm-roll.preview.stl",
@@ -852,18 +852,18 @@
     },
     {
       "path": "hollow/robot.xml",
-      "bytes": 29763,
-      "sha256": "62deddc87d5427bde146b41ea8be6ac744d74d7d22f21169e8b72edf47f139b6"
+      "bytes": 29765,
+      "sha256": "1a62e8b0dc79457bb3206f734f9874df0c99cfb68b0ce22416d1419b9e054ea1"
     },
     {
       "path": "hollow/targets.csv",
-      "bytes": 23454,
-      "sha256": "5378f21934d01e9ab4acb524b06665d6aa489d493de0cb9e97cda728af6ecb89"
+      "bytes": 23687,
+      "sha256": "70cda132f008541235b0c3246a565fa4435bd187feca5e63622a0f0c881138c4"
     },
     {
       "path": "hollow/tests/conftest.py",
-      "bytes": 990,
-      "sha256": "96fb6e4bf7bf23eba9c5126ca3f6984f71164039b9c56422637889bd69eecd99"
+      "bytes": 1039,
+      "sha256": "a6e496ca6b67be4ade8e4b09281e1282ff0459ad9ea335e258fb28e188d3d6d5"
     },
     {
       "path": "hollow/tests/test_build.py",
@@ -877,8 +877,8 @@
     },
     {
       "path": "hollow/tests/test_forearm_link.py",
-      "bytes": 3244,
-      "sha256": "28955865004d50238cffcd1e3257b08802cb1b15b79a70f1a2a6d2a19f2efb37"
+      "bytes": 3838,
+      "sha256": "b14a8605f41b06da13b664da6192c47589bd02f5228027c911b79e6799d2a512"
     },
     {
       "path": "hollow/tests/test_lengths.py",
@@ -906,9 +906,14 @@
       "sha256": "cb18823a69abe3593d5fef36ee1dbe0e64050bdded940523a2bbc8128a61e7f8"
     },
     {
+      "path": "hollow/tests/test_targets.py",
+      "bytes": 1291,
+      "sha256": "d6292f67372046dd919c7ef989215fe93b9076a676a5171d6df64cb146d0ed04"
+    },
+    {
       "path": "hollow/tests/test_wrist_link.py",
-      "bytes": 3145,
-      "sha256": "50a483c01d3738ae6f41c1e9246773db4fe044b215d13ebb7135a40589fc84af"
+      "bytes": 3687,
+      "sha256": "98cf3dd3673863a76278f71892807937a28ec70d9a690f9dfaa1e2c3e2e3a920"
     },
     {
       "path": "hollow/viewer.html",
@@ -1171,5 +1176,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 74064227
+  "total_bytes": 70454861
 }

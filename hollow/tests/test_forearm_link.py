@@ -53,6 +53,17 @@ def test_roll_servo_can_be_inserted(mesh):
         assert depth <= checks.SERVO_ALLOWANCE_MM, (out, depth)
 
 
+def test_roll_servo_is_screwed_to_its_seat(link):
+    for centre, axis in parts.seat_screws(parts.roll_servo_frame()):
+        assert checks.hole_is_open(link, centre, axis, radius=0.9, depth=5.0), centre  # the stock 2 mm passage
+
+
+def test_seat_holds_the_roll_servo_on_four_sides(mesh):
+    # pushed 2 mm toward the tail, toward the closed flank and toward either face, the servo meets the seat
+    for push in ((-2, 0, 0), (0, -2, 0), (0, 0, 2), (0, 0, -2)):
+        assert checks.servo_penetration_mm(mesh, "forearm_roll_case", shift=push, placement=parts.roll_servo_frame()) > 1.5, push
+
+
 def test_connectors_are_open(link):
     assert checks.connector_blocked_mm3(link, "forearm_roll_case", placement=parts.roll_servo_frame()) < 1.0
 
