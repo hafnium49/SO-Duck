@@ -711,14 +711,19 @@
       "sha256": "99a22bc336fb884b11140ea84ada0607bfc4d53f4062dffd9f19caf19c08a947"
     },
     {
+      "path": "hollow/cad/parts.py",
+      "bytes": 7780,
+      "sha256": "1190037e2199d37d71d266df409a016aecadcdaf7978279e81dbdaebddebee17"
+    },
+    {
       "path": "hollow/cad/placements.json",
       "bytes": 3842,
       "sha256": "ccb758056464ef894fc0223e18b54a3e59f069e45714ae7f484c2cc2334e9b10"
     },
     {
       "path": "hollow/cad/stock.py",
-      "bytes": 6803,
-      "sha256": "9596792258e6b5dc73592fd04dc6dd69bccfb69895f3986d32271a8f3938f598"
+      "bytes": 7077,
+      "sha256": "5adb1b7118a44f073b05ab27f30203f0c05d116149647bfe6e3b6e8f0bf389e2"
     },
     {
       "path": "hollow/inspect_viewer.py",
@@ -829,6 +834,11 @@
       "path": "hollow/tests/test_checks.py",
       "bytes": 4806,
       "sha256": "580b8688e01cd0b06f93739f4de08dda6699d69de542cfdbb5353aa21b8cfabe"
+    },
+    {
+      "path": "hollow/tests/test_forearm_link.py",
+      "bytes": 3244,
+      "sha256": "28955865004d50238cffcd1e3257b08802cb1b15b79a70f1a2a6d2a19f2efb37"
     },
     {
       "path": "hollow/tests/test_lengths.py",
@@ -1111,5 +1121,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 65483972
+  "total_bytes": 65495270
 }

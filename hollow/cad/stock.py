@@ -48,7 +48,12 @@ SERVO_CONNECTORS = (
 def tessellate(solid, tolerance=0.02):
     """A CadQuery solid as a triangle mesh in the same units."""
     vertices, faces = solid.tessellate(tolerance, 0.1)
-    return trimesh.Trimesh([v.toTuple() for v in vertices], faces, process=True)
+    mesh = trimesh.Trimesh([v.toTuple() for v in vertices], faces, process=True)
+    # The SO-101 solids come out with a few vertices doubled a ten-thousandth of a
+    # millimetre apart, which leaves hairline cracks. Joining them closes the mesh.
+    mesh.merge_vertices(digits_vertex=4)
+    mesh.update_faces(mesh.nondegenerate_faces())
+    return mesh
 
 
 @lru_cache(maxsize=None)
