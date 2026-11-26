@@ -28,9 +28,9 @@ def robot():
 
 @pytest.fixture(scope="session")
 def passing_q():
-    """Stored postures of the targets that have a passing posture, shape (n, 16)."""
+    """Stored postures of the covered targets: a passing posture within the load limit. Shape (n, 16)."""
     import numpy as np
     import postures
 
     q, _ = postures.read_targets()
-    return np.delete(q, list(postures.UNREACHED), axis=0)
+    return np.delete(q, list(postures.UNREACHED) + list(postures.OVER_LIMIT), axis=0)

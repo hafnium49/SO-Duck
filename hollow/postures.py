@@ -1,13 +1,15 @@
 """Replay, search and viewer update for the postures of the hollow design.
 
     python hollow/postures.py                  # replay targets.csv, pickup.csv and the viewer clips
-    python hollow/postures.py --search         # search targets whose row fails, rewrite targets.csv
+    python hollow/postures.py --search         # search targets whose row fails or is over the load limit, rewrite targets.csv
     python hollow/postures.py --search-pickup  # search a pickup crouch that passes, rewrite pickup.csv
     python hollow/postures.py --write-viewer   # write the CSV postures into viewer.html
 
-Everything runs on the reconstructed model of model.py and applies the checks of the
+Everything runs on the model that cad/build_parts.py writes and applies the checks of the
 six-part replay, coverage/replay.py, including the required gap between legs and trunk.
-Run from the repository root after scripts/restore_assets.py and collision/build_bvh.py.
+The search stores, for each target, the passing posture with the lowest shoulder torque
+under the payload. Run from the repository root after scripts/restore_assets.py,
+collision/build_bvh.py and hollow/cad/build_parts.py --stock.
 """
 
 import argparse
@@ -24,11 +26,16 @@ from model import HERE, robot_model, tested_pairs
 from inspect_viewer import decode_clip, load_viewer
 from replay import JOINTS, LEG_GAP, LEG_LINKS, leg_clearance, pair_hits, pose_test, screen
 import resolve
+import loads
+import params
 
 LEGS = [f"{side}_{joint}" for side in screen.legs.SIDES for joint in screen.legs.NAMES]
 COLUMNS = [name + "_rad" for name in LEGS + list(JOINTS)]
 # Targets with no posture that passes every check. Their rows hold the best posture found.
-UNREACHED = (12, 35, 89)
+UNREACHED = (64, 74, 78, 89, 93)
+# Targets whose best passing posture loads the shoulder servo beyond the stock SO-101's
+# worst case. They are reached, and not counted as covered.
+OVER_LIMIT = (5, 18, 21, 50, 53, 60)
 MARGIN = resolve.MARGIN
 
 
@@ -110,7 +117,61 @@ def replay_targets(robot, pairs):
     for t in np.flatnonzero(~ok):
         print(f"  target {t:02d}: support margin {1000 * margin[t]:.2f} mm")
     assert np.flatnonzero(~ok).tolist() == list(UNREACHED)
+    inside = within_limit(robot, q)
+    covered = ok & inside
+    print(
+        f"  within the stock shoulder load: {covered.sum()} (front {covered[:64].sum()}/64, broad {covered[64:].sum()}/32); "
+        f"reached but over it {np.flatnonzero(ok & ~inside).tolist()}"
+    )
+    print(
+        f"  largest shoulder torque of those {covered.sum()}: {shoulder_torque(robot, q[covered]).max():.3f} N m empty, "
+        f"{shoulder_torque(robot, q[covered], params.PAYLOAD_KG).max():.3f} N m with {1000 * params.PAYLOAD_KG:.0f} g"
+    )
+    assert np.flatnonzero(ok & ~inside).tolist() == list(OVER_LIMIT)
     return q, ok, margin
+
+
+def shoulder_torque(robot, q, payload=0.0):
+    """Gravity torque on the shoulder-pitch servo for each posture, N m."""
+    return np.abs(loads.arm_torques(robot, np.atleast_2d(q), payload)[:, loads.SHOULDER])
+
+
+def within_limit(robot, q):
+    """Whether each posture loads the shoulder no more than the stock SO-101's worst case, empty and with the payload."""
+    empty, loaded = loads.stock_baseline()
+    return (shoulder_torque(robot, q) <= empty) & (shoulder_torque(robot, q, params.PAYLOAD_KG) <= loaded)
+
+
+def search_targets(robot, pairs, starts):
+    """Search every target whose row fails a check or is over the load limit.
+
+    Among the candidates of a target the first that passes, in order of rising shoulder
+    torque under the payload, is taken. It replaces the stored row unless that row passes
+    with a lower torque.
+    """
+    q, _ = read_targets()
+    positions, rotations, _ = target_frames()
+    everything = np.arange(96)
+    ok, _ = resolve.passes(robot, pairs, q, everything, positions, rotations)
+    settled = ok & within_limit(robot, q)
+    missing = np.flatnonzero(~settled).tolist()
+    print(f"Stored rows that pass within the load limit: {int(settled.sum())} of 96; searching {len(missing)}", flush=True)
+    if missing:
+        found = resolve.candidates(robot, resolve.chain_frames(robot), pairs, missing, positions, rotations, starts)
+        print(f"Converged candidates: {sum(len(rows) for rows in found.values())} for {len(missing)} targets", flush=True)
+        rank = lambda rows: shoulder_torque(robot, rows, params.PAYLOAD_KG)
+        for t, row in resolve.choose(robot, pairs, found, positions, rotations, rank=rank).items():
+            if not ok[t] or rank(row)[0] < rank(q[t])[0]:
+                q[t] = row
+    ok, margin = resolve.passes(robot, pairs, q, everything, positions, rotations)
+    inside = within_limit(robot, q)
+    write_targets(q, ["re-solved"] * 96, ok, margin)
+    covered = ok & inside
+    print(f"Rewrote targets.csv. Reached {int(ok.sum())}; within the load limit {int(covered.sum())} (front {int(covered[:64].sum())}/64, broad {int(covered[64:].sum())}/32)")
+    print(f"  no passing posture: {np.flatnonzero(~ok).tolist()}")
+    print(f"  reached but over the load limit: {np.flatnonzero(ok & ~inside).tolist()}")
+    if covered.any():
+        print(f"  largest shoulder torque of a covered target: {shoulder_torque(robot, q[covered]).max():.3f} N m empty, {shoulder_torque(robot, q[covered], params.PAYLOAD_KG).max():.3f} N m with {1000 * params.PAYLOAD_KG:.0f} g")
 
 
 def fixed_legs(robot, pairs, q, name, pad_contact=()):
@@ -272,13 +333,7 @@ def main():
     robot = robot_model()
     pairs = tested_pairs(robot)
     if args.search:
-        q, source = read_targets()
-        result, ok, kept = resolve.search(robot, pairs, q, args.starts)
-        positions, rotations, _ = target_frames()
-        _, margin = resolve.passes(robot, pairs, result, np.arange(96), positions, rotations, full=False)
-        source = [s if keep else "re-solved" for s, keep in zip(source, kept | ~ok)]
-        write_targets(result, source, ok, margin)
-        print(f"Rewrote targets.csv: {int((ok & ~kept).sum())} new postures, {int(kept.sum())} kept")
+        search_targets(robot, pairs, args.starts)
     elif args.search_pickup:
         search_pickup(robot, pairs, args.starts)
     elif args.write_viewer:
