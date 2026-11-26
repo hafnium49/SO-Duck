@@ -114,6 +114,18 @@ def _wrist_pocket(servo_frame):
     return stock.moved(_join("servo pocket", seat, clip), onto)
 
 
+def _horn_cheek():
+    """The horn-side round end of the SO-101 under arm, hole pattern on the z axis.
+
+    As in the stock arm: the horn's face at z = 0, the cheek below it, a lip around the horn above.
+    """
+    under = so101("lower_arm", "under_arm_so101_v1")
+    x, y = DONOR_HORN_CENTRE_MM
+    centred = stock.moved(params.donor("Under_arm_SO101"), _frame([-x, -y, 0], [1, 0, 0, 0]) @ under)
+    z0, z1 = CHEEK_Z_MM[0]
+    return _join("horn cheek", centred.intersect(cq.Solid.makeCylinder(CHEEK_RADIUS_MM, z1 - z0, cq.Vector(0, 0, z0))))
+
+
 def _elbow_roots():
     """The donor's material at the elbow: its two round ends, each with the start of its web.
 
@@ -163,3 +175,43 @@ def forearm_link():
     low = _join("lower arm", root_low, _plate(PLATE_LOW_MM, x0, x1, y_back), strip_low)
     high = _join("upper arm", root_high, _plate(PLATE_HIGH_MM, x0, x1, y_back), strip_high)
     return _join("forearm link", pocket, low, high)
+
+
+# --- forearm-roll-to-wrist link, in the frame of forearm_roll_linkage ------------------
+# The origin is on the roll axis, z along it, away from the roll servo. The servo's horn
+# ends at z = 1.5. The wrist-flex servo lies across the axis with its tail over it.
+ROLL_HORN_FACE_MM = 1.5
+ROLL_SEAT_BORE_MM = (7.5, 11.8)  # centre and length along z of the screw passages in the seat
+# The forearm link's pocket reaches 8.2 mm past the roll joint's plane, 16.3 mm from the
+# axis. The seat turns inside it; the bridge starts above it.
+BRIDGE_Z_MM = (10.0, 36.5)
+BRIDGE_X_MM = (-12.5, 4.2)
+BRIDGE_HALF_MM = 11.0
+BRIDGE_WALL_MM = 3.0
+# The four seat screws are driven from beyond the pocket, before the wrist servo goes in.
+DRIVER_RADIUS_MM = 2.25
+ROLL_DRIVER_PATH_MM = (43.0, 58.0)  # centre and length along z of the driver's path above the seat
+
+
+def wrist_servo_frame():
+    """The wrist-flex servo in the roll body's frame, moved by the chosen shortening."""
+    frame = stock.placement("wrist_flex_case").copy()
+    frame[0, 3] += 1000 * params.WRIST_SIDE_SHORTEN
+    frame[2, 3] -= 1000 * params.WRIST_AXIAL_SHORTEN
+    return frame
+
+
+def wrist_link():
+    """Forearm-roll-to-wrist link: an SO-101 cheek on the roll horn, a channel, the SO-101 pocket for the wrist servo."""
+    # The cheek turned over: its horn face on the roll horn, the cheek beyond it.
+    seat = stock.moved(_horn_cheek(), _frame([0, 0, ROLL_HORN_FACE_MM], [0, 1, 0, 0]))
+    pocket = _wrist_pocket(wrist_servo_frame())
+    (x0, x1), (z0, z1), half, wall = BRIDGE_X_MM, BRIDGE_Z_MM, BRIDGE_HALF_MM, BRIDGE_WALL_MM
+    # A channel closed on three sides; the screws' paths run inside it and past its open side.
+    channel = _box(x0, x1, -half, half, z0, z1).cut(_box(x0 + wall, x1 + 1, -half + wall, half - wall, z0 - 1, z1 + 1))
+    link = _join("wrist link", pocket, channel, seat)
+    top = ROLL_DRIVER_PATH_MM[0] + ROLL_DRIVER_PATH_MM[1] / 2 + 10
+    for x, y in HORN_HOLES_MM:
+        path = cq.Solid.makeCylinder(DRIVER_RADIUS_MM, top - BRIDGE_Z_MM[0] - 4, cq.Vector(x, y, BRIDGE_Z_MM[0] + 4))
+        link = _join("wrist link", link.cut(path))
+    return link

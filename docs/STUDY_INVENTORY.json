@@ -712,8 +712,8 @@
     },
     {
       "path": "hollow/cad/parts.py",
-      "bytes": 7780,
-      "sha256": "1190037e2199d37d71d266df409a016aecadcdaf7978279e81dbdaebddebee17"
+      "bytes": 10471,
+      "sha256": "263a71b207569b97eb5b4adb18916feaa317151cfa7734684c937656182c52f7"
     },
     {
       "path": "hollow/cad/placements.json",
@@ -859,6 +859,11 @@
       "path": "hollow/tests/test_stock.py",
       "bytes": 1803,
       "sha256": "cb18823a69abe3593d5fef36ee1dbe0e64050bdded940523a2bbc8128a61e7f8"
+    },
+    {
+      "path": "hollow/tests/test_wrist_link.py",
+      "bytes": 3145,
+      "sha256": "50a483c01d3738ae6f41c1e9246773db4fe044b215d13ebb7135a40589fc84af"
     },
     {
       "path": "hollow/viewer.html",
@@ -1121,5 +1126,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 65495270
+  "total_bytes": 65501106
 }
