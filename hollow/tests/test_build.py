@@ -16,11 +16,47 @@ def test_committed_parts_are_current():
     assert build_parts.check()
 
 
-def test_part_masses_are_solid_volume(robot):
+def test_part_masses_are_as_printed(robot):
     for geom, (_, body, _) in build_parts.CUSTOM.items():
         stored = cq.importers.importStep(str(build_parts.OUT / f"{assemble.CUSTOM[geom]}.step")).val()
         part = robot.model.body(body).mass[0] - params.SERVO_KG
-        assert abs(part - stored.Volume() * 1e-9 * params.DENSITY) < 1e-6, geom
+        assert abs(part - params.printed_grams(stored.Volume(), stored.Area()) / 1000) < 1e-6, geom
+        assert part < 0.8 * stored.Volume() * 1e-9 * params.DENSITY  # lighter than solid
+
+
+def test_print_rule_weighs_the_stock_parts_as_their_model_does(root):
+    """The six stock SO-101 bodies: the plastic mass in so101.xml (servo 55 g taken out) against the rule."""
+    import trimesh
+
+    def area_volume(name):
+        if name.endswith(".stl"):
+            mesh = trimesh.load(next(root.glob(f"collision/**/{name}")), force="mesh")
+            if np.ptp(mesh.bounds, axis=0).max() < 1.0:
+                mesh.apply_scale(1000.0)  # stored in metres
+            return mesh.area, abs(mesh.volume)
+        solid = params.donor(name)
+        return solid.Area(), solid.Volume()
+
+    bodies = {
+        "shoulder": (45.0, ["Motor_holder_SO101_Base", "Rotation_Pitch_SO101"]),
+        "upper_arm": (48.0, ["Upper_arm_SO101"]),
+        "lower_arm": (49.0, ["Under_arm_SO101", "Motor_holder_SO101_Wrist"]),
+        "wrist": (24.0, ["Wrist_Roll_Pitch_SO101"]),
+        "gripper": (32.0, ["wrist_roll_follower_so101_v1.stl"]),
+        "moving_jaw_so101_v1": (12.0, ["moving_jaw_so101_v1.stl"]),
+    }
+    model = ET.parse(root / "collision" / "inputs" / "so101.xml")
+    errors = []
+    for body, (plastic, names) in bodies.items():
+        element = model.find(f".//body[@name='{body}']")
+        servos = sum(1 for g in element.findall("geom") if (g.get("mesh") or "").startswith("sts3215") and g.get("class") == "visual")
+        assert abs(1000 * float(element.find("inertial").get("mass")) - 55.0 * servos - plastic) < 0.5, body
+        weighed = 0.0
+        for name in names:
+            area, volume = area_volume(name)
+            weighed += params.printed_grams(volume, area)
+        errors.append(weighed - plastic)
+    assert max(abs(e) for e in errors) < 4.0 and np.sqrt(np.mean(np.square(errors))) < 2.5, errors
 
 
 def test_zero_pose_has_no_intersections(robot):

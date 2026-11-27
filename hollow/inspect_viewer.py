@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-EXPECTED_FRAMES = {"targets": 96, "pickup": 81, "fold": 230}
+EXPECTED_FRAMES = {"targets": 96, "pickup": 81, "fold": 229}
 # Viewer colour of each part and its print file in parts/.
 PART_MESHES = {
     "mount": "neck_socket_mount.stl",

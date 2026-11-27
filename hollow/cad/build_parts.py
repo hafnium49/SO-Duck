@@ -65,7 +65,10 @@ def _holds(step, solid):
 
 
 def masses(solids):
-    """Body name to (kg, centre m): solid volume at the print density, 55 g per servo, stock link inertials."""
+    """Body name to (kg, centre m): each part as printed (params.printed_grams), 55 g per servo, stock link inertials.
+
+    The centre of a printed part is taken at the centre of its solid volume.
+    """
     frames = servo_frames()
     servo_centre = stock.servo_mesh().center_mass
     out = {}
@@ -76,7 +79,7 @@ def masses(solids):
                 solid = solids[geom]
                 centre = cq.Shape.centerOfMass(solid)
                 entries = [
-                    (solid.Volume() * 1e-9 * params.DENSITY, np.array([centre.x, centre.y, centre.z]) / 1000),
+                    (params.printed_grams(solid.Volume(), solid.Area()) / 1000, np.array([centre.x, centre.y, centre.z]) / 1000),
                     (params.SERVO_KG, (frames[servo] @ np.r_[servo_centre, 1.0])[:3] / 1000),
                 ]
         total = sum(mass for mass, _ in entries)
@@ -192,7 +195,7 @@ def main():
     solids = write()
     for geom, solid in solids.items():
         box = solid.BoundingBox()
-        print(f"{assemble.CUSTOM[geom]}: {solid.Volume() * 1e-3 * params.DENSITY / 1000:.1f} g, {box.xlen:.0f} x {box.ylen:.0f} x {box.zlen:.0f} mm")
+        print(f"{assemble.CUSTOM[geom]}: {params.printed_grams(solid.Volume(), solid.Area()):.1f} g, {box.xlen:.0f} x {box.ylen:.0f} x {box.zlen:.0f} mm")
     print("Wrote hollow/parts/ and hollow/robot.xml")
 
 

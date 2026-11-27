@@ -36,7 +36,7 @@ COLUMNS = [name + "_rad" for name in LEGS + list(JOINTS)]
 UNREACHED = (64, 74, 78, 89, 93)
 # Targets whose best passing posture loads the shoulder servo beyond the stock SO-101's
 # worst case. They are reached, and not counted as covered.
-OVER_LIMIT = (5, 18, 50, 53, 60)
+OVER_LIMIT = (5, 18, 21, 50, 53, 60)
 MARGIN = resolve.MARGIN
 
 
