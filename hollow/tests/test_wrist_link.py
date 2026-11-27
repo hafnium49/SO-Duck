@@ -59,7 +59,7 @@ def test_connectors_are_open(link):
 @pytest.mark.parametrize("x, y", parts.HORN_HOLES_MM)
 def test_seat_takes_the_roll_horn_screws(link, x, y):
     z, length = parts.ROLL_SEAT_BORE_MM
-    assert checks.hole_is_open(link, (x, y, z), (0, 0, 1), radius=1.0, depth=length)  # M2 screws
+    assert checks.hole_is_open(link, (x, y, z), (0, 0, 1), radius=1.45, depth=length)  # M3 screws
 
 
 @pytest.mark.parametrize("x, y", parts.HORN_HOLES_MM)

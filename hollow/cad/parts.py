@@ -15,7 +15,9 @@ from scipy.spatial.transform import Rotation
 import params
 import stock
 
-# The STS3215 horn's four tapped holes about its axis.
+# The STS3215 horn's four tapped M3 holes about its axis. The round ends of the SO-101
+# under arm have a 3.0 mm hole at each, centred on the joint axis, with a 5.4 mm recess
+# for the screw head.
 HORN_HOLES_MM = [(-4.95, -4.95), (-4.95, 4.95), (4.95, -4.95), (4.95, 4.95)]
 
 # --- elbow-to-forearm-roll link, in the frame of forearm_pitch_linkage -----------------
@@ -26,8 +28,6 @@ CHEEK_RADIUS_MM = 12.4  # the SO-101 cheek is a 12 mm disc
 # reaches the horn from outside: centre and length along z, for the horn and the idler side.
 ELBOW_BORES_MM = ((-6.0, 11.8), (42.2, 11.4))
 CHEEK_Z_MM = ((-12.5, 2.0), (34.5, 48.0))  # the two cheeks; above 48 the donor has only ribs
-# In the SO-101 under arm the horn's hole pattern sits 0.46 mm off the joint axis.
-DONOR_HORN_CENTRE_MM = (0.0, -0.46)
 # The upper arm passes between the plates when the elbow folds. Outside this band of z
 # it is absent near the elbow, so the plates run below and above it.
 PLATE_LOW_MM = (-12.0, -8.8)
@@ -138,9 +138,7 @@ def _horn_cheek():
 
     As in the stock arm: the horn's face at z = 0, the cheek below it, a lip around the horn above.
     """
-    under = so101("lower_arm", "under_arm_so101_v1")
-    x, y = DONOR_HORN_CENTRE_MM
-    centred = stock.moved(params.donor("Under_arm_SO101"), _frame([-x, -y, 0], [1, 0, 0, 0]) @ under)
+    centred = stock.moved(params.donor("Under_arm_SO101"), so101("lower_arm", "under_arm_so101_v1"))
     z0, z1 = CHEEK_Z_MM[0]
     return _join("horn cheek", centred.intersect(cq.Solid.makeCylinder(CHEEK_RADIUS_MM, z1 - z0, cq.Vector(0, 0, z0))))
 
@@ -150,11 +148,8 @@ def _elbow_roots():
 
     Returned for the horn side and the idler side, hole patterns on the elbow axis.
     """
-    under = so101("lower_arm", "under_arm_so101_v1")
-    x, y = DONOR_HORN_CENTRE_MM
-    # Half a turn puts the side the SO-101 arm leaves from toward +x, and the shift puts
-    # the hole pattern on the axis.
-    turned = stock.moved(params.donor("Under_arm_SO101"), _frame([0, 0, 0], [0, 0, 0, 1]) @ _frame([-x, -y, 0], [1, 0, 0, 0]) @ under)
+    # Half a turn about the joint axis puts the side the SO-101 arm leaves from toward +x.
+    turned = stock.moved(params.donor("Under_arm_SO101"), _frame([0, 0, 0], [0, 0, 0, 1]) @ so101("lower_arm", "under_arm_so101_v1"))
     roots = []
     for (z0, z1), plate in zip(CHEEK_Z_MM, (PLATE_LOW_MM, PLATE_HIGH_MM)):
         disc = cq.Solid.makeCylinder(CHEEK_RADIUS_MM, z1 - z0, cq.Vector(0, 0, z0))

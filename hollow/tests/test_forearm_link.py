@@ -71,7 +71,7 @@ def test_connectors_are_open(link):
 @pytest.mark.parametrize("z, length", parts.ELBOW_BORES_MM)
 @pytest.mark.parametrize("x, y", parts.HORN_HOLES_MM)
 def test_a_screwdriver_reaches_the_elbow_horn_screws(link, x, y, z, length):
-    assert checks.hole_is_open(link, (x, y, z), (0, 0, 1), radius=1.0, depth=length)  # M2 screws
+    assert checks.hole_is_open(link, (x, y, z), (0, 0, 1), radius=1.45, depth=length)  # M3 screws
 
 
 def test_elbow_swing_keeps_clearance(mesh):
