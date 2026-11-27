@@ -12,10 +12,10 @@ EXCLUDE = {'docs/SHA256SUMS.txt', 'docs/STUDY_INVENTORY.json', 'collision/bvh.so
 
 def tracked_files():
     for p in sorted(ROOT.rglob('*')):
-        if not p.is_file() or '.git' in p.parts or '__pycache__' in p.parts:
+        if not p.is_file() or {'.git', '__pycache__', '.pytest_cache', '.superpowers'} & set(p.parts):
             continue
         rel = p.relative_to(ROOT).as_posix()
-        if rel in EXCLUDE or rel.startswith('archives/study-assets.zip.part') or p.suffix in {'.log', '.pyc', '.zip', '.tmp'}:
+        if rel in EXCLUDE or rel.startswith(('archives/study-assets.zip.part', 'hollow/parts/stock/')) or p.suffix in {'.log', '.pyc', '.zip', '.tmp'}:
             continue
         yield p, rel
 

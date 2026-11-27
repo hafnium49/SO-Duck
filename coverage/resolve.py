@@ -229,10 +229,11 @@ def passes(robot, pairs, q, targets, positions, rotations, full=True):
     return ok, margin
 
 
-def choose(robot, pairs, found, positions, rotations, block=8, depth=240):
-    """For each target the passing candidate with the largest support margin.
+def choose(robot, pairs, found, positions, rotations, block=8, depth=240, rank=None):
+    """For each target the first passing candidate in order of preference.
 
-    Candidates are tried in order of falling margin. A target still open after the first
+    Candidates are tried in order of falling support margin, or of rising rank(q) when a
+    rank function is given. A target still open after the first
     candidates has the leg gap measured for all of them, and only those with the gap are
     tried further.
     """
@@ -240,7 +241,7 @@ def choose(robot, pairs, found, positions, rotations, block=8, depth=240):
     for t, q in found.items():
         if len(q):
             ok, margin = passes(robot, pairs, q, np.full(len(q), t), positions, rotations, full=False)
-            order = np.argsort(-margin)
+            order = np.argsort(-margin if rank is None else rank(q), kind="stable")
             ranked[t] = q[order[ok[order]]]
     chosen = {}
     for first in range(0, depth, block):

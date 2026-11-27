@@ -19,3 +19,7 @@ results/private/
 /cad/*.png
 /cad/under_arm_so101_v1.step
 /collision/bvh.so
+.pytest_cache/
+.superpowers/
+# Stock links and servos as the hollow model places them; written by hollow/cad/build_parts.py --stock
+/hollow/parts/stock/
