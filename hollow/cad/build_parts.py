@@ -56,6 +56,14 @@ def _same(drawn, stored):
     return abs(drawn[0] - stored[0]) < 1.0 and np.abs(drawn[1] - stored[1]).max() < 0.01  # 0.001 cm3, 0.01 mm
 
 
+def _holds(step, solid):
+    """Whether a STEP file holds this solid: same volume and box, and surfaces within 0.05 mm, as check() asks."""
+    stored = cq.importers.importStep(str(step)).val()
+    if not _same(measure(solid), measure(stored)):
+        return False
+    return surface_gap_mm(stock.tessellate(solid, 0.01, 0.1), stock.tessellate(stored, 0.01, 0.1)) < 0.05
+
+
 def masses(solids):
     """Body name to (kg, centre m): solid volume at the print density, 55 g per servo, stock link inertials."""
     frames = servo_frames()
@@ -96,7 +104,7 @@ def write(out=OUT, model=True):
         name = assemble.CUSTOM[geom]
         step = out / f"{name}.step"
         # A STEP file carries the time it was written. One that already holds this solid is kept.
-        if not (step.exists() and _same(measure(solid), measure(cq.importers.importStep(str(step)).val()))):
+        if not (step.exists() and _holds(step, solid)):
             cq.exporters.export(cq.Workplane("XY").add(solid), str(step))
         mesh = stock.tessellate(solid, *MESH_TOLERANCE)
         if not mesh.is_watertight:
@@ -127,15 +135,38 @@ def orientations(name):
     return out
 
 
+def surface_gap_mm(a, b, samples=20000):
+    """The largest distance from sample points on either mesh to the other mesh's surface."""
+    import trimesh
+
+    gap = 0.0
+    for one, other in ((a, b), (b, a)):
+        points = np.asarray(trimesh.sample.sample_surface(one, samples, seed=0)[0])
+        gap = max(gap, float(trimesh.proximity.closest_point(other, points)[1].max()))
+    return gap
+
+
 def check():
-    """Whether each committed STEP file has the volume and the bounding box that parts.py draws."""
+    """Whether the committed STEP and STL of each part are what parts.py draws.
+
+    Volume and bounding box alone would miss a hole moved by a millimetre, so the surfaces
+    are compared as well: no point of one may lie further than 0.05 mm from the other.
+    """
+    import trimesh
+
     good = True
     for geom, (draw, _, _) in CUSTOM.items():
         name = assemble.CUSTOM[geom]
-        drawn = measure(draw())
-        stored = measure(cq.importers.importStep(str(OUT / f"{name}.step")).val())
-        same = _same(drawn, stored)
-        print(f"{name}: {drawn[0] / 1000:.3f} cm3 drawn, {stored[0] / 1000:.3f} cm3 stored: {'same' if same else 'DIFFERENT'}")
+        solid = draw()
+        step = cq.importers.importStep(str(OUT / f"{name}.step")).val()
+        sizes = measure(solid), measure(step)  # before any mesh exists: a meshed shape reports the mesh's box
+        # The STEP file is compared on fine meshes; the STL is the drawn solid at the written tolerance.
+        gaps = (
+            surface_gap_mm(stock.tessellate(solid, 0.01, 0.1), stock.tessellate(step, 0.01, 0.1)),
+            surface_gap_mm(stock.tessellate(solid, *MESH_TOLERANCE), trimesh.load(OUT / f"{name}.stl")),
+        )
+        same = _same(*sizes) and max(gaps) < 0.05
+        print(f"{name}: {sizes[0][0] / 1000:.3f} cm3 drawn, {sizes[1][0] / 1000:.3f} cm3 stored, surfaces within {gaps[0]:.3f} mm (STEP) and {gaps[1]:.3f} mm (STL): {'same' if same else 'DIFFERENT'}")
         good &= same
     return good
 

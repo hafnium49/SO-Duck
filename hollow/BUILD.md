@@ -10,7 +10,7 @@
 | --- | ---: | --- |
 | `neck_socket_mount` | 50.7 g | 68 × 48 × 127 mm |
 | `elbow_to_forearm_roll` | 40.7 g | 117 × 77 × 60 mm |
-| `forearm_roll_to_wrist` | 21.8 g | 36 × 46 × 57 mm |
+| `forearm_roll_to_wrist` | 22.0 g | 36 × 46 × 58 mm |
 
 Each part has a STEP and an STL file in millimetres. All three fit a 180 mm bed.
 
@@ -64,7 +64,7 @@ Each of the two seats holds its servo on four sides and with two screws. The sto
 
 ## Printing
 
-Material: PLA or PETG. The model's masses assume PLA at 1.24 g/cm³ printed solid. Use a 0.4 mm nozzle, 0.2 mm layers, four perimeters and 100 % infill. The walls are 1.6 mm or more, so little is left to infill.
+Material: PLA or PETG. The model's masses assume PLA at 1.24 g/cm³ printed solid. Use a 0.4 mm nozzle, 0.2 mm layers, four perimeters and 100 % infill. The walls are 1.6 mm or more over 99 % of each part, so little is left to infill. The thinnest place is at the two rear neck screws: 1.05 mm from the pilot hole to the end of the plug.
 
 The orientations below put the layers along the direction in which each part bends. The overhang areas come from `python hollow/cad/build_parts.py --orientations`, which lists all six ways to lay each part down. "Up" names the axis of the part's file that points away from the bed.
 
@@ -72,7 +72,7 @@ The orientations below put the layers along the direction in which each part ben
 | --- | --- | --- |
 | `neck_socket_mount` | +y up, on its side, 48 mm tall | 53.7 cm² of overhang: under the upper side wall of the upright, inside the servo holder and inside the plug. Add a brim: 4.9 cm² touch the bed. |
 | `elbow_to_forearm_roll` | +y up, the back of the servo seat on the bed, 77 mm tall | 9.3 cm² of overhang, inside the seat and under the round ends. |
-| `forearm_roll_to_wrist` | +x up, the closed face of the channel on the bed, 36 mm tall | 14.5 cm² of overhang, under the seat and the round end. Add a brim: 2.2 cm² touch the bed. |
+| `forearm_roll_to_wrist` | +x up, the closed face of the channel on the bed, 36 mm tall | 14.8 cm² of overhang, under the seat and the round end. Add a brim: 2.2 cm² touch the bed. |
 
 The mount could also stand upright with 16.5 cm² of overhang, but then the layers lie across the upright, which carries the whole arm. Keep supports out of the screw holes, or clear them with a 2 mm or 3 mm drill.
 
@@ -98,7 +98,7 @@ The bus runs in the same order, from the trunk to the gripper. Each of the three
 4. **Shoulder and upper arm.** Build `Rotation_Pitch_SO101`, the shoulder pitch servo, `Motor_holder_SO101_Base`, `Upper_arm_SO101` and the elbow servo as in the SO-101 guide, and fit `Rotation_Pitch_SO101` on the horn of the shoulder yaw servo.
 5. **Forearm roll servo.** Slide it into the seat of `elbow_to_forearm_roll` tail first, horn away from the elbow. Fasten it with two M2 × 6, one from the elbow side and one from the horn side.
 6. **Elbow.** Spring the two round ends of `elbow_to_forearm_roll` over the horn and the idler of the elbow servo. Fasten four M3 × 6 on each side.
-7. **Wrist link.** Before the wrist flex servo goes in, put the round end of `forearm_roll_to_wrist` on the horn of the forearm roll servo and fasten four M3 × 6 through the channels in the seat.
+7. **Wrist link.** Before the wrist flex servo goes in, put the round end of `forearm_roll_to_wrist` on the horn of the forearm roll servo. Put the four M3 × 6 into their holes sideways, through the open side of the channel: the channels in the seat above are 4.5 mm wide and pass a driver, not a screw head. Then tighten them from above through those channels.
 8. **Wrist flex servo.** Slide it into the seat tail first and fasten it with two M2 × 6.
 9. **Wrist and gripper.** Build `Wrist_Roll_Pitch_SO101`, the wrist roll servo, `Wrist_Roll_Follower_SO101`, the gripper servo and `Moving_Jaw_SO101` as in the SO-101 guide, and fit `Wrist_Roll_Pitch_SO101` on the horn and idler of the wrist flex servo.
 10. **Parking pad.** Glue it on the roof 104 mm behind the trunk's origin and 23 mm to the left.

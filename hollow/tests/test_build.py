@@ -38,6 +38,20 @@ def test_neighbours_across_every_joint_are_tested(robot):
     assert (*model.STOCK_WRIST_JOINT, "crossing") in model.tested_pairs(robot)
 
 
+def test_a_servo_and_the_link_on_its_horn_are_tested_outside_the_seat(robot):
+    pairs = model.tested_pairs(robot)
+    for servo, link in model.SEATS:
+        assert (servo + model.SEAT_MARK, link + model.SEAT_MARK, "crossing") in pairs
+    yaw = ("shoulder_yaw_case" + model.SEAT_MARK, "shoulder_pitch_link" + model.SEAT_MARK, "crossing")
+    angles = np.array([-107.0, -100.0, 0.0, 100.0, 107.0])
+    sweep = np.zeros((len(angles), 7))
+    sweep[:, 0] = angles
+    hit = pair_hits(robot, yaw, robot.placements(sweep)[0])
+    assert hit.tolist() == [True, False, False, False, True]  # the stage meets the servo's plug strip near the range ends
+    whole = pair_hits(robot, ("shoulder_yaw_case", "shoulder_pitch_link", "crossing"), robot.placements(sweep)[0])
+    assert whole.all()  # with the seat left in, the two always touch
+
+
 def test_the_stock_wrist_joint_crosses_in_one_narrow_band(robot):
     low, high = params.RANGES_DEG["wrist_roll"]
     angles = np.arange(-180.0, 180.25, 0.5)

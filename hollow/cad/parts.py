@@ -192,10 +192,10 @@ def forearm_link():
 
 
 # --- forearm-roll-to-wrist link, in the frame of forearm_roll_linkage ------------------
-# The origin is on the roll axis, z along it, away from the roll servo. The servo's horn
-# ends at z = 1.5. The wrist-flex servo lies across the axis with its tail over it.
-ROLL_HORN_FACE_MM = 1.5
-ROLL_SEAT_BORE_MM = (7.5, 11.8)  # centre and length along z of the screw passages in the seat
+# The origin is on the roll axis, z along it, away from the roll servo. The screw face of
+# the servo's horn is at z = 0. The wrist-flex servo lies across the axis with its tail over it.
+ROLL_HORN_FACE_MM = 0.0  # the horn's screw face; only its centre hub reaches z = 1.5, into the cheek's recess
+ROLL_SEAT_BORE_MM = (6.0, 11.8)  # centre and length along z of the screw passages in the seat
 # The forearm link's pocket reaches 8.2 mm past the roll joint's plane, 16.3 mm from the
 # axis. The seat turns inside it; the bridge starts above it.
 BRIDGE_Z_MM = (10.0, 36.5)

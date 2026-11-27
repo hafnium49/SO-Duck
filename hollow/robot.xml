@@ -230,7 +230,7 @@
                 <geom type="mesh" mesh="forearm_roll_link" name="forearm_roll_link" rgba=".12 .57 .55 1" />
                 <body name="forearm_roll_linkage" pos="0.1000000007 -0.02600000073 0.01819999992" quat="0.5000003498 0.4999996508 0.5000003493 0.4999996502">
                   <joint name="forearm_roll" type="hinge" axis="0 0 1" range="-2.705260341 2.705260341" />
-                  <inertial pos="-0.02165663283 -0.0003489589595 0.04432970021" mass="0.076767842" diaginertia="1e-5 1e-5 1e-5" />
+                  <inertial pos="-0.02161427006 -0.0003479644377 0.04414718704" mass="0.0769588858" diaginertia="1e-5 1e-5 1e-5" />
                   <geom type="mesh" mesh="wrist_flex_case" name="wrist_flex_case" rgba=".24 .26 .29 1" />
                   <geom type="mesh" mesh="wrist_flex_link" name="wrist_flex_link" rgba=".12 .57 .55 1" />
                   <body name="wrist_flex_linkage" pos="-0.04000000012 -0.01870000033 0.04999999952" quat="-0.4999985457 0.4999985454 0.5000014539 0.500001455">

@@ -2,7 +2,7 @@
 
 ## Hollow three-part design at the original neck socket
 
-The neck mount, elbow-to-forearm-roll link and forearm-roll-to-wrist link are drawn from the SO-101 donor solids and have STEP and STL print files. The mount uses the four original neck screws. The arm retains six positioning axes and the gripper. With a required gap between the legs and the trunk, 91 of the 96 published grasp targets pass the replay, 85 of them without loading the shoulder servo more than the stock SO-101 arm does. The parts are not yet printed.
+The neck mount, elbow-to-forearm-roll link and forearm-roll-to-wrist link are drawn from the SO-101 donor solids and have STEP and STL print files. The mount uses the four original neck screws. The arm retains six positioning axes and the gripper. With a required gap between the legs and the trunk, 91 of the 96 published grasp targets pass the replay, 86 of them without loading the shoulder servo more than the stock SO-101 arm does. The parts are not yet printed.
 
 [The three parts, loads and checks](hollow/README.md) · [parts list, printing and assembly](hollow/BUILD.md) · [download the assembly viewer](hollow/viewer.html).
 

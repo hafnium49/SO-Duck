@@ -53,7 +53,7 @@ def zero_pose(robot):
     origins = {}
     for joint in JOINTS:
         body = robot.model.jnt_bodyid[robot.model.joint(joint).id]
-        name = next(n for n in frames if robot.body[n] == body and n in robot.mesh)
+        name = next(n for n in robot.mesh if robot.body[n] == body)
         origins[joint] = 1000 * (trunk @ frames[name][0])[:3, 3]
     return origins, points(robot, np.zeros(7))[0]
 

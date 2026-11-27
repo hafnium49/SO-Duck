@@ -45,6 +45,7 @@ def test_wrist_servo_can_be_inserted(mesh):
 def test_wrist_servo_is_screwed_to_its_seat(link):
     for centre, axis in parts.seat_screws(parts.wrist_servo_frame(), mirrored=True):
         assert checks.hole_is_open(link, centre, axis, radius=0.9, depth=5.0), centre  # the stock 2 mm passage
+        assert not checks.hole_is_open(link, centre, axis, radius=1.4, depth=5.0), centre  # with a wall under the screw's head
 
 
 def test_seat_holds_the_wrist_servo_on_four_sides(mesh):
@@ -67,6 +68,26 @@ def test_a_screwdriver_reaches_the_roll_horn_screws(link, x, y):
     # with the wrist servo not yet in its pocket, straight down the roll axis' direction
     z, length = parts.ROLL_DRIVER_PATH_MM
     assert checks.hole_is_open(link, (x, y, z), (0, 0, 1), radius=2.0, depth=length)  # a 4 mm driver shaft
+
+
+def roll_frame():
+    """From the forearm frame into the roll body's frame."""
+    position, quaternion = params.joint_frames(params.FOREARM_SHORTEN, params.WRIST_SIDE_SHORTEN, params.WRIST_AXIAL_SHORTEN)["forearm_roll"]
+    out = np.eye(4)
+    out[:3, :3] = Rotation.from_quat(np.roll(quaternion, -1)).as_matrix()
+    out[:3, 3] = 1000 * np.asarray(position)
+    return np.linalg.inv(out)
+
+
+def test_round_end_sits_on_the_roll_horn(mesh):
+    horn = roll_frame() @ parts.roll_servo_frame()
+    assert checks.servo_penetration_mm(mesh, "forearm_roll_case", placement=horn) <= 0.1
+    seated = stock.servo_mesh().copy()
+    seated.apply_transform(horn)
+    assert checks.clearance_mm(mesh, seated) < 0.05  # they touch
+    # the horn's screw face is at z = 0 of this frame, and the round end starts there
+    underside = mesh.vertices[np.hypot(mesh.vertices[:, 0], mesh.vertices[:, 1]) < 9.0][:, 2].min()
+    assert abs(underside) < 0.05
 
 
 def test_roll_turn_keeps_clearance(mesh):

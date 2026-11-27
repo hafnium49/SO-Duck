@@ -59,8 +59,8 @@ VIEWER_BODY = {model: viewer for model, viewer, _ in BODIES}
 # meshes on the two sides of one joint get the test that ignores touching faces.
 NEIGHBOURS = [(a, b) for (_, _, near), (_, _, far) in zip(BODIES[:5], BODIES[1:6]) for a in near for b in far]
 NEIGHBOURS += [("wrist_roll_link", "gripper")]
-# Five of them are a link seated on the horn of the servo before it. They touch by design.
-# The part tests in tests/ sweep each of them with only the 13 mm around the horn left out.
+# Five of them are a link seated on the horn of the servo before it. They touch there by
+# design and are tested outside the seat (HollowRobot).
 SEATS = [
     ("shoulder_yaw_case", "shoulder_pitch_link"),
     ("shoulder_pitch_case", "forearm_pitch_link"),
@@ -72,8 +72,49 @@ SEATS = [
 RESERVE_DEG = 2.01
 
 
+SEAT_RADIUS = 0.013  # metres round the joint axis in which a servo and the link on its horn are allowed to touch
+SEAT_MARK = "@seat"
+
+
+class HollowRobot(Robot):
+    """The model, with the two meshes of each seat a second time without their seat.
+
+    A link sits on the horn of the servo before it and touches it there. The copies
+    leave out every triangle within SEAT_RADIUS of the joint axis, so that the rest of the
+    two meshes can be tested against each other like any other pair.
+    """
+
+    def __init__(self):
+        import fcl
+
+        super().__init__(HERE / "robot.xml", JOINTS, UPPER)
+        self.solids = {}
+        self.seat_of = {}
+        for servo, link in SEATS:
+            child = self.body[link]
+            to_parent = Rotation.from_quat(np.roll(self.model.body_quat[child], -1)).as_matrix()
+            centre = self.mesh[servo].mean(axis=1)
+            near = {
+                servo: np.hypot(*((centre - self.model.body_pos[child]) @ to_parent)[:, :2].T) < SEAT_RADIUS,
+                link: np.hypot(*self.mesh[link].mean(axis=1)[:, :2].T) < SEAT_RADIUS,
+            }
+            for name, inside in near.items():
+                points = np.ascontiguousarray(self.mesh[name][~inside].reshape(-1, 3))
+                shape = fcl.BVHModel()
+                shape.beginModel(len(points), len(points) // 3)
+                shape.addSubModel(points, np.arange(len(points)).reshape(-1, 3))
+                shape.endModel()
+                self.solids[name + SEAT_MARK] = fcl.CollisionObject(shape, fcl.Transform())
+                self.seat_of[name + SEAT_MARK] = name
+
+    def placements(self, joints, leg_angles=None):
+        frames, com = super().placements(joints, leg_angles)
+        frames.update({copy: frames[name] for copy, name in self.seat_of.items()})
+        return frames, com
+
+
 def robot_model():
-    return Robot(HERE / "robot.xml", JOINTS, UPPER)
+    return HollowRobot()
 
 
 # The stock gripper on its stock wrist link. Their meshes touch all round the wrist-roll
@@ -86,12 +127,14 @@ def tested_pairs(robot):
     """Pairs of mesh groups that must not intersect, for the model that cad/build_parts.py writes.
 
     Every pair across a joint gets the triangle test, which counts touching faces as a
-    hit. The seats are left out; the part tests sweep them. The mount is tested against
-    the trunk: the neck servo it replaces is not in the model. The stock wrist joint
-    gets the test that ignores touching faces, so no posture is accepted where its meshes cross.
+    hit. A servo and the link on its horn are tested outside their seat, on the copies
+    of HollowRobot. The mount is tested against the trunk: the neck servo it replaces is
+    not in the model. The stock wrist joint gets the test that ignores touching faces,
+    so no posture is accepted where its meshes cross.
     """
     pairs = list(collision_pairs(robot, seats=SEATS + [STOCK_WRIST_JOINT], more_parts=("shoulder_collar",)))
-    return pairs + [("shoulder_mount", "trunk_assembly"), (*STOCK_WRIST_JOINT, "crossing")]
+    pairs += [("shoulder_mount", "trunk_assembly"), (*STOCK_WRIST_JOINT, "crossing")]
+    return pairs + [(servo + SEAT_MARK, link + SEAT_MARK, "crossing") for servo, link in SEATS]
 
 
 def all_frames(data):

@@ -56,6 +56,7 @@ def test_roll_servo_can_be_inserted(mesh):
 def test_roll_servo_is_screwed_to_its_seat(link):
     for centre, axis in parts.seat_screws(parts.roll_servo_frame()):
         assert checks.hole_is_open(link, centre, axis, radius=0.9, depth=5.0), centre  # the stock 2 mm passage
+        assert not checks.hole_is_open(link, centre, axis, radius=1.4, depth=5.0), centre  # with a wall under the screw's head
 
 
 def test_seat_holds_the_roll_servo_on_four_sides(mesh):
@@ -72,6 +73,12 @@ def test_connectors_are_open(link):
 @pytest.mark.parametrize("x, y", parts.HORN_HOLES_MM)
 def test_a_screwdriver_reaches_the_elbow_horn_screws(link, x, y, z, length):
     assert checks.hole_is_open(link, (x, y, z), (0, 0, 1), radius=1.45, depth=length)  # M3 screws
+
+
+def test_round_ends_sit_on_the_elbow_servo(mesh):
+    placement = parent_at(0.0) @ stock.placement("forearm_pitch_case")
+    assert checks.servo_penetration_mm(mesh, "forearm_pitch_case", placement=placement) <= 0.1
+    assert checks.clearance_mm(mesh, stock.mesh("forearm_pitch_case"), move_b=parent_at(0.0)) < 0.05  # they touch
 
 
 def test_elbow_swing_keeps_clearance(mesh):

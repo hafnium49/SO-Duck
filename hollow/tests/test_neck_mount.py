@@ -15,8 +15,8 @@ NECK_SERVO = {"wj-wk00-0123middlecase_56", "wj-wk00-0124bottomcase_45", "wj-wk00
 
 
 def trunk_meshes():
-    """The trunk's meshes of coverage/robot.xml in the trunk frame, millimetres, by name."""
-    model = mujoco.MjModel.from_xml_path(str(stock.ROOT / "coverage" / "robot.xml"))
+    """The trunk's meshes of hollow/robot.xml in the trunk frame, millimetres, by name."""
+    model = mujoco.MjModel.from_xml_path(str(stock.ROOT / "hollow" / "robot.xml"))
     trunk = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "trunk_assembly")
     out = []
     for geom in range(model.ngeom):
@@ -32,7 +32,7 @@ def trunk_meshes():
 
 
 @pytest.fixture(scope="module")
-def trunk():
+def trunk(robot):  # the robot fixture writes the stock meshes the model file names
     return trunk_meshes()
 
 
@@ -96,6 +96,18 @@ def test_yaw_servo_is_screwed_from_below(mount, x, y, z):
     assert checks.hole_is_open(mount, (x, y, z - 33.5), (0, 0, 1), radius=2.0, depth=60.0)
 
 
+def test_shelf_screws_meet_the_servo_holes():
+    servo = stock.mesh("shoulder_yaw_case")
+
+    def first_surface(x, y):
+        hits, _, _ = servo.ray.intersects_location([[x, y, 100.0]], [[0.0, 0.0, 1.0]], multiple_hits=False)
+        return float(np.asarray(hits).reshape(-1, 3)[0, 2])
+
+    for x, y, z in parts.YAW_SERVO_SCREWS_MM:
+        assert first_surface(x, y) > z + 1.0, (x, y)  # a hole in the servo's back face
+        assert abs(first_surface(x + 3.0, y) - z) < 0.05  # and the face itself beside it
+
+
 def test_yaw_servo_can_be_inserted(mesh):
     for out in range(4, 48, 4):  # lifted out of the sleeve
         depth = checks.servo_penetration_mm(mesh, "shoulder_yaw_case", shift=(0, 0, out))
@@ -107,9 +119,8 @@ def test_connectors_are_open(mount):
 
 
 def test_mount_clears_the_trunk(mesh, trunk):
+    assert not [name for name, part in trunk if name in NECK_SERVO and part.bounds.mean(axis=0)[0] > -5.0]  # the neck servo is gone
     for name, part in trunk:
-        if name in NECK_SERVO and part.bounds.mean(axis=0)[0] > -5.0:
-            continue  # the neck servo, removed
         assert checks.clearance_mm(mesh, part) >= 0.05, name
 
 

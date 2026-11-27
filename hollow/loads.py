@@ -10,8 +10,11 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from functools import lru_cache
+
 import mujoco
 import numpy as np
+from scipy.optimize import minimize
 
 HERE = Path(__file__).resolve().parent
 sys.path[:0] = [str(HERE / "cad"), str(HERE.parent / "coverage"), str(HERE.parent / "crosswise")]
@@ -19,15 +22,18 @@ sys.path[:0] = [str(HERE / "cad"), str(HERE.parent / "coverage"), str(HERE.paren
 import params  # noqa: E402
 
 GRAVITY = 9.81
+REFINED_STARTS = 6  # sampled poses from which the worst case is climbed
 SHOULDER = 1  # column of shoulder pitch in arm_torques
 STRIPPED = ("geom", "asset", "default", "actuator", "contact", "sensor", "equality", "tendon", "keyframe")
 
 
+@lru_cache(maxsize=None)
 def stock_baseline(samples=params.LOAD_SAMPLES, seed=0):
     """Worst shoulder-lift gravity torque of the stock SO-101 arm, empty and with the payload.
 
     The arm of collision/inputs/so101.xml stands on a table with its link inertials. The
-    worst case is taken over random poses inside its joint ranges. The payload is a point
+    worst case is searched inside its joint ranges: random poses first, then a climb from
+    the best of them, so the result does not depend on the sample. The payload is a point
     mass at the gripperframe site.
     """
     root = ET.parse(HERE.parent / "collision" / "inputs" / "so101.xml").getroot()
@@ -46,15 +52,24 @@ def stock_baseline(samples=params.LOAD_SAMPLES, seed=0):
     low, high = model.jnt_range.T
     rng = np.random.default_rng(seed)
     jacobian = np.zeros((3, model.nv))
-    empty = loaded = 0.0
-    for _ in range(samples):
-        data.qpos[:] = low + (high - low) * rng.random(model.nq)
+
+    def torques(pose):
+        data.qpos[:] = pose
         mujoco.mj_forward(model, data)
         mujoco.mj_jacSite(model, data, jacobian, None, site)
         torque = data.qfrc_bias[shoulder]
-        empty = max(empty, abs(torque))
-        loaded = max(loaded, abs(torque + jacobian[:, shoulder] @ weight))
-    return empty, loaded
+        return abs(torque), abs(torque + jacobian[:, shoulder] @ weight)
+
+    poses = low + (high - low) * rng.random((samples, model.nq))
+    sampled = np.array([torques(pose) for pose in poses])
+    worst = []
+    for column in (0, 1):
+        best = sampled[:, column].max()
+        for start in poses[np.argsort(-sampled[:, column])[:REFINED_STARTS]]:
+            found = minimize(lambda pose: -torques(pose)[column], start, method="L-BFGS-B", bounds=list(zip(low, high)))
+            best = max(best, -found.fun)
+        worst.append(float(best))
+    return tuple(worst)
 
 
 def arm_torques(robot, q, payload_kg=0.0):
