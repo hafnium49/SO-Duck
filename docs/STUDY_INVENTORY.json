@@ -642,13 +642,13 @@
     },
     {
       "path": "hollow/README.md",
-      "bytes": 12988,
-      "sha256": "384d6f56e2421fd55596c895f28a8ed6f7aa2fe8d43424a0c9edcfe1b7dfec81"
+      "bytes": 13065,
+      "sha256": "aecab1fbd2b09bf231f83b09c07b71e27229be299711cdd0242b169e050c8a31"
     },
     {
       "path": "hollow/cad/assemble.py",
-      "bytes": 7718,
-      "sha256": "44bd286cb6c393029ff302fa79aa1608d6c57a0c47b8a10caddb080d69f4924e"
+      "bytes": 8375,
+      "sha256": "a1ff3d5929134188ca9e6f73db9bcf6c8f61eb66eb5fc6d47ebec77ca0756e90"
     },
     {
       "path": "hollow/cad/build_parts.py",
@@ -877,13 +877,13 @@
     },
     {
       "path": "hollow/robot.xml",
-      "bytes": 29767,
-      "sha256": "8c1af0b9ee6b9bce2d9b333b4747d717abc3236df2d897269071f91cdab4112a"
+      "bytes": 29779,
+      "sha256": "9ebba35b009dfa4a4d40676365decb5bbcdc42f498efa6058b0b2c3a3c8e5976"
     },
     {
       "path": "hollow/targets.csv",
-      "bytes": 23682,
-      "sha256": "65a0104138c85d1e22d5f05d2dd80737b411f1a1be8a99c4e5289498e368867a"
+      "bytes": 23681,
+      "sha256": "7e1cf9c649133504abeaab49fe8087a1d41d3897530ff95b86117eea7346e3ee"
     },
     {
       "path": "hollow/tests/conftest.py",
@@ -892,8 +892,8 @@
     },
     {
       "path": "hollow/tests/test_build.py",
-      "bytes": 3625,
-      "sha256": "a926a3244b8029e9e269b628c46569934fe7f142eb47b2f076fe09d8753a1db3"
+      "bytes": 5161,
+      "sha256": "b8d6963d5b979bb9a97eebea7b3eaa1ef284367da53482e024d28966b16f5931"
     },
     {
       "path": "hollow/tests/test_checks.py",
@@ -957,8 +957,8 @@
     },
     {
       "path": "hollow/viewer.html",
-      "bytes": 1594661,
-      "sha256": "3d198a1b2f2157708722881e186d727bc7e10b2b36b966f073921eca9d406b25"
+      "bytes": 1594657,
+      "sha256": "d85cbea6840d44f9a8902b78c89d41f8509be8d29ee05f614c06277ec75b7b9b"
     },
     {
       "path": "hollow/viewer_build.py",
@@ -1221,5 +1221,5 @@
       "sha256": "65c2a1db477414be7861e601ff57bc47e7a144685dfe40df5a0a73e0289f6d48"
     }
   ],
-  "total_bytes": 69720210
+  "total_bytes": 69722487
 }

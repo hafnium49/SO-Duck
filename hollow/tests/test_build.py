@@ -71,6 +71,32 @@ def test_model_ranges_come_from_sweeps(robot):
         assert np.allclose(np.rad2deg(robot.model.joint(joint).range), (low, high), atol=1e-6)
 
 
+def test_the_trunk_weighs_one_servo_less(root, robot):
+    import mujoco
+
+    stock_trunk = ET.parse(root / "coverage" / "robot.xml").find(".//body[@name='trunk_assembly']/inertial")
+    before, centre = float(stock_trunk.get("mass")), np.fromstring(stock_trunk.get("pos"), sep=" ")
+    trunk = robot.model.body("trunk_assembly")
+    assert abs(trunk.mass[0] - (before - params.SERVO_KG)) < 1e-6
+    # putting the servo back at its place gives the stock trunk's centre of mass
+    restored = (trunk.mass[0] * trunk.ipos + params.SERVO_KG * np.array(assemble.NECK_SERVO_CENTRE)) / before
+    assert np.allclose(restored, centre, atol=1e-6)
+    # and that place is the middle of the servo's case meshes in the six-part model
+    six = mujoco.MjModel.from_xml_path(str(root / "coverage" / "robot.xml"))
+    points = []
+    for geom in range(six.ngeom):
+        if six.geom_bodyid[geom] != six.body("trunk_assembly").id or six.geom_type[geom] != mujoco.mjtGeom.mjGEOM_MESH:
+            continue
+        mesh = six.geom_dataid[geom]
+        if six.mesh(mesh).name in assemble.NECK_SERVO and six.geom_pos[geom][0] > -0.005:
+            turn = np.zeros(9)
+            mujoco.mju_quat2Mat(turn, six.geom_quat[geom])
+            vertices = six.mesh_vert[six.mesh_vertadr[mesh] : six.mesh_vertadr[mesh] + six.mesh_vertnum[mesh]]
+            points.append(vertices @ turn.reshape(3, 3).T + six.geom_pos[geom])
+    points = np.concatenate(points)
+    assert np.abs((points.min(0) + points.max(0)) / 2 - assemble.NECK_SERVO_CENTRE).max() < 0.0005
+
+
 def test_the_neck_servo_is_not_in_the_model(root):
     trunk = ET.parse(root / "hollow" / "robot.xml").find(".//body[@name='trunk_assembly']")
     kept = [geom for geom in trunk.findall("geom") if geom.get("mesh") in assemble.NECK_SERVO]

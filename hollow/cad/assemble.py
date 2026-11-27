@@ -56,6 +56,10 @@ CUSTOM = {"shoulder_mount": "neck_socket_mount", "forearm_roll_link": "elbow_to_
 NECK_SERVO = {"wj-wk00-0123middlecase_56", "wj-wk00-0124bottomcase_45", "wj-wk00-0122topcabinetcase_95", "drive_palonier", "passive_palonier"}
 
 
+# Centre of that servo's case in the trunk frame, metres. It is an STS3215 like the arm's servos.
+NECK_SERVO_CENTRE = (0.0010, 0.0003, 0.0775)
+
+
 def built_meshes():
     """Body name to (geom name, mesh file relative to hollow/) for the parts cad/build_parts.py writes."""
     return {body: [(part, f"parts/{CUSTOM[part]}.stl" if part in CUSTOM else f"parts/stock/{part}.stl") for part in parts] for body, parts in DISPLAY.items()}
@@ -125,6 +129,13 @@ def write_model(path, frames, masses, meshes, ranges, neck_servo=True):
             # the hip-yaw servos use the same meshes, further back
             if geom.get("mesh") in NECK_SERVO and float(geom.get("pos").split()[0]) > -0.005:
                 trunk.remove(geom)
+        # The trunk's stated mass and centre include that servo. Take it out of both.
+        # Only mass and centre of mass matter for the static checks; the inertia stays.
+        inertial = trunk.find("inertial")
+        mass = float(inertial.get("mass"))
+        centre = np.fromstring(inertial.get("pos"), sep=" ")
+        inertial.set("mass", f"{mass - params.SERVO_KG:.9g}")
+        inertial.set("pos", _numbers((mass * centre - params.SERVO_KG * np.array(NECK_SERVO_CENTRE)) / (mass - params.SERVO_KG)))
     assets = root.find("asset")
     roof = assets.find("mesh[@name='body_middle_top']")
     roof.attrib.pop("scale", None)

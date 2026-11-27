@@ -57,10 +57,10 @@ The first hollow design reached 93 targets without a load limit. This one gives 
 
 ## Other postures
 
-- **Pickup.** One crouch holds for the whole clip while the tool goes down a vertical line over a 20 mm cube, closes and lifts 30 mm. The support margin stays above 30.4 mm.
+- **Pickup.** One crouch holds for the whole clip while the tool goes down a vertical line over a 20 mm cube, closes and lifts 30 mm. The support margin stays above 30.3 mm.
 - **Overhead.** The tool point reaches **800 mm** above the floor on the centre line, 200 mm ahead of the trunk. That is the highest whole millimetre at which a posture passes at the reference stance.
 - **Parked.** The fixed fingertip rests 0.08 mm into the roof pad and the moving jaw stays 3.28 mm above it. The parked robot is 520 mm tall.
-- **Fold.** 230 frames lead from overhead to parked through one waypoint, at most half a degree per joint and frame. The support margin stays above 6.3 mm. The pad is touched only in the last frame.
+- **Fold.** 230 frames lead from overhead to parked through one waypoint, at most half a degree per joint and frame. The support margin stays above 5.3 mm. The pad is touched only in the last frame.
 
 The overhead, parked and waypoint postures are in [`overhead.csv`](overhead.csv), [`park.csv`](park.csv) and [`fold_waypoint.csv`](fold_waypoint.csv), the pickup in [`pickup.csv`](pickup.csv).
 
@@ -71,8 +71,8 @@ The overhead, parked and waypoint postures are in [`overhead.csv`](overhead.csv)
 - **Joints.** The frames of the first design with the chosen lengths applied ([`cad/params.py`](cad/params.py)).
 - **Joint ranges.** Shoulder yaw ±108°, shoulder pitch −81° to 100°, elbow ±95°, forearm roll ±155°, wrist flex ±95°, wrist roll −143° to 162°. The three joints next to a printed part stay inside the sweep that its part test covers. Inside these ranges some stock meshes still cross near the ends; such postures are refused one by one. See the mesh pairs under Checks.
 - **Meshes.** The three parts from `parts/`. The stock SO-101 links and the servos from the SO-101 solids, placed by a fit to the first design's display meshes within 0.11 mm. They are written to `parts/stock/` by `build_parts.py --stock` and are not committed.
-- **Masses.** The volume of each part's solid at 1.24 g/cm³, 55 g per servo, and the SO-101 link inertials. The robot comes to 2.185 kg. Screws, horns, wiring and any payload are not counted.
-- **Trunk.** The meshes of the six-part model with the original roof and without the neck servo.
+- **Masses.** The volume of each part's solid at 1.24 g/cm³, 55 g per servo, and the SO-101 link inertials. The robot comes to 2.130 kg. Screws, horns, wiring and any payload are not counted.
+- **Trunk.** The meshes of the six-part model with the original roof and without the neck servo. Its mass and centre of mass are the Duck's with that servo's 55 g taken out.
 
 ## Checks
 
@@ -100,7 +100,7 @@ OPENBLAS_NUM_THREADS=1 python hollow/postures.py
 
 [`postures.py`](postures.py) replays the CSV postures on the model with the checks of the [six-part replay](../coverage/README.md). It fails unless exactly targets 64, 74, 78, 89 and 93 fail and exactly targets 5, 18, 50, 53 and 60 are over the load limit.
 
-- **Targets.** Joint ranges with a 2° reserve, tool within 1.5 mm and 1°, soles within 0.2 mm and 0.15°, support margin of at least 5 mm, nothing below the floor, a gap of 0.3 mm from each hip link and 1 mm from each thigh, shin and foot to the trunk, no mesh intersection, and all of that again at ten jaw openings up to 20°. The 91 passing endpoints are within 0.558 mm and 0.309° of their targets. The smallest support margin is 5.08 mm at target 90. The smallest gaps are 0.30 mm at a hip link and 1.01 mm at a thigh.
+- **Targets.** Joint ranges with a 2° reserve, tool within 1.5 mm and 1°, soles within 0.2 mm and 0.15°, support margin of at least 5 mm, nothing below the floor, a gap of 0.3 mm from each hip link and 1 mm from each thigh, shin and foot to the trunk, no mesh intersection, and all of that again at ten jaw openings up to 20°. The 91 passing endpoints are within 0.558 mm and 0.309° of their targets. The smallest support margin is 5.70 mm at target 90. The smallest gaps are 0.30 mm at a hip link and 1.01 mm at a thigh.
 - **Clips.** The pickup, overhead, fold and parked postures with the same checks at fixed legs.
 - **Viewer.** The transforms stored in the viewer equal the model's in every frame of every clip.
 - **Mesh pairs.** Every pair of meshes on the two sides of a joint is tested, and touching counts as a hit, with these exceptions. A servo and the link on its horn touch at the horn: those five pairs are tested without the 13 mm round the joint axis. The stock gripper on its stock wrist link touches all round its joint and gets a test that ignores touching faces. Two pairs inside the stock gripper are not tested: its servo against its body, and its body against the moving jaw.

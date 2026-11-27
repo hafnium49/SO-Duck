@@ -68,7 +68,7 @@
     <body name="base" pos="0 0 0.17">
       <freejoint />
       <body name="trunk_assembly">
-        <inertial pos="-0.0483259 -9.97823e-05 0.0384971" quat="0.505499 0.490695 0.496207 0.507413" mass="0.698526" diaginertia="0.00344489 0.00292719 0.00167606" />
+        <inertial pos="-0.05254161856 -0.0001339503468 0.03516365349" quat="0.505499 0.490695 0.496207 0.507413" mass="0.643526" diaginertia="0.00344489 0.00292719 0.00167606" />
         <geom pos="-0.019 0 0.0648909" type="mesh" rgba="0.917647 0.917647 0.917647 1" mesh="body_front" />
         <geom pos="-0.019 0 0.0648909" type="mesh" rgba="0.917647 0.917647 0.917647 1" mesh="body_back" />
         <geom pos="-0.019 0 0.0648909" type="mesh" rgba="0.917647 0.917647 0.917647 1" mesh="body_middle_bottom" />
