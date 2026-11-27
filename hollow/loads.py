@@ -82,17 +82,26 @@ def main():
 
     empty, loaded = stock_baseline()
     grams = round(1000 * params.PAYLOAD_KG)
-    print(f"Stock SO-101 shoulder, worst pose: {empty:.2f} N m empty, {loaded:.2f} N m with {grams} g")
+    print(f"Stock SO-101 shoulder, worst pose: {empty:.3f} N m empty, {loaded:.3f} N m with {grams} g")
     robot = hollow_model.robot_model()
     q, _ = postures.read_targets()
-    q = np.delete(q, list(postures.UNREACHED), axis=0)
-    for label, payload, limit in (("empty", 0.0, empty), (f"with {grams} g", params.PAYLOAD_KG, loaded)):
-        shoulder = arm_torques(robot, q, payload)[:, SHOULDER]
-        verdict = "within" if shoulder.max() <= limit else "over"
+    groups = (
+        ("covered", [t for t in range(96) if t not in postures.UNREACHED + postures.OVER_LIMIT]),
+        ("reached but over the limit", list(postures.OVER_LIMIT)),
+    )
+    for name, targets in groups:
+        without = arm_torques(robot, q[targets])[:, SHOULDER]
+        carrying = arm_torques(robot, q[targets], params.PAYLOAD_KG)[:, SHOULDER]
         print(
-            f"Hollow arm shoulder over {len(q)} stored postures, {label}: "
-            f"worst {shoulder.max():.2f} N m, median {np.median(shoulder):.2f} N m ({verdict} the stock limit)"
+            f"Hollow arm shoulder over the {len(targets)} targets {name}: worst {without.max():.3f} N m empty "
+            f"and {carrying.max():.3f} N m with {grams} g; median {np.median(without):.3f} and {np.median(carrying):.3f}"
         )
+        if name != "covered":
+            for t, a, b in zip(targets, without, carrying):
+                print(f"  target {t}: {a:.3f} N m empty, {b:.3f} N m with {grams} g")
+    print("Worst torque at each arm joint over the covered targets, with the payload (N m):")
+    worst = arm_torques(robot, q[groups[0][1]], params.PAYLOAD_KG).max(axis=0)
+    print("  " + ", ".join(f"{joint} {value:.3f}" for joint, value in zip(("shoulder yaw", "shoulder pitch", "elbow", "forearm roll", "wrist flex", "wrist roll"), worst)))
 
 
 if __name__ == "__main__":

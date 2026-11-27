@@ -3,6 +3,7 @@
     python hollow/cad/build_parts.py           # write hollow/parts/ and hollow/robot.xml
     python hollow/cad/build_parts.py --stock   # write only hollow/parts/stock/, the meshes the model needs besides the three parts
     python hollow/cad/build_parts.py --check   # exit 1 unless the committed STEP files are what parts.py draws
+    python hollow/cad/build_parts.py --orientations   # overhang area of each part for the six ways to lay it on the bed
 
 hollow/parts/stock/ holds the stock SO-101 links and the servos as the model places them.
 It is derived from cad/donors/ and is not committed.
@@ -108,6 +109,24 @@ def write(out=OUT, model=True):
     return solids
 
 
+UP = {"+x": (1, 0, 0), "-x": (-1, 0, 0), "+y": (0, 1, 0), "-y": (0, -1, 0), "+z": (0, 0, 1), "-z": (0, 0, -1)}
+
+
+def orientations(name):
+    """For each body axis pointing up: overhang area steeper than 45 degrees, area on the bed (cm2), print height (mm)."""
+    import trimesh
+
+    mesh = trimesh.load(OUT / f"{name}.stl")
+    out = {}
+    for label, up in UP.items():
+        up = np.array(up, dtype=float)
+        height = mesh.triangles_center @ up
+        down = mesh.face_normals @ -up > np.cos(np.radians(45))
+        bed = down & (height < height.min() + 0.3)
+        out[label] = (float(mesh.area_faces[down & ~bed].sum() / 100), float(mesh.area_faces[bed].sum() / 100), float(np.ptp(mesh.vertices @ up)))
+    return out
+
+
 def check():
     """Whether each committed STEP file has the volume and the bounding box that parts.py draws."""
     good = True
@@ -125,9 +144,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--stock", action="store_true")
+    parser.add_argument("--orientations", action="store_true")
     args = parser.parse_args()
     if args.check:
         sys.exit(0 if check() else 1)
+    if args.orientations:
+        for name in assemble.CUSTOM.values():
+            print(name)
+            for label, (overhang, bed, height) in sorted(orientations(name).items(), key=lambda item: item[1][0]):
+                print(f"  {label} up: {overhang:.1f} cm2 of overhang, {bed:.1f} cm2 on the bed, {height:.0f} mm tall")
+        return
     if args.stock:
         write_stock()
         print("Wrote hollow/parts/stock/")
