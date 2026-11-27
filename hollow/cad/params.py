@@ -45,7 +45,7 @@ RANGES_DEG = {
     "forearm_pitch": (-95.0, 95.0),
     "forearm_roll": (-155.0, 155.0),
     "wrist_flex": (-95.0, 95.0),
-    "wrist_roll": (-143.0, 162.0),
+    "wrist_roll": (-143.0, 162.0),  # as before; postures between -117.5 and -115 are refused (model.STOCK_WRIST_JOINT)
 }
 # Tool poses of the clips, in the world frame of the reference stance: millimetres, and
 # quaternions (w, x, y, z). They are those of the earlier design, so the cube, the pad

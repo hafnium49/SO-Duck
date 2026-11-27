@@ -76,15 +76,22 @@ def robot_model():
     return Robot(HERE / "robot.xml", JOINTS, UPPER)
 
 
+# The stock gripper on its stock wrist link. Their meshes touch all round the wrist-roll
+# joint, and they cross between -117.5 and -115 degrees, inside the model's range of the
+# joint (and near -146 degrees, outside it). Whether the printed parts do the same is not known.
+STOCK_WRIST_JOINT = ("wrist_roll_link", "gripper")
+
+
 def tested_pairs(robot):
     """Pairs of mesh groups that must not intersect, for the model that cad/build_parts.py writes.
 
     Every pair across a joint gets the triangle test, which counts touching faces as a
-    hit. The seats are left out, and so is the stock gripper on its stock wrist link.
-    The mount is tested against the trunk: the neck servo it replaces is not in the model.
+    hit. The seats are left out; the part tests sweep them. The mount is tested against
+    the trunk: the neck servo it replaces is not in the model. The stock wrist joint
+    gets the test that ignores touching faces, so no posture is accepted where its meshes cross.
     """
-    seats = SEATS + [("wrist_roll_link", "gripper")]
-    return list(collision_pairs(robot, seats=seats, more_parts=("shoulder_collar",))) + [("shoulder_mount", "trunk_assembly")]
+    pairs = list(collision_pairs(robot, seats=SEATS + [STOCK_WRIST_JOINT], more_parts=("shoulder_collar",)))
+    return pairs + [("shoulder_mount", "trunk_assembly"), (*STOCK_WRIST_JOINT, "crossing")]
 
 
 def all_frames(data):

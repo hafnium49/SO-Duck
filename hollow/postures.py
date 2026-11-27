@@ -4,7 +4,7 @@
     python hollow/postures.py --search         # search targets whose row fails or is over the load limit, rewrite targets.csv
     python hollow/postures.py --search-pickup  # search a pickup crouch that passes, rewrite pickup.csv
     python hollow/postures.py --make-clips     # find the overhead and parked postures and the fold between them
-    python hollow/postures.py --write-viewer   # write the CSV postures into viewer.html
+    python hollow/postures.py --write-viewer   # write the postures of every clip into viewer.html
 
 Everything runs on the model that cad/build_parts.py writes and applies the checks of the
 six-part replay, coverage/replay.py, including the required gap between legs and trunk.
@@ -441,21 +441,15 @@ def compare_viewer(data, name, frames):
     return worst
 
 
-def replay_viewer(robot, pairs, targets, pickup):
-    """The viewer shows the CSV postures, and its other clips pass at the reference stance."""
+def replay_viewer(robot):
+    """The viewer shows the postures of the CSV files in every clip."""
     data = load_viewer()
-    for name, q in (("targets", targets), ("pickup", pickup)):
+    for name, q in clip_rows().items():
+        clip = next(c for c in data["poses"] if c["name"] == name)
+        assert clip["n"] == len(q), f"{name}: the viewer holds {clip['n']} frames, the files {len(q)}"
         worst = compare_viewer(data, name, place(robot, q)[0])
         print(f"Viewer clip {name} against the CSV postures: largest transform difference {worst:.1e}")
         assert worst < 2e-6, name
-    reference = pose_test.REF.ravel()
-    for name in ("fold", "overhead", "park"):
-        clip = next(c for c in data["poses"] if c["name"] == name)
-        q = np.c_[np.tile(reference, (clip["n"], 1)), np.deg2rad(np.array(clip["q"]))]
-        contact = [clip["n"] - 1] if name in ("fold", "park") else []
-        frames = fixed_legs(robot, pairs, q, name.capitalize(), pad_contact=contact)
-        # Stored angles are rounded to 0.01 deg, which moves the tool by up to 0.3 mm.
-        assert compare_viewer(data, name, frames) < 5e-4, name
 
 
 def search_pickup(robot, pairs, starts):
@@ -499,39 +493,51 @@ def search_pickup(robot, pairs, starts):
     print(f"Rewrote pickup.csv; smallest support margin along the path {1000 * best[0]:.2f} mm")
 
 
-def write_viewer(robot):
-    """Store the model's transforms for every frame whose CSV posture differs from the viewer."""
-    data = load_viewer()
+ASSEMBLY_DEG = (0.0, 48.0, -59.0, 0.0, 14.0, 8.0, 12.0)  # the viewer's opening pose: six arm angles and the jaw
+
+
+def clip_rows():
+    """The postures of every viewer clip, as rows of 17 angles."""
     targets, _ = read_targets()
-    total = 0
-    for name, q in (("targets", targets), ("pickup", read_pickup())):
+    return {
+        "targets": np.c_[targets, np.zeros(len(targets))],
+        "assembly": at_reference(np.deg2rad(ASSEMBLY_DEG[:6]), np.deg2rad(ASSEMBLY_DEG[6])),
+        "pickup": read_pickup(),
+        "fold": fold_path(),
+        "overhead": at_reference(read_arm("overhead")),
+        "park": at_reference(read_arm("park")),
+    }
+
+
+def viewer_clips(data, robot):
+    """Store the model's transforms of every clip in the viewer's data."""
+    bodies = data["bodies"]
+    for name, q in clip_rows().items():
         clip = next(c for c in data["poses"] if c["name"] == name)
         frames, _ = place(robot, q)
         stored = viewer_frames(data, name)
-        differs = np.zeros(len(q), bool)
-        for b, body in enumerate(data["bodies"]):
+        world = np.zeros((len(q), len(bodies), 3, 4))
+        for b, body in enumerate(bodies):
             if body in frames:
-                differs |= np.abs(stored[:, b] - frames[body]).reshape(len(q), -1).max(1) >= 1e-6
-        world = np.frombuffer(base64.b64decode(clip["world"]), dtype="<f4").reshape(len(q), len(data["bodies"]), 3, 4).copy()
+                world[:, b] = frames[body][:, :3]
+            else:  # the cube keeps its stored placement: the gripper's path over it has not changed
+                world[:, b] = stored[:, b, :3] if len(stored) == len(q) else stored[0, b, :3]
         point = tool(frames)
-        jaw = np.rad2deg(q[:, 16]) if q.shape[1] > 16 else np.zeros(len(q))
-        for i in np.flatnonzero(differs):
-            for b, body in enumerate(data["bodies"]):
-                if body in frames:  # the cube keeps its stored placement
-                    world[i, b] = frames[body][i, :3]
-            clip["xyz"][i] = [round(float(v), 2) for v in 1000 * point[i, :3, 3]]
-            clip["q"][i] = [round(float(v), 2) for v in [*np.rad2deg(q[i, 10:16]), jaw[i]]]
-            axis = frames["wrist_flex_link"][i]
-            clip["roll"][i] = [round(float(v), 7) for v in [*axis[:3, 3], *axis[:3, 2]]]
+        axis = frames["wrist_flex_link"]
+        clip["n"] = len(q)
+        clip["q"] = [[round(float(v), 2) for v in row] for row in np.rad2deg(q[:, 10:17])]
+        clip["xyz"] = [[round(float(v), 2) for v in row] for row in 1000 * point[:, :3, 3]]
+        clip["roll"] = [[round(float(v), 7) for v in [*row[:3, 3], *row[:3, 2]]] for row in axis]
         clip["world"] = base64.b64encode(world.astype("<f4").tobytes()).decode()
-        total += int(differs.sum())
-        print(f"Viewer clip {name}: rewrote {int(differs.sum())} of {len(q)} frames")
-    blob = base64.b64encode(gzip.compress(json.dumps(data, separators=(",", ":")).encode(), 9, mtime=0)).decode()
-    html = (HERE / "viewer.html").read_text(encoding="utf-8")
-    html, count = re.subn(r'(<script id="payload"[^>]*>).*?(</script>)', lambda m: m.group(1) + blob + m.group(2), html, count=1, flags=re.S)
-    assert count == 1
-    if total:
-        (HERE / "viewer.html").write_text(html, encoding="utf-8", newline="\n")
+        print(f"Viewer clip {name}: {len(q)} frames")
+
+
+def write_viewer(robot):
+    import viewer_build
+
+    data = load_viewer()
+    viewer_clips(data, robot)
+    viewer_build.save(data, (HERE / "viewer.html").read_text(encoding="utf-8"))
 
 
 def main():
@@ -553,10 +559,10 @@ def main():
     elif args.write_viewer:
         write_viewer(robot)
     else:
-        targets, _, _ = replay_targets(robot, pairs)
-        pickup = replay_pickup(robot, pairs)
+        replay_targets(robot, pairs)
+        replay_pickup(robot, pairs)
         replay_clips(robot, pairs)
-        replay_viewer(robot, pairs, targets, pickup)
+        replay_viewer(robot)
         print("POSTURE REPLAY PASSED")
 
 

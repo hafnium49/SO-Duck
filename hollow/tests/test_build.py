@@ -35,12 +35,25 @@ def test_neighbours_across_every_joint_are_tested(robot):
     assert frozenset(("shoulder_mount", "shoulder_pitch_link")) in tested
     assert frozenset(("shoulder_mount", "trunk_assembly")) in tested
     assert not any(frozenset(seat) in tested for seat in model.SEATS)
+    assert (*model.STOCK_WRIST_JOINT, "crossing") in model.tested_pairs(robot)
+
+
+def test_the_stock_wrist_joint_crosses_in_one_narrow_band(robot):
+    low, high = params.RANGES_DEG["wrist_roll"]
+    angles = np.arange(-180.0, 180.25, 0.5)
+    sweep = np.zeros((len(angles), 7))
+    sweep[:, 5] = angles
+    hit = pair_hits(robot, (*model.STOCK_WRIST_JOINT, "crossing"), robot.placements(sweep)[0])
+    inside = angles[hit & (angles >= low) & (angles <= high)]
+    assert len(inside) and inside.min() >= -118.0 and inside.max() <= -114.5, inside
+    assert hit[angles <= -165].all() and hit[angles >= 172].all()  # the joint's own stops, outside the range
 
 
 def test_model_ranges_come_from_sweeps(robot):
     for joint, (low, high) in params.RANGES_DEG.items():
-        measured = checks.joint_range(robot, joint)
-        assert measured[0] <= low < 0 < high <= measured[1], (joint, measured)
+        if joint != "wrist_roll":  # the stock joint keeps its stock range; see the test of its band
+            measured = checks.joint_range(robot, joint)
+            assert measured[0] <= low < 0 < high <= measured[1], (joint, measured)
         assert np.allclose(np.rad2deg(robot.model.joint(joint).range), (low, high), atol=1e-6)
 
 
