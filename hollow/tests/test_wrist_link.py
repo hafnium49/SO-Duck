@@ -43,13 +43,15 @@ def test_wrist_servo_can_be_inserted(mesh):
 
 
 def test_wrist_servo_is_screwed_to_its_seat(link):
-    for centre, axis in parts.seat_screws(parts.wrist_servo_frame(), mirrored=True):
+    assert len(parts.seat_screws(parts.wrist_servo_frame())) == 4
+    for centre, axis in parts.seat_screws(parts.wrist_servo_frame()):
         assert checks.hole_is_open(link, centre, axis, radius=0.9, depth=5.0), centre  # the stock 2 mm passage
         assert not checks.hole_is_open(link, centre, axis, radius=1.4, depth=5.0), centre  # with a wall under the screw's head
 
 
-def test_seat_holds_the_wrist_servo_on_four_sides(mesh):
-    for push in ((-2, 0, 0), (0, 2, 0), (0, 0, 2), (0, 0, -2)):  # the closed flank is the mirrored one
+def test_seat_holds_the_wrist_servo_on_all_sides(mesh):
+    # pushed 2 mm toward the tail, either flank or either face, the servo meets the seat
+    for push in ((-2, 0, 0), (0, 2, 0), (0, -2, 0), (0, 0, 2), (0, 0, -2)):
         assert checks.servo_penetration_mm(mesh, "wrist_flex_case", shift=push, placement=parts.wrist_servo_frame()) > 1.5, push
 
 

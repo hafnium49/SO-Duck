@@ -37,7 +37,7 @@ def test_build_guide_covers_every_joint_and_part(build):
 def test_build_guide_masses_are_the_solids(build, readme):
     for name in PARTS:
         solid = cq.importers.importStep(str(build_parts.OUT / f"{name}.step")).val()
-        grams = f"{solid.Volume() * 1e-6 * params.DENSITY:.1f} g"
+        grams = f"{params.printed_grams(solid.Volume(), solid.Area()):.1f} g"
         assert re.search(rf"`{name}` \| {re.escape(grams)} \|", build), (name, grams)
         assert grams in readme, (name, grams)
 

@@ -62,6 +62,19 @@ MOVING_CLEARANCE_MM = 1.5  # between parts that move relative to each other
 MIN_WALL_MM = 1.6
 BED_MM = 180.0
 DENSITY = 1240.0  # kg/m3; custom parts count at full solid volume
+# Printed parts are weighed as printed, not as solid: walls of this thickness on every
+# surface, and this infill inside. These values reproduce the plastic masses of the six
+# stock SO-101 bodies in collision/inputs/so101.xml (hollow/tests/test_build.py), so the
+# custom parts and the stock parts they are compared with are weighed alike. They are
+# the SO-101's own print settings: two walls of 0.45 mm and 15 % infill.
+PRINT_WALL_MM = 0.9
+PRINT_INFILL = 0.15
+
+
+def printed_grams(volume_mm3, area_mm2):
+    """Mass of a printed part from its solid volume and surface area."""
+    walls = min(volume_mm3, area_mm2 * PRINT_WALL_MM)
+    return DENSITY * 1e-6 * (walls + PRINT_INFILL * (volume_mm3 - walls))
 SERVO_KG = 0.055
 PAYLOAD_KG = 0.1  # at the gripperframe site
 LOAD_SAMPLES = 20000
